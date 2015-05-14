@@ -8,7 +8,9 @@
     "server": "./node_modules/.bin/hs -a localhost -p $((RANDOM + 10000)) -o",
     "build": "./build.sh",
     "start": "npm run build; npm run server",
-    "deploy": "npm run build; ./deploy.sh"
+    "deploy": "npm run build; ./deploy.sh",
+    "watch": "./watch.sh; npm run server"
+
   },
   "repository": {
     "type": "git",
