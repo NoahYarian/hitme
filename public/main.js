@@ -1,0 +1,4 @@
+"use strict";
+
+alert("WHAT!");
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9tYWluLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUEsS0FBSyxDQUFDLE9BQU8sQ0FBQyxDQUFDIiwiZmlsZSI6InNyYy9tYWluLmpzIiwic291cmNlc0NvbnRlbnQiOlsiYWxlcnQoXCJXSEFUIVwiKTtcbiJdfQ==
