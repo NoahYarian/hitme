@@ -1,0 +1,31 @@
+{
+  "name": "hitme",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "./node_modules/.bin/hs -a localhost -p $((RANDOM + 10000)) -o",
+    "build": "./build.sh",
+    "start": "npm run build; npm run server",
+    "deploy": "npm run build; ./deploy.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NoahYarian/hitme.git"
+  },
+  "author": "Noah Yarian <Noah.Yarian@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NoahYarian/hitme/issues"
+  },
+  "homepage": "https://github.com/NoahYarian/hitme#readme",
+  "devDependencies": {
+    "babel": "^5.3.3",
+    "bowcat": "0.0.4",
+    "http-server": "^0.8.0",
+    "jade": "git+https://github.com/jadejs/jade.git",
+    "node-sass": "^3.1.0",
+    "nodemon": "^1.3.7"
+  }
+}}
