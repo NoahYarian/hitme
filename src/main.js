@@ -1,79 +1,23 @@
-var API = "http://deckofcardsapi.com/api/",
-  $dealer1 = $(".dealer1"),
-  $dealer2 = $(".dealer2"),
-  $dealer3 = $(".dealer3"),
-  $dealer4 = $(".dealer4"),
-  $dealer5 = $(".dealer5"),
-  $dealer6 = $(".dealer6"),
-  $dealer7 = $(".dealer7"),
-  $dealer8 = $(".dealer8"),
-  $dealer9 = $(".dealer9"),
-  $dealer10 = $(".dealer10"),
-  $dealer11 = $(".dealer11"),
-  $player1 = $(".player1"),
-  $player2 = $(".player2"),
-  $player3 = $(".player3"),
-  $player4 = $(".player4"),
-  $player5 = $(".player5"),
-  $player6 = $(".player6"),
-  $player7 = $(".player7"),
-  $player8 = $(".player8"),
-  $player9 = $(".player9"),
-  $player10 = $(".player10"),
-  $player11 = $(".player11"),
-  deckId,
-  $getDeck = $(".getDeck"),
-  $dealCards = $(".dealCards"),
+var API = "http://deckofcardsapi.com/api/";
+
+var deckId;
+
+var $dealCards = $(".dealCards"),
   $hit = $(".hit"),
   $stay = $(".stay"),
   dealerHand = [],
-  playerHand = [];
+  playerHand = [],
+  $dealerCard = $(".dealerCard"),
+  $playerCard = $(".playerCard");
+
 
 var $dealer = $(".dealer");
 var $player = $(".player");
 
-var dealer = [];
-var player = [];
-var $dealerCard = $(".dealerCard");
-var $playerCard = $(".playerCard");
 
-$getDeck.click(sixDecks);
-$dealCards.click(dealFour);
+$dealCards.click(deal);
+
 //$hit.click(hit);
-
-function sixDecks() {
-  var shuffleURL = API + "shuffle/?deck_count=6";
-  console.log("shuffleURL = " + shuffleURL);
-  getJSON(shuffleURL, function(data) {
-    deckId = data.deck_id;
-    console.log(deckId);
-  });
-};
-
-function dealFour() {
-  var draw4URL = API + "draw/" + deckId + "/?count=4";
-  console.log("draw4URL = " + draw4URL);
-  getJSON(draw4URL, function(data) {
-    $dealer1.attr("src", "http://behance.vo.llnwd.net/profiles/56117/projects/5740089/e86ace60c0d4931bd3a89abe50b4d267.jpg");
-    $player1.attr("src", data.cards[1].image);
-    $dealer2.attr("src", data.cards[2].image);
-    $player2.attr("src", data.cards[3].image);
-    dealerHand.push(data.cards[0].value + " " + data.cards[0].suit);
-    playerHand.push(data.cards[1].value + " " + data.cards[1].suit);
-    dealerHand.push(data.cards[2].value + " " + data.cards[2].suit);
-    playerHand.push(data.cards[3].value + " " + data.cards[3].suit);
-  });
-}
-
-//function hit() {
-  //var hitURL = API + "/draw/" + deckId + "/?count=2";
-  //getJSON(hitURL, function(data) {
-    ////var playerHtml = "  ("src", data.cards[0].image);
-    //$dealer3.attr("src", data.cards[1].image);
-    //playerHand.push(data.cards[0].value + " " + data.cards[0].suit);
-    //dealerHand.push(data.cards[1].value + " " + data.cards[1].suit);
-  //});
-//}
 
 $dealerCard.click(dealerCard);
 $playerCard.click(playerCard);
@@ -110,12 +54,17 @@ function deal() {
   var shuffleURL = API + "shuffle/?deck_count=6";
   console.log("shuffleURL = " + shuffleURL);
   getJSON(shuffleURL, function(data) {
-  deckId = data.deck_id;
-  dealerCard();
-  playerCard();
-  dealerCard();
-  playerCard();
-  $(".dealer:first-child").attr("src", "http://behance.vo.llnwd.net/profiles/56117/projects/5740089/e86ace60c0d4931bd3a89abe50b4d267.jpg");
+    deckId = data.deck_id;
+    console.log(deckId);
+    dealerCard();
+    playerCard();
+    dealerCard();
+    playerCard();
+  });
+  $( ".cardImage" )
+  .attr( "id", function( arr ) {
+    return "div-id" + arr;
+  });
 }
 
 // commented out until i figure out passing event handlers functions with arguments
@@ -143,3 +92,39 @@ function getJSON(url, cb) {
   };
   request.send();
 }
+
+
+//function sixDecks() {
+  //var shuffleURL = API + "shuffle/?deck_count=6";
+  //console.log("shuffleURL = " + shuffleURL);
+  //getJSON(shuffleURL, function(data) {
+    //deckId = data.deck_id;
+    //console.log(deckId);
+  //});
+//};
+
+//function dealFour() {
+  //var draw4URL = API + "draw/" + deckId + "/?count=4";
+  //console.log("draw4URL = " + draw4URL);
+  //getJSON(draw4URL, function(data) {
+    //$dealer1.attr("src", "http://behance.vo.llnwd.net/profiles/56117/projects/5740089/e86ace60c0d4931bd3a89abe50b4d267.jpg");
+    //$player1.attr("src", data.cards[1].image);
+    //$dealer2.attr("src", data.cards[2].image);
+    //$player2.attr("src", data.cards[3].image);
+    //dealerHand.push(data.cards[0].value + " " + data.cards[0].suit);
+    //playerHand.push(data.cards[1].value + " " + data.cards[1].suit);
+    //dealerHand.push(data.cards[2].value + " " + data.cards[2].suit);
+    //playerHand.push(data.cards[3].value + " " + data.cards[3].suit);
+  //});
+//}
+
+//function hit() {
+  //var hitURL = API + "/draw/" + deckId + "/?count=2";
+  //getJSON(hitURL, function(data) {
+    ////var playerHtml = "  ("src", data.cards[0].image);
+    //$dealer3.attr("src", data.cards[1].image);
+    //playerHand.push(data.cards[0].value + " " + data.cards[0].suit);
+    //dealerHand.push(data.cards[1].value + " " + data.cards[1].suit);
+  //});
+//}
+
