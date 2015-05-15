@@ -51,7 +51,7 @@ function sixDecks() {
 };
 
 function dealFour() {
-  var draw4URL = API + "/draw/" + deckId + "/?count=4";
+  var draw4URL = API + "draw/" + deckId + "/?count=4";
   console.log("draw4URL = " + draw4URL);
   getJSON(draw4URL, function(data) {
     $dealer1.attr("src", "http://behance.vo.llnwd.net/profiles/56117/projects/5740089/e86ace60c0d4931bd3a89abe50b4d267.jpg");
@@ -79,7 +79,7 @@ $dealerCard.click(dealerCard);
 $playerCard.click(playerCard);
 
 function dealerCard(){
-  var cardURL = API + "/draw/" + deckId + "/?count=1";
+  var cardURL = API + "draw/" + deckId + "/?count=1";
   getJSON(cardURL, function(data) {
     var html = "<img class='cardImage' src='" + data.cards[0].image + "'>";
     $dealer.append(html);
@@ -88,7 +88,7 @@ function dealerCard(){
 }
 
 function playerCard(){
-  var cardURL = API + "/draw/" + deckId + "/?count=1";
+  var cardURL = API + "draw/" + deckId + "/?count=1";
   getJSON(cardURL, function(data) {
     var html = "<img class='cardImage' src='" + data.cards[0].image + "'>";
     $player.append(html);
@@ -106,6 +106,17 @@ function convertCard(value) {
   }
 }
 
+function deal() {
+  var shuffleURL = API + "shuffle/?deck_count=6";
+  console.log("shuffleURL = " + shuffleURL);
+  getJSON(shuffleURL, function(data) {
+  deckId = data.deck_id;
+  dealerCard();
+  playerCard();
+  dealerCard();
+  playerCard();
+  $(".dealer:first-child").attr("src", "http://behance.vo.llnwd.net/profiles/56117/projects/5740089/e86ace60c0d4931bd3a89abe50b4d267.jpg");
+}
 
 // commented out until i figure out passing event handlers functions with arguments
 //function card(person){
