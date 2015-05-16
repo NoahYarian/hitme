@@ -14,10 +14,10 @@ cp -r src public
 
 # compile sass to css
 ./node_modules/.bin/node-sass \
+  --source-comments \
   --output-style compressed \
   --source-map-embed \
   --recursive \
-  --watch \
   src/_styles/main.scss public/css/main.css &
 
 # convert ES6 JS to ES5

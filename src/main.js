@@ -83,7 +83,7 @@ function drawCard(options) {
       $("." + options.person).append(html);
       game.hiddenCard = data.cards[0].image;
     } else {
-      var html = "<img class='cardImage' src='" + data.cards[0].image + "'>";
+      var html = "<img class='cardImage' src='" + cardImage(data) + "'>";
       $("." + options.person).append(html);
     }
     if (options.person === "dealer") {
@@ -99,6 +99,13 @@ function drawCard(options) {
     updateCount(data.cards[0].value);
     typeof options.callback === 'function' && options.callback();
   });
+}
+
+function cardImage(data) {
+  var cardValue = data.cards[0].value;
+  var cardSuit = data.cards[0].suit;
+  var filename = "../images/cards/" + cardValue + "_of_" + cardSuit.toLowerCase() + ".svg";
+  return filename;
 }
 
 function checkPlayerTotal() {
@@ -171,7 +178,11 @@ function checkVictory() {
 
 function gameEnd() {
   $winner.empty();
-  $winner.append("<p>" + _.capitalize(game.winner) + " wins</p>");
+  if (game.winner === "push") {
+    $winner.append("<p>" + _.capitalize(game.winner) + "</p>");
+  } else {
+    $winner.append("<p>" + _.capitalize(game.winner) + " wins</p>");
+  }
   $newGame.attr("disabled", false);
   $hit.attr("disabled", true);
   $stay.attr("disabled", true);
@@ -199,8 +210,12 @@ function stay() {
       person: "dealer",
       callback: stay
     });
-  } else {
-    game.dealerTotal >= game.playerTotal ?
+  } else if (game.dealerTotal === game.playerTotal) {
+    game.winner = "push";
+    console.log("push");
+    gameEnd();
+  } else if (game.dealerTotal < 22) {
+    game.dealerTotal > game.playerTotal ?
       (game.winner = "dealer", score -= 1, console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal)) :
       (game.winner = "player", score += 1, console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal));
     gameEnd();
@@ -235,6 +250,8 @@ function getJSON(url, cb) {
   request.open('GET', JSONP_PROXY + url);
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
+      cb(JSON.parse(request.responseText));
+    } else {
       cb(JSON.parse(request.responseText));
     }
   };
