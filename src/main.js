@@ -1,10 +1,11 @@
 var API = "http://deckofcardsapi.com/api/";
 var newDeckURL = API + "shuffle/?deck_count=6";
-var deckId;
+var game;
 
 var cardBack = "http://tinyurl.com/kqzzmbr";
 
 //buttons
+var $newGame = $(".newGame");
 var $deal = $(".deal");
 var $hit = $(".hit");
 var $stay = $(".stay");
@@ -17,23 +18,38 @@ var $count = $(".count");
 var $dealer = $(".dealer");
 var $player = $(".player");
 
-var dealerHand = [];
-var playerHand = [];
-var playerTotal = 0;
-var dealerTotal = 0;
-
-var winner;
 var score = 0;
-var count = 0;
 
+$newGame.click(newGame);
 $deal.click(deal);
 $hit.click(hit);
 $stay.click(stay);
 
+function Game() {
+  this.deckId = "";
+  this.hiddenCard = "";
+  this.dealerHand = [];
+  this.playerHand = [];
+  this.dealerTotal = 0;
+  this.playerTotal = 0;
+  this.winner = "";
+  this.count = 0;
+}
+
+function newGame() {
+  score = 0;
+  game = new Game();
+  deal();
+}
+
 function deal() {
-  if (!deckId) {
+  clearTable();
+  $hit.attr("disabled", false);
+  $stay.attr("disabled", false);
+
+  if (game.deckId === "") {
     getJSON(newDeckURL, function(data) {
-      deckId = data.deck_id;
+      game.deckId = data.deck_id;
       console.log("About to deal from new deck");
       draw4();
     });
@@ -51,23 +67,24 @@ function draw4() {
 }
 
 function drawCard(person, image) {
-  var cardURL = API + "draw/" + deckId + "/?count=1";
+  var cardURL = API + "draw/" + game.deckId + "/?count=1";
   getJSON(cardURL, function(data, cb) {
     if (image) {
       var html = "<img class='cardImage' src='" + image + "'>";
       $("." + person).append(html);
+      game.hiddenCard = data.cards[0].image;
     } else {
       var html = "<img class='cardImage' src='" + data.cards[0].image + "'>";
       $("." + person).append(html);
     }
     if (person === "dealer") {
-      dealerHand.push(data.cards[0].value);
+      game.dealerHand.push(data.cards[0].value);
       checkDealerTotal();
-      console.log("dealer's hand - " + dealerHand + " **** dealer is at " + dealerTotal);
+      console.log("dealer's hand - " + game.dealerHand + " **** dealer is at " + game.dealerTotal);
     } else if (person === "player") {
-      playerHand.push(data.cards[0].value);
+      game.playerHand.push(data.cards[0].value);
       checkPlayerTotal();
-      console.log("player's hand - " + playerHand + " **** player is at " + playerTotal);
+      console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal);
     }
     checkVictory();
     updateCount(data.cards[0].value);
@@ -75,80 +92,81 @@ function drawCard(person, image) {
 }
 
 function checkPlayerTotal() {
-  playerTotal = 0;
-  playerHand.forEach(function(card) {
+  game.playerTotal = 0;
+  game.playerHand.forEach(function(card) {
     if (card === "KING" || card === "QUEEN" || card === "JACK") {
-      playerTotal += 10;
+      game.playerTotal += 10;
     } else if (!isNaN(card)) {
-      playerTotal += Number(card);
+      game.playerTotal += Number(card);
     }
   });
-  playerHand.forEach(function(card) {
+  game.playerHand.forEach(function(card) {
     if (card === "ACE") {
-      if (playerTotal <= 10) {
-        playerTotal += 11;
+      if (game.playerTotal <= 10) {
+        game.playerTotal += 11;
       } else {
-        playerTotal += 1;
+        game.playerTotal += 1;
       }
     }
   });
 }
 
 function checkDealerTotal() {
-  dealerTotal = 0;
-  dealerHand.forEach(function(card) {
+  game.dealerTotal = 0;
+  game.dealerHand.forEach(function(card) {
     if (card === "KING" || card === "QUEEN" || card === "JACK") {
-      dealerTotal += 10;
+      game.dealerTotal += 10;
     } else if (!isNaN(card)) {
-      dealerTotal += Number(card);
+      game.dealerTotal += Number(card);
     }
   });
-  dealerHand.forEach(function(card) {
+  game.dealerHand.forEach(function(card) {
     if (card === "ACE") {
-      if (dealerTotal <= 10) {
-        dealerTotal += 11;
+      if (game.dealerTotal <= 10) {
+        game.dealerTotal += 11;
       } else {
-        dealerTotal += 1;
+        game.dealerTotal += 1;
       }
     }
   });
 }
 
 function checkVictory() {
-  if (dealerTotal === 21) {
+  if (game.dealerTotal === 21) {
     console.log("dealer has 21");
-    winner = "dealer";
+    game.winner = "dealer";
     score -= 1;
-  } else if (dealerTotal > 21) {
+  } else if (game.dealerTotal > 21) {
     console.log("dealer busts");
-    winner = "player";
+    game.winner = "player";
     score += 1;
   }
 
-  if (playerTotal === 21) {
+  if (game.playerTotal === 21) {
     console.log("player has 21");
-    winner = "player";
+    game.winner = "player";
     score += 1;
-  } else if (playerTotal > 21) {
+  } else if (game.playerTotal > 21) {
     console.log("player busts");
-    winner = "dealer";
+    game.winner = "dealer";
     score -= 1;
   }
 
-  if (winner) {
+  if (game.winner !== "") {
     updateScore();
-    clearTable();
+    $hit.attr("disabled", true);
+    $stay.attr("disabled", true);
+    gameEnd();
+    //clearTable();
   }
+}
+
+function gameEnd() {
 }
 
 function clearTable() {
   $dealer.empty();
   $player.empty();
-  dealerHand = [];
-  playerHand = [];
-  dealerTotal = 0;
-  playerTotal = 0;
-  winner = null;
   console.log("--table cleared--");
 }
 
@@ -160,12 +178,12 @@ function hit() {
 function stay() {
   console.log("stay");
   flipCard();
-  if (!winner && dealerTotal < 17) {
+  if (game.winner === "" && game.dealerTotal < 17) {
     drawCard("dealer");
   } else {
-    dealerTotal >= playerTotal ?
-      (winner = "dealer", score -= 1, console.log("dealer's " + dealerTotal + " beats player's " + playerTotal)) :
-      (winner = "player", score += 1, console.log("player's " + playerTotal + " beats dealer's " + dealerTotal));
+    game.dealerTotal >= game.playerTotal ?
+      (game.winner = "dealer", score -= 1, console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal)) :
+      (game.winner = "player", score += 1, console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal));
   }
 }
 
@@ -179,12 +197,12 @@ function updateScore() {
 
 function updateCount(card) {
   if (isNaN(Number(card)) || card === "10") {
-    count -= 1;
+    game.count -= 1;
   } else if (card < 7) {
-    count += 1;
+    game.count += 1;
   }
   $count.empty();
-  $count.append("<p>Count: " + count + "</p>");
+  $count.append("<p>Count: " + game.count + "</p>");
 }
 
 // JSON request function with JSONP proxy
@@ -200,219 +218,3 @@ function getJSON(url, cb) {
   };
   request.send();
 }
-
-
-/////////////////
-//the graveyard//
-/////////////////
-
-//function hit() {
-  //console.log("hit");
-  //playerCard();
-  //if (!winner && dealerTotalMin < 17) {
-    //dealerCard();
-  //} else {
-    //if (dealerTotalMax < 22) {
-      //console.log("dealer stays at " + dealerTotalMax);
-    //} else {
-      //console.log("dealer stays at " + dealerTotalMin);
-    //}
-  //}
-//}
-
-//function stay() {
-  //console.log("stay");
-  //var dealerTotalFinal = (dealerTotalMax < 22) ? dealerTotalMax : dealerTotalMin;
-  //var playerTotalFinal = (playerTotalMax < 22) ? playerTotalMax : playerTotalMin;
-
-  //if (dealerTotalMin < 17) {
-    //dealerCard();
-  //} else {
-    //dealerTotalFinal >= playerTotalFinal ?
-      //(winner = "dealer", score -= 1, console.log("dealer's " + dealerTotalFinal + " beats player's " + playerTotalFinal)) :
-      //(winner = "player", score += 1, console.log("player's " + playerTotalFinal + " beats dealer's " + dealerTotalFinal));
-    //checkGame();
-  //}
-//}
-
-//// deal dealer one card
-
-//// converts JSON string values in card hard arrays to numbers
-//function convertCardMax(value) {
-  //if (value === "ACE") {
-    //return 11;
-  //} else if (isNaN(value)) {
-    //return 10;
-  //} else {
-    //return Number(value);
-  //}
-//}
-
-//function convertCardMin(value) {
-  //if (value === "ACE") {
-    //return 1;
-  //} else if (isNaN(value)) {
-    //return 10;
-  //} else {
-    //return Number(value);
-  //}
-//}
-
-//// reduces card hand arrays to totals
-//function getTotal(hand) {
-  //var total = hand.reduce(function(prev, curr) {
-    //return prev + curr;
-  //});
-  //return total;
-//}
-
-//// looks for victory conditions and triggers game reset and scorekeeping
-//function checkGame() {
-  //if (dealerTotalMax === 21 || dealerTotalMin === 21) {
-    //console.log("dealer has 21");
-    //winner = "dealer";
-    //score -= 1;
-  //} else if (dealerTotalMin > 21) {
-    //console.log("dealer busts");
-    //winner = "player";
-    //score += 1;
-  //}
-
-  //if (playerTotalMax === 21 || playerTotalMin === 21) {
-    //console.log("player has 21");
-    //winner = "player";
-    //score += 1;
-  //} else if (playerTotalMin > 21) {
-    //console.log("player busts");
-    //winner = "dealer";
-    //score -= 1;
-  //}
-
-  //if (winner) {
-    //updateScore();
-    //reset();
-  //}
-//}
-
-// adds 1 or subtracts 1 from scoreboard
-
-////function draw4() {
-  //drawDealerCard(cardBack);
-  //drawPlayerCard();
-  //drawDealerCard();
-  //drawPlayerCard();
-//}
-
-//function drawDealerCard(image) {
-  //var cardURL = API + "draw/" + deckId + "/?count=1";
-  //getJSON(cardURL, function(data) {
-    //if (image) {
-      //var html = "<img class='cardImage' src='" + image + "'>";
-      //$dealer.append(html);
-    //} else {
-      //var html = "<img class='cardImage' src='" + data.cards[0].image + "'>";
-      //$dealer.append(html);
-    //}
-    //dealerHand.push(data.cards[0].value);
-    //checkDealerTotal();
-    //checkVictory();
-  //});
-//}
-
-//function drawPlayerCard() {
-  //var cardURL = API + "draw/" + deckId + "/?count=1";
-  //getJSON(cardURL, function(data) {
-    //var html = "<img class='cardImage' src='" + data.cards[0].image + "'>";
-    //$player.append(html);
-    //playerHand.push(data.cards[0].value);
-    //checkPlayerTotal();
-    //checkVictory();
-  //});
-//}
-
-// deal a new hand from a new deck
-//function deal() {
-  //var shuffleURL = API + "shuffle/?deck_count=6";
-  //count = 0;
-  //reset();
-  //console.log("shuffleURL = " + shuffleURL);
-  //getJSON(shuffleURL, function(data) {
-    //deckId = data.deck_id;
-    //console.log("deckId = " + deckId);
-    //dealerCard();
-    //playerCard();
-    //dealerCard();
-    //playerCard();
-  //});
-//}
-
-//// deal a new hand from the same deck
-//function sameDeckDeal() {
-    //reset();
-    //dealerCard();
-    //playerCard();
-    //dealerCard();
-    //playerCard();
-//}
-//
-//// clears card images and resets game values to initial
-//function reset() {
-  //$dealer.empty();
-  //$player.empty();
-  //dealerHandMax = [];
-  //playerHandMax = [];
-  //dealerHandMin = [];
-  //playerHandMin = [];
-  //dealerTotalMax = 0;
-  //playerTotalMax = 0;
-  //dealerTotalMin = 0;
-  //playerTotalMin = 0;
-  //winner = null;
-  //console.log("--reset--");
-//}
-//
-//function dealerCard(){
-  //var cardURL = API + "draw/" + deckId + "/?count=1";
-  //getJSON(cardURL, function(data) {
-    //var html = "<img class='cardImage' src='" + data.cards[0].image + "'>";
-    //$dealer.append(html);
-
-    //dealerHandMax.push(convertCardMax(data.cards[0].value));
-    //dealerTotalMax = getTotal(dealerHandMax);
-    //dealerHandMin.push(convertCardMin(data.cards[0].value));
-    //dealerTotalMin = getTotal(dealerHandMin);
-
-    //if (dealerTotalMin === dealerTotalMax) {
-      //console.log("dealer's hand - " + dealerHandMax + " **** dealer is at " + dealerTotalMax);
-    //} else {
-      //console.log("dealer's hand - " + dealerHandMax + " or " + dealerHandMin + " **** dealer is at " + dealerTotalMax + " or " + dealerTotalMin);
-    //}
-
-    //whatsTheCount(convertCardMax(data.cards[0].value));
-    //checkGame();
-  //});
-//}
-
-//// deal player one card
-//function playerCard(){
-  //var cardURL = API + "draw/" + deckId + "/?count=1";
-  //getJSON(cardURL, function(data) {
-    //var html = "<img class='cardImage' src='" + data.cards[0].image + "'>";
-    //$player.append(html);
-
-    //playerHandMax.push(convertCardMax(data.cards[0].value));
-    //playerTotalMax = getTotal(playerHandMax);
-    //playerHandMin.push(convertCardMin(data.cards[0].value));
-    //playerTotalMin = getTotal(playerHandMin);
-
-    //if (playerTotalMin === playerTotalMax) {
-      //console.log("player's hand - " + playerHandMax + " **** player is at " + playerTotalMax);
-    //} else {
-      //console.log("player's hand - " + playerHandMax + " or " + playerHandMin + " **** player is at " + playerTotalMax + " or " + playerTotalMin);
-    //}
-
-    //whatsTheCount(convertCardMax(data.cards[0].value));
-    //checkGame();
-  //});
-//}
-
