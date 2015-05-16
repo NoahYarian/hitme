@@ -9,13 +9,14 @@ html
   body
     .container
       h1 Snack Pack Black Jack
-      .score Score: 0
-      .count Count: 0
+      .scoreBoard
+        .score Score: 0
+        .count Count: 0
+        .winner
       .buttons
-        button.newGame new game
-        button.deal deal
-        button.hit hit
-        button.stay stay
+        button.newGame deal cards
+        button.hit(disabled) hit
+        button.stay(disabled) stay
       .dealer
       .player
     script(src="lib/build.js")

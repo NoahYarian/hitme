@@ -1,29 +1,37 @@
 h1 {
-  color: #fff;
-  background: #000;
+  color: white;
+  background: black;
 }
 
 p {
   margin: 0;
 }
 
-.cardImage {
-  width: 113px;
-  height: 157px;
-}
+.scoreBoard {
+  background: black;
 
+  div {
+    display: inline-block;
+    font-size: 2em;
+  }
+}
 .score {
   color: red;
-  background: #000;
-  font-size: 2em;
 }
 
 .count {
   color: yellow;
-  background: #000;
-  font-size: 2em;
+}
+
+.winner {
+  color: blue;
 }
 
 button:disabled {
   display: none;
+}
+
+.cardImage {
+  width: 113px;
+  height: 157px;
 }

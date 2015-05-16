@@ -1,55 +1,55 @@
 var API = "http://deckofcardsapi.com/api/";
 var newDeckURL = API + "shuffle/?deck_count=6";
-var game;
-
 var cardBack = "http://tinyurl.com/kqzzmbr";
+
+var game;
+var deckId = "";
+var score = 0;
+var count = 0;
 
 //buttons
 var $newGame = $(".newGame");
-var $deal = $(".deal");
 var $hit = $(".hit");
 var $stay = $(".stay");
 
 //scoreboard divs
 var $score = $(".score");
 var $count = $(".count");
+var $winner = $(".winner");
 
 //card hand divs
 var $dealer = $(".dealer");
 var $player = $(".player");
 
-var score = 0;
-
+//button click listeners
 $newGame.click(newGame);
-$deal.click(deal);
 $hit.click(hit);
 $stay.click(stay);
 
+//game object
 function Game() {
-  this.deckId = "";
   this.hiddenCard = "";
   this.dealerHand = [];
   this.playerHand = [];
   this.dealerTotal = 0;
   this.playerTotal = 0;
   this.winner = "";
-  this.count = 0;
 }
 
 function newGame() {
-  score = 0;
   game = new Game();
   deal();
 }
 
 function deal() {
   clearTable();
+  $newGame.attr("disabled", true);
   $hit.attr("disabled", false);
   $stay.attr("disabled", false);
 
-  if (game.deckId === "") {
+  if (deckId === "") {
     getJSON(newDeckURL, function(data) {
-      game.deckId = data.deck_id;
+      deckId = data.deck_id;
       console.log("About to deal from new deck");
       draw4();
     });
@@ -67,7 +67,7 @@ function draw4() {
 }
 
 function drawCard(person, image) {
-  var cardURL = API + "draw/" + game.deckId + "/?count=1";
+  var cardURL = API + "draw/" + deckId + "/?count=1";
   getJSON(cardURL, function(data, cb) {
     if (image) {
       var html = "<img class='cardImage' src='" + image + "'>";
@@ -154,19 +154,22 @@ function checkVictory() {
 
   if (game.winner !== "") {
     updateScore();
-    $hit.attr("disabled", true);
-    $stay.attr("disabled", true);
     gameEnd();
-    //clearTable();
   }
 }
 
 function gameEnd() {
+  $winner.empty();
+  $winner.append("<p>" + _.capitalize(game.winner) + " wins</p>");
+  $newGame.attr("disabled", false);
+  $hit.attr("disabled", true);
+  $stay.attr("disabled", true);
 }
 
 function clearTable() {
   $dealer.empty();
   $player.empty();
+  $winner.empty();
   console.log("--table cleared--");
 }
 
@@ -184,6 +187,7 @@ function stay() {
     game.dealerTotal >= game.playerTotal ?
       (game.winner = "dealer", score -= 1, console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal)) :
       (game.winner = "player", score += 1, console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal));
+    gameEnd();
   }
 }
 
@@ -197,12 +201,12 @@ function updateScore() {
 
 function updateCount(card) {
   if (isNaN(Number(card)) || card === "10") {
-    game.count -= 1;
+    count -= 1;
   } else if (card < 7) {
-    game.count += 1;
+    count += 1;
   }
   $count.empty();
-  $count.append("<p>Count: " + game.count + "</p>");
+  $count.append("<p>Count: " + count + "</p>");
 }
 
 // JSON request function with JSONP proxy
