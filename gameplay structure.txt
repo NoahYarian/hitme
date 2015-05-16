@@ -1,0 +1,26 @@
+when the page loads you can click somewhere to deal cards
+4 cards are dealt, one face down for the dealer
+player total and dealer total checked
+
+if dealer total = 21, player loses —> clear table
+else if player total = 21, player wins —> clear table
+else prompt player: hit or stay?
+
+  if player hits:
+    if player total = 21, player wins —> clear table
+    else if player total > 21, player loses —> clear table
+    else prompt player (loop)
+
+  else if player stays:
+    dealer's card turned face up
+    if dealer total < 17, dealer hits
+      if dealer total = 21, player loses —> clear table
+      else if dealer total > 21, player wins —> clear table
+      else if dealer total > 16, dealer stays
+        if dealer total >= player total, player loses --> clear table
+        else player wins --> clear table
+      else dealer hits (loop)
+    else dealer stays
+      if dealer total >= player total, player loses --> clear table
+      else player wins --> clear table
+
