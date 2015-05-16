@@ -60,34 +60,44 @@ function deal() {
 }
 
 function draw4() {
-  drawCard("dealer", cardBack);
-  drawCard("player");
-  drawCard("dealer");
-  drawCard("player");
+  drawCard({
+    person: "dealer",
+    image: cardBack
+  });
+  drawCard({
+    person: "player"
+  });
+  drawCard({
+    person: "dealer"
+  });
+  drawCard({
+    person: "player"
+  });
 }
 
-function drawCard(person, image) {
+function drawCard(options) {
   var cardURL = API + "draw/" + deckId + "/?count=1";
   getJSON(cardURL, function(data, cb) {
-    if (image) {
-      var html = "<img class='cardImage' src='" + image + "'>";
-      $("." + person).append(html);
+    if (options.image) {
+      var html = "<img class='cardImage' src='" + options.image + "'>";
+      $("." + options.person).append(html);
       game.hiddenCard = data.cards[0].image;
     } else {
       var html = "<img class='cardImage' src='" + data.cards[0].image + "'>";
-      $("." + person).append(html);
+      $("." + options.person).append(html);
     }
-    if (person === "dealer") {
+    if (options.person === "dealer") {
       game.dealerHand.push(data.cards[0].value);
       checkDealerTotal();
       console.log("dealer's hand - " + game.dealerHand + " **** dealer is at " + game.dealerTotal);
-    } else if (person === "player") {
+    } else if (options.person === "player") {
       game.playerHand.push(data.cards[0].value);
       checkPlayerTotal();
       console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal);
     }
     checkVictory();
     updateCount(data.cards[0].value);
+    typeof options.callback === 'function' && options.callback();
   });
 }
 
@@ -153,6 +163,7 @@ function checkVictory() {
   }
 
   if (game.winner !== "") {
+    flipCard();
     updateScore();
     gameEnd();
   }
@@ -175,14 +186,19 @@ function clearTable() {
 
 function hit() {
   console.log("hit");
-  drawCard("player");
+  drawCard({
+    person: "player"
+  });
 }
 
 function stay() {
   console.log("stay");
   flipCard();
   if (game.winner === "" && game.dealerTotal < 17) {
-    drawCard("dealer");
+    drawCard({
+      person: "dealer",
+      callback: stay
+    });
   } else {
     game.dealerTotal >= game.playerTotal ?
       (game.winner = "dealer", score -= 1, console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal)) :
@@ -192,6 +208,8 @@ function stay() {
 }
 
 function flipCard() {
+  var $flipped = $(".dealer .cardImage");
+  $flipped.first().attr("src", game.hiddenCard);
 }
 
 function updateScore() {
