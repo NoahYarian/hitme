@@ -75,26 +75,41 @@ function draw4() {
   });
 }
 
+
+
 function drawCard(options) {
   var cardURL = API + "draw/" + deckId + "/?count=1";
   getJSON(cardURL, function(data, cb) {
-    if (options.image) {
-      var html = "<img class='cardImage' src='" + options.image + "'>";
-      $("." + options.person).append(html);
-      game.hiddenCard = data.cards[0].image;
-    } else {
-      var html = "<img class='cardImage' src='" + cardImage(data) + "'>";
-      $("." + options.person).append(html);
-    }
-    if (options.person === "dealer") {
-      game.dealerHand.push(data.cards[0].value);
-      checkDealerTotal();
-      console.log("dealer's hand - " + game.dealerHand + " **** dealer is at " + game.dealerTotal);
-    } else if (options.person === "player") {
-      game.playerHand.push(data.cards[0].value);
-      checkPlayerTotal();
-      console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal);
-    }
+    options.image
+      ? (var html = "<img class='cardImage' src='" + options.image + "'>",
+        $("." + options.person).append(html),
+        game.hiddenCard = cardImage(data))
+      : (var html = "<img class='cardImage' src='" + cardImage(data) + "'>",
+        $("." + options.person).append(html));
+    options.person === "dealer"
+      ? (game.dealerHand.push(data.cards[0].value),
+        checkTotal("dealer"),
+        console.log("dealer's hand - " + game.dealerHand + " **** dealer is at " + game.dealerTotal))
+      : (game.playerHand.push(data.cards[0].value),
+        checkTotal("player"),
+        console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal));
+    //if (options.image) {
+      //var html = "<img class='cardImage' src='" + options.image + "'>";
+      //$("." + options.person).append(html);
+      //game.hiddenCard = cardImage(data);
+    //} else {
+      //var html = "<img class='cardImage' src='" + cardImage(data) + "'>";
+      //$("." + options.person).append(html);
+    //}
+    //if (options.person === "dealer") {
+      //game.dealerHand.push(data.cards[0].value);
+      //checkTotal("dealer");
+      //console.log("dealer's hand - " + game.dealerHand + " **** dealer is at " + game.dealerTotal);
+    //} else if (options.person === "player") {
+      //game.playerHand.push(data.cards[0].value);
+      //checkTotal("player");
+      //console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal);
+    //}
     checkVictory();
     updateCount(data.cards[0].value);
     typeof options.callback === 'function' && options.callback();
@@ -108,45 +123,67 @@ function cardImage(data) {
   return filename;
 }
 
-function checkPlayerTotal() {
-  game.playerTotal = 0;
-  game.playerHand.forEach(function(card) {
+function checkTotal(person) {
+  var total = 0;
+  var hand = person === "dealer" ? game.dealerHand : game.playerHand;
+  hand.forEach(function(card) {
     if (card === "KING" || card === "QUEEN" || card === "JACK") {
-      game.playerTotal += 10;
+      total += 10;
     } else if (!isNaN(card)) {
-      game.playerTotal += Number(card);
+      total += Number(card);
     }
   });
-  game.playerHand.forEach(function(card) {
+  hand.forEach(function(card) {
     if (card === "ACE") {
-      if (game.playerTotal <= 10) {
-        game.playerTotal += 11;
+      if (total <= 10) {
+        total += 11;
       } else {
-        game.playerTotal += 1;
+        total += 1;
       }
     }
   });
+  person === "dealer" ? game.dealerTotal = total : game.playerTotal = total;
 }
 
-function checkDealerTotal() {
-  game.dealerTotal = 0;
-  game.dealerHand.forEach(function(card) {
-    if (card === "KING" || card === "QUEEN" || card === "JACK") {
-      game.dealerTotal += 10;
-    } else if (!isNaN(card)) {
-      game.dealerTotal += Number(card);
-    }
-  });
-  game.dealerHand.forEach(function(card) {
-    if (card === "ACE") {
-      if (game.dealerTotal <= 10) {
-        game.dealerTotal += 11;
-      } else {
-        game.dealerTotal += 1;
-      }
-    }
-  });
-}
+//function checkPlayerTotal() {
+  //game.playerTotal = 0;
+  //game.playerHand.forEach(function(card) {
+    //if (card === "KING" || card === "QUEEN" || card === "JACK") {
+      //game.playerTotal += 10;
+    //} else if (!isNaN(card)) {
+      //game.playerTotal += Number(card);
+    //}
+  //});
+  //game.playerHand.forEach(function(card) {
+    //if (card === "ACE") {
+      //if (game.playerTotal <= 10) {
+        //game.playerTotal += 11;
+      //} else {
+        //game.playerTotal += 1;
+      //}
+    //}
+  //});
+//}
+
+//function checkDealerTotal() {
+  //game.dealerTotal = 0;
+  //game.dealerHand.forEach(function(card) {
+    //if (card === "KING" || card === "QUEEN" || card === "JACK") {
+      //game.dealerTotal += 10;
+    //} else if (!isNaN(card)) {
+      //game.dealerTotal += Number(card);
+    //}
+  //});
+  //game.dealerHand.forEach(function(card) {
+    //if (card === "ACE") {
+      //if (game.dealerTotal <= 10) {
+        //game.dealerTotal += 11;
+      //} else {
+        //game.dealerTotal += 1;
+      //}
+    //}
+  //});
+//}
 
 function checkVictory() {
   if (game.dealerTotal === 21) {

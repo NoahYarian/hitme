@@ -8,17 +8,16 @@ html
     link(rel='stylesheet', href='css/main.css')
   body
     .container
-      h1 Snack Pack Black Jack
+      .table
+        .dealer
+        .player
+        button.newGame
+        button.hit(disabled) hit
+        button.stay(disabled) stay
       .scoreBoard
         .score Score: 0
         .count Count: 0
         .winner
-      .buttons
-        button.newGame deal cards
-        button.hit(disabled) hit
-        button.stay(disabled) stay
-      .dealer
-      .player
     script(src="lib/build.js")
     script(src="main.js")
 

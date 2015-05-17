@@ -7,6 +7,10 @@ p {
   margin: 0;
 }
 
+body {
+  background: black;
+}
+
 .scoreBoard {
   background: black;
 
@@ -16,7 +20,7 @@ p {
   }
 }
 .score {
-  color: red;
+  color: green;
 }
 
 .count {
@@ -29,6 +33,50 @@ p {
 
 button:disabled {
   display: none;
+}
+
+.table {
+  background-image: url("../images/table-graphic.jpg");
+  background-size: contain;
+  position: absolute;
+  left: 50%;
+  margin-left: -480px;
+  top: 50%;
+  margin-top: -270px;
+  width: 960px;
+  height: 540px;
+  border: 2px solid white;
+}
+
+.dealer {
+  position: absolute;
+  top: 50px;
+  left: 350px;
+}
+
+.player {
+  position: absolute;
+  top: 250px;
+  left: 350px;
+}
+
+.newGame {
+  position: absolute;
+  top: 323px;
+  left: 433px;
+  height: 99px;
+  width: 108px;
+  background: none;
+  border: none;
+  &:active {
+    outline: none;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  &[disabled]:hover {
+    cursor: initial;
+  }
 }
 
 .cardImage {
