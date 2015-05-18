@@ -60,6 +60,10 @@ button:disabled {
   left: 350px;
 }
 
+img.dealer:nth-child(n + 2), img.player:nth-child(n + 2) {
+  margin-right: -20px;
+}
+
 .newGame {
   position: absolute;
   top: 323px;
@@ -79,7 +83,29 @@ button:disabled {
   }
 }
 
+.hit {
+  position: absolute;
+  top: 450px;
+  left: 377px;
+  color: black;
+  background: yellowgreen;
+  font-size: 2em;
+  padding: 10px;
+}
+
+.stay {
+    position: absolute;
+  top: 450px;
+  left: 478px;
+  color: black;
+  background: yellowgreen;
+  font-size: 2em;
+  padding: 10px;
+}
+
 .cardImage {
   width: 113px;
   height: 157px;
 }
+
+
