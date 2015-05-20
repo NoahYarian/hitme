@@ -22,9 +22,13 @@ var $dealer = $(".dealer");
 var $player = $(".player");
 
 //button click listeners
-$newGame.click(newGame);
-$hit.click(hit);
-$stay.click(stay);
+$("button").on("click", function () {
+  $(".buttonClick").trigger("load");
+  $(".buttonClick").trigger("play");
+});
+$newGame.on("click", newGame);
+$hit.on("click", hit);
+$stay.on("click", stay);
 
 //game object
 function Game() {
@@ -46,7 +50,8 @@ function deal() {
   $newGame.attr("disabled", true);
   $hit.attr("disabled", false);
   $stay.attr("disabled", false);
-
+  $(".cardPackage").trigger("load");
+  $(".cardPackage").trigger("play");
   if (deckId === "") {
     getJSON(newDeckURL, function(data) {
       deckId = data.deck_id;
@@ -79,14 +84,8 @@ function drawCard(options) {
   var cardURL = API + "draw/" + deckId + "/?count=1";
   getJSON(cardURL, function(data, cb) {
     var html;
-    // if (options.image) {
-    //     var html = "<img class='cardImage' src='" + options.image + "'>";
-    //     $("." + options.person).append(html);
-    //     game.hiddenCard = cardImage(data);
-    // } else {
-    //     var html = "<img class='cardImage' src='" + cardImage(data) + "'>";
-    //     $("." + options.person).append(html);
-    // }
+    $(".cardPlace").trigger("load");
+    $(".cardPlace").trigger("play");
     options.image ? (
       html = "<img class='cardImage' src='" + options.image + "'>",
       $("." + options.person).append(html),
@@ -170,9 +169,15 @@ function checkVictory() {
 function gameEnd() {
   $winner.empty();
   if (game.winner === "push") {
-    $winner.append("<p>" + _.capitalize(game.winner) + "</p>");
-  } else {
-    $winner.append("<p>" + _.capitalize(game.winner) + " wins</p>");
+    $winner.append("<p>Push</p>");
+  } else if (game.winner === "dealer") {
+    $(".lose").trigger("load");
+    $(".lose").trigger("play");
+    $winner.append("<p>Dealer wins</p>");
+  } else if (game.winner === "player") {
+    $(".win").trigger("load");
+    $(".win").trigger("play");
+    $winner.append("<p>Player wins</p>");
   }
   $newGame.attr("disabled", false);
   $hit.attr("disabled", true);
@@ -188,6 +193,8 @@ function clearTable() {
 
 function hit() {
   console.log("hit");
+  $(".buttonClick").trigger("load");
+  $(".buttonClick").trigger("play");
   drawCard({
     person: "player"
   });
@@ -235,7 +242,7 @@ function updateCount(card) {
 
 // JSON request function with JSONP proxy
 function getJSON(url, cb) {
-  var JSONP_PROXY = 'https://jsonp.afeld.me/?url='
+  var JSONP_PROXY = 'https://jsonp.afeld.me/?url=';
   // THIS WILL ADD THE CROSS ORIGIN HEADERS
   var request = new XMLHttpRequest();
   request.open('GET', JSONP_PROXY + url);
