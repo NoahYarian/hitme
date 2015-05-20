@@ -27,7 +27,7 @@
     "bowcat": "0.0.4",
     "http-server": "^0.8.0",
     "jade": "git+https://github.com/jadejs/jade.git",
-    "node-sass": "^3.1.0",
+    "node-sass": "^3.1.1",
     "nodemon": "^1.3.7"
   }
 }

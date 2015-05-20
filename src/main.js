@@ -78,19 +78,32 @@ function draw4() {
 function drawCard(options) {
   var cardURL = API + "draw/" + deckId + "/?count=1";
   getJSON(cardURL, function(data, cb) {
-    options.image
-      ? (var html = "<img class='cardImage' src='" + options.image + "'>",
-        $("." + options.person).append(html),
-        game.hiddenCard = cardImage(data))
-      : (var html = "<img class='cardImage' src='" + cardImage(data) + "'>",
-        $("." + options.person).append(html));
-    options.person === "dealer"
-      ? (game.dealerHand.push(data.cards[0].value),
-        checkTotal("dealer"),
-        console.log("dealer's hand - " + game.dealerHand + " **** dealer is at " + game.dealerTotal))
-      : (game.playerHand.push(data.cards[0].value),
-        checkTotal("player"),
-        console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal));
+    var html;
+    // if (options.image) {
+    //     var html = "<img class='cardImage' src='" + options.image + "'>";
+    //     $("." + options.person).append(html);
+    //     game.hiddenCard = cardImage(data);
+    // } else {
+    //     var html = "<img class='cardImage' src='" + cardImage(data) + "'>";
+    //     $("." + options.person).append(html);
+    // }
+    options.image ? (
+      html = "<img class='cardImage' src='" + options.image + "'>",
+      $("." + options.person).append(html),
+      game.hiddenCard = cardImage(data)
+    ) : (
+      html = "<img class='cardImage' src='" + cardImage(data) + "'>",
+      $("." + options.person).append(html)
+    );
+    options.person === "dealer" ? (
+      game.dealerHand.push(data.cards[0].value),
+      checkTotal("dealer"),
+      console.log("dealer's hand - " + game.dealerHand + " **** dealer is at " + game.dealerTotal)
+    ) : (
+      game.playerHand.push(data.cards[0].value),
+      checkTotal("player"),
+      console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal)
+    );
     checkVictory();
     updateCount(data.cards[0].value);
     typeof options.callback === 'function' && options.callback();
