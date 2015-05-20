@@ -16,7 +16,7 @@ cp -r src public
 ./node_modules/.bin/node-sass src/_styles/main.scss public/css/main.css
 ./node_modules/.bin/node-sass \
   --source-comments \
-  --output-style compressed \
+  --output-style nested \
   --source-map-embed \
   --recursive \
   --watch \

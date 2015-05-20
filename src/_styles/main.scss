@@ -65,22 +65,62 @@ img.dealer:nth-child(n + 2), img.player:nth-child(n + 2) {
   margin-right: -20px;
 }
 
-.newGame {
+// .newGame {
+//   position: absolute;
+//   top: 323px;
+//   left: 433px;
+//   height: 99px;
+//   width: 108px;
+//   background: none;
+//   border: none;
+//   &:active {
+//     outline: none;
+//   }
+//   &:hover {
+//     cursor: pointer;
+//   }
+//   &[disabled]:hover {
+//     cursor: initial;
+//   }
+// }
+
+.announce {
   position: absolute;
-  top: 323px;
-  left: 433px;
-  height: 99px;
-  width: 108px;
-  background: none;
-  border: none;
-  &:active {
-    outline: none;
+  width: 250px;
+  height: 100px;
+  top: 200px;
+  left: 357px;
+  background: black;
+  display: none;
+  &.bust {
+    border: 6px double red;
+    display: block;
+    p {
+      color: red;
+      font-size: 4em;
+      text-align: center;
+      margin-top: 13px;
+    }
   }
-  &:hover {
-    cursor: pointer;
+  &.win {
+    border: 6px double lime;
+    display: block;
+    p {
+      color: lime;
+      font-size: 3em;
+      text-align: center;
+      margin-top: 23px;
+    }
   }
-  &[disabled]:hover {
-    cursor: initial;
+  &.push {
+    border: 6px double white;
+    display: block;
+    p {
+      color: rgb(173, 199, 138);
+      font-size: 4em;
+      text-align: center;
+      margin-top: 13px;
+    }
   }
 }
 
