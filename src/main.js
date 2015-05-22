@@ -177,55 +177,14 @@ function checkTotal(person) {
     } else if (card === "ACE") {
       aces += 1;
     }
-    // if (card === "ACE") {
-    //   if (total <= 10) {
-    //     total += 11;
-    //   } else {
-    //     total += 1;
-    //   }
-    // }
   });
 
-//Inelegant solution to the "AAJ" problem. If the aces are drawn first
-//they will cause the player to bust without this extra logic. This does not account
-//for all possibilities but the chances of being dealt something like "AAAAAA5"
-//are astronomically low.
-  switch (aces) {
-    case 1 :
-      if (total <= 10) {
-        total += 11;
-      } else {
-        total += 1;
-      }
-      break;
-    case 2 :
-      if (total <= 9) {
-        total += 12;
-      } else {
-        total += 2;
-      }
-      break;
-    case 3 :
-      if (total <= 8) {
-        total += 13;
-      } else {
-        total += 3;
-      }
-      break;
-    case 4 :
-      if (total <= 7) {
-        total += 14;
-      } else {
-        total += 4;
-      }
-      break;
-    case 5 :
-      if (total <= 6) {
-        total += 15;
-      } else {
-        total += 5;
-      }
-      break;
+  if (aces > 0) {
+    if (total + aces + 10 > 21) {
+      total += aces;
+    } else {
+      total += aces + 10;
+    }
   }
 
   person === "dealer" ? game.dealerTotal = total : game.playerTotal = total;
