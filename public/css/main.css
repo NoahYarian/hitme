@@ -1,41 +1,31 @@
-/* line 1, /Users/noah/code/hitme/src/_styles/main.scss */
 h1 {
   color: white;
   background: black; }
 
-/* line 6, /Users/noah/code/hitme/src/_styles/main.scss */
 p {
   margin: 0; }
 
-/* line 10, /Users/noah/code/hitme/src/_styles/main.scss */
 body {
   background: black; }
 
-/* line 14, /Users/noah/code/hitme/src/_styles/main.scss */
 .scoreBoard {
   background: black; }
-  /* line 17, /Users/noah/code/hitme/src/_styles/main.scss */
   .scoreBoard div {
     display: inline-block;
     font-size: 2em; }
 
-/* line 22, /Users/noah/code/hitme/src/_styles/main.scss */
 .score {
   color: green; }
 
-/* line 26, /Users/noah/code/hitme/src/_styles/main.scss */
 .count {
   color: yellow; }
 
-/* line 30, /Users/noah/code/hitme/src/_styles/main.scss */
 .winner {
   color: blue; }
 
-/* line 34, /Users/noah/code/hitme/src/_styles/main.scss */
 button:disabled {
   display: none; }
 
-/* line 38, /Users/noah/code/hitme/src/_styles/main.scss */
 .table {
   background-image: url("../images/table-graphic.jpg");
   background-size: contain;
@@ -48,64 +38,52 @@ button:disabled {
   height: 540px;
   border: 2px solid white; }
 
-/* line 51, /Users/noah/code/hitme/src/_styles/main.scss */
 .dealer {
   position: absolute;
   top: 50px;
   left: 350px;
   perspective: 800px; }
 
-/* line 58, /Users/noah/code/hitme/src/_styles/main.scss */
 .player {
   position: absolute;
   top: 250px;
   left: 350px; }
 
-/* line 64, /Users/noah/code/hitme/src/_styles/main.scss */
 img.dealer:nth-child(n + 2), img.player:nth-child(n + 2) {
   margin-right: -20px; }
 
-/* line 87, /Users/noah/code/hitme/src/_styles/main.scss */
 .announce {
   position: absolute;
   width: 250px;
-  height: 100px;
   top: 200px;
   left: 357px;
   background: black;
   display: none; }
-  /* line 95, /Users/noah/code/hitme/src/_styles/main.scss */
-  .announce.bust {
+  .announce.lose {
     border: 6px double red;
-    display: block; }
-    /* line 98, /Users/noah/code/hitme/src/_styles/main.scss */
-    .announce.bust p {
+    display: table-cell;
+    vertical-align: middle; }
+    .announce.lose p {
       color: red;
       font-size: 4em;
-      text-align: center;
-      margin-top: 13px; }
-  /* line 105, /Users/noah/code/hitme/src/_styles/main.scss */
+      text-align: center; }
   .announce.win {
     border: 6px double lime;
-    display: block; }
-    /* line 108, /Users/noah/code/hitme/src/_styles/main.scss */
+    display: table-cell;
+    vertical-align: middle; }
     .announce.win p {
       color: lime;
       font-size: 3em;
-      text-align: center;
-      margin-top: 23px; }
-  /* line 115, /Users/noah/code/hitme/src/_styles/main.scss */
+      text-align: center; }
   .announce.push {
     border: 6px double white;
-    display: block; }
-    /* line 118, /Users/noah/code/hitme/src/_styles/main.scss */
+    display: table-cell;
+    vertical-align: middle; }
     .announce.push p {
       color: #adc78a;
       font-size: 4em;
-      text-align: center;
-      margin-top: 13px; }
+      text-align: center; }
 
-/* line 127, /Users/noah/code/hitme/src/_styles/main.scss */
 .hit {
   position: absolute;
   top: 450px;
@@ -115,7 +93,6 @@ img.dealer:nth-child(n + 2), img.player:nth-child(n + 2) {
   font-size: 2em;
   padding: 10px; }
 
-/* line 137, /Users/noah/code/hitme/src/_styles/main.scss */
 .stay {
   position: absolute;
   top: 450px;
@@ -125,7 +102,6 @@ img.dealer:nth-child(n + 2), img.player:nth-child(n + 2) {
   font-size: 2em;
   padding: 10px; }
 
-/* line 147, /Users/noah/code/hitme/src/_styles/main.scss */
 .cardImage {
   width: 113px;
   height: 157px; }

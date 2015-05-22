@@ -10,7 +10,6 @@
     "start": "npm run build; npm run server",
     "deploy": "npm run build; ./deploy.sh",
     "watch": "./watch.sh; npm run server"
-
   },
   "repository": {
     "type": "git",

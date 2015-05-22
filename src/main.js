@@ -15,20 +15,40 @@ var $stay = $(".stay");
 //scoreboard divs
 var $score = $(".score");
 var $count = $(".count");
-var $winner = $(".winner");
+var $announce = $(".announce")
+var $announceText = $(".announce p")
 
 //card hand divs
 var $dealer = $(".dealer");
 var $player = $(".player");
 
+//create audio elements
+var cardPlace = document.createElement('audio');
+cardPlace.setAttribute('src', 'sounds/cardPlace1.wav');
+
+var cardPackage = document.createElement('audio');
+cardPackage.setAttribute('src', 'sounds/cardOpenPackage2.wav');
+
+var buttonClick = document.createElement('audio');
+buttonClick.setAttribute('src', 'sounds/click1.wav');
+
+var winWav = document.createElement('audio');
+winWav.setAttribute('src', 'sounds/chipsHandle5.wav');
+
+var loseWav = document.createElement('audio');
+loseWav.setAttribute('src', 'sounds/cardShove3.wav');
+
 //button click listeners
 $("button").on("click", function () {
-  $(".buttonClick").trigger("load");
-  $(".buttonClick").trigger("play");
+  buttonClick.load();
+  buttonClick.play();
 });
 $newGame.on("click", newGame);
 $hit.on("click", hit);
-$stay.on("click", stay);
+$stay.on("click", function () {
+  console.log("stay");
+  stay();
+});
 
 //game object
 function Game() {
@@ -50,8 +70,8 @@ function deal() {
   $newGame.attr("disabled", true);
   $hit.attr("disabled", false);
   $stay.attr("disabled", false);
-  $(".cardPackage").trigger("load");
-  $(".cardPackage").trigger("play");
+  cardPackage.load();
+  cardPackage.play();
   if (deckId === "") {
     getJSON(newDeckURL, function(data) {
       deckId = data.deck_id;
@@ -84,8 +104,8 @@ function drawCard(options) {
   var cardURL = API + "draw/" + deckId + "/?count=1";
   getJSON(cardURL, function(data, cb) {
     var html;
-    $(".cardPlace").trigger("load");
-    $(".cardPlace").trigger("play");
+    cardPlace.load();
+    cardPlace.play();
     options.image ? (
       html = "<img class='cardImage' src='" + options.image + "'>",
       $("." + options.person).append(html),
@@ -109,11 +129,39 @@ function drawCard(options) {
   });
 }
 
-function cardImage(data) {
-  var cardValue = data.cards[0].value;
-  var cardSuit = data.cards[0].suit;
-  var filename = "../images/cards/" + cardValue + "_of_" + cardSuit.toLowerCase() + ".svg";
-  return filename;
+function hit() {
+  console.log("hit");
+  drawCard({
+    person: "player"
+  });
+}
+
+function stay() {
+  flipCard();
+  if (game.winner === "" && game.dealerTotal < 17) {
+    console.log("dealer hits");
+    drawCard({
+      person: "dealer",
+      callback: stay
+    });
+  } else if (game.dealerTotal === game.playerTotal) {
+    game.winner = "push";
+    announce("PUSH");
+    console.log("push");
+  } else if (game.dealerTotal < 22) {
+    game.dealerTotal > game.playerTotal ? (
+      game.winner = "dealer",
+      announce("YOU LOSE"),
+      score -= 1,
+      console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal)
+    ) : (
+      game.winner = "player",
+      announce("YOU WIN"),
+      score += 1,
+      console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal)
+    );
+  }
+  gameEnd();
 }
 
 function checkTotal(person) {
@@ -143,42 +191,34 @@ function checkVictory() {
     console.log("dealer has 21");
     game.winner = "dealer";
     score -= 1;
+    announce("YOU LOSE");
   } else if (game.dealerTotal > 21) {
     console.log("dealer busts");
     game.winner = "player";
     score += 1;
+    announce("YOU WIN");
   }
 
   if (game.playerTotal === 21) {
     console.log("player has 21");
     game.winner = "player";
     score += 1;
+    announce("21!");
   } else if (game.playerTotal > 21) {
     console.log("player busts");
     game.winner = "dealer";
     score -= 1;
+    announce("BUST");
   }
 
   if (game.winner !== "") {
     flipCard();
-    updateScore();
     gameEnd();
   }
 }
 
 function gameEnd() {
-  $winner.empty();
-  if (game.winner === "push") {
-    $winner.append("<p>Push</p>");
-  } else if (game.winner === "dealer") {
-    $(".lose").trigger("load");
-    $(".lose").trigger("play");
-    $winner.append("<p>Dealer wins</p>");
-  } else if (game.winner === "player") {
-    $(".win").trigger("load");
-    $(".win").trigger("play");
-    $winner.append("<p>Player wins</p>");
-  }
+  updateScore();
   $newGame.attr("disabled", false);
   $hit.attr("disabled", true);
   $stay.attr("disabled", true);
@@ -187,37 +227,30 @@ function gameEnd() {
 function clearTable() {
   $dealer.empty();
   $player.empty();
-  $winner.empty();
+  $announce.removeClass("win lose push");
   console.log("--table cleared--");
 }
 
-function hit() {
-  console.log("hit");
-  $(".buttonClick").trigger("load");
-  $(".buttonClick").trigger("play");
-  drawCard({
-    person: "player"
-  });
+function cardImage(data) {
+  var cardValue = data.cards[0].value;
+  var cardSuit = data.cards[0].suit;
+  var filename = "../images/cards/" + cardValue + "_of_" + cardSuit.toLowerCase() + ".svg";
+  return filename;
 }
 
-function stay() {
-  console.log("stay");
-  flipCard();
-  if (game.winner === "" && game.dealerTotal < 17) {
-    drawCard({
-      person: "dealer",
-      callback: stay
-    });
-  } else if (game.dealerTotal === game.playerTotal) {
-    game.winner = "push";
-    console.log("push");
-    gameEnd();
-  } else if (game.dealerTotal < 22) {
-    game.dealerTotal > game.playerTotal ?
-      (game.winner = "dealer", score -= 1, console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal)) :
-      (game.winner = "player", score += 1, console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal));
-    gameEnd();
+function announce(text) {
+  if (game.winner === "dealer") {
+    $announce.addClass("lose");
+    loseWav.load();
+    loseWav.play();
+  } else if (game.winner === "player") {
+    $announce.addClass("win");
+    winWav.load();
+    winWav.play();
+  } else if (game.winner === "push") {
+    $announce.addClass("push");
   }
+  $announceText.text(text);
 }
 
 function flipCard() {

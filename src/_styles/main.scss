@@ -87,39 +87,38 @@ img.dealer:nth-child(n + 2), img.player:nth-child(n + 2) {
 .announce {
   position: absolute;
   width: 250px;
-  height: 100px;
   top: 200px;
   left: 357px;
   background: black;
   display: none;
-  &.bust {
+  &.lose {
     border: 6px double red;
-    display: block;
+    display: table-cell;
+    vertical-align: middle;
     p {
       color: red;
       font-size: 4em;
       text-align: center;
-      margin-top: 13px;
     }
   }
   &.win {
     border: 6px double lime;
-    display: block;
+    display: table-cell;
+    vertical-align: middle;
     p {
       color: lime;
       font-size: 3em;
       text-align: center;
-      margin-top: 23px;
     }
   }
   &.push {
     border: 6px double white;
-    display: block;
+    display: table-cell;
+    vertical-align: middle;
     p {
       color: rgb(173, 199, 138);
       font-size: 4em;
       text-align: center;
-      margin-top: 13px;
     }
   }
 }
