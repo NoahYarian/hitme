@@ -7,8 +7,7 @@ var deckId = "";
 var score = 0;
 var count = 0;
 var bank = 500;
-var initialWager = 0;
-var betAmt = 10;
+var betAmt = 25;
 
 //buttons
 var $bet = $(".bet");
@@ -75,6 +74,7 @@ $chip1.click(function () {
   $chip5.attr("id", "");
   $chip25.attr("id", "");
   $chip100.attr("id", "");
+  betAmt = 1;
 });
 
 $chip5.click(function () {
@@ -82,6 +82,7 @@ $chip5.click(function () {
   $chip1.attr("id", "");
   $chip25.attr("id", "");
   $chip100.attr("id", "");
+  betAmt = 5;
 });
 
 $chip25.click(function () {
@@ -89,6 +90,7 @@ $chip25.click(function () {
   $chip5.attr("id", "");
   $chip1.attr("id", "");
   $chip100.attr("id", "");
+  betAmt = 25;
 });
 
 $chip100.click(function () {
@@ -96,6 +98,7 @@ $chip100.click(function () {
   $chip5.attr("id", "");
   $chip25.attr("id", "");
   $chip1.attr("id", "");
+  betAmt = 100;
 });
 
 //game object
