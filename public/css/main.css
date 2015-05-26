@@ -97,11 +97,11 @@ button:active {
 /* line 97, /Users/noah/code/hitme/src/_styles/main.scss */
 .dealer img, .player img {
   margin-right: -90px;
-  transform: rotateX(19deg); }
+  transform: rotateX(16deg); }
 
 /* line 102, /Users/noah/code/hitme/src/_styles/main.scss */
-.player img {
-  transform: rotateX(19deg); }
+.dealer img {
+  transform: scale(0.85) rotateX(16deg); }
 
 /* line 106, /Users/noah/code/hitme/src/_styles/main.scss */
 .announce {
@@ -149,7 +149,7 @@ button:active {
       text-align: center; }
 
 /* line 151, /Users/noah/code/hitme/src/_styles/main.scss */
-.currentBet {
+.currentWager {
   position: absolute;
   top: 200px;
   left: 20px; }
@@ -161,16 +161,7 @@ button:active {
   left: 20px; }
 
 /* line 163, /Users/noah/code/hitme/src/_styles/main.scss */
-.bet10 {
-  position: absolute;
-  top: 400px;
-  left: 30px; }
-
-/* line 169, /Users/noah/code/hitme/src/_styles/main.scss */
-.newGame {
-  position: absolute;
-  top: 450px;
-  left: 442px;
+button {
   background: rgba(154, 185, 133, 0.63);
   font-size: 2em;
   padding: 8px 24px;
@@ -179,33 +170,27 @@ button:active {
   color: #3b0600;
   font-family: Tahoma; }
 
-/* line 182, /Users/noah/code/hitme/src/_styles/main.scss */
-.hit {
+/* line 174, /Users/noah/code/hitme/src/_styles/main.scss */
+.buttons {
   position: absolute;
-  top: 450px;
-  left: 377px;
-  background: rgba(154, 185, 133, 0.63);
-  font-size: 2em;
-  padding: 8px 24px;
-  border: 4px groove rgba(154, 185, 133, 0.63);
-  border-radius: 16px 16px;
-  color: #3b0600;
-  font-family: Tahoma; }
+  display: flex;
+  justify-content: space-around;
+  top: 448px;
+  left: 308px;
+  width: 361px; }
 
-/* line 195, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 183, /Users/noah/code/hitme/src/_styles/main.scss */
+.bet:disabled {
+  display: inline-block;
+  background: rgba(154, 185, 133, 0.25);
+  border: 4px groove rgba(154, 185, 133, 0.25);
+  color: rgba(59, 6, 0, 0.4); }
+
+/* line 205, /Users/noah/code/hitme/src/_styles/main.scss */
 .stay {
-  position: absolute;
-  top: 450px;
-  left: 478px;
-  background: rgba(154, 185, 133, 0.63);
-  font-size: 2em;
-  padding: 8px 16px;
-  border: 4px groove rgba(154, 185, 133, 0.63);
-  border-radius: 16px 16px;
-  color: #3b0600;
-  font-family: Tahoma; }
+  padding: 8px 16px; }
 
-/* line 208, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 211, /Users/noah/code/hitme/src/_styles/main.scss */
 .cardImage {
   width: 113px;
   height: 157px; }

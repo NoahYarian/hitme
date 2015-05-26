@@ -96,11 +96,11 @@ button:active {
 
 .dealer img, .player img {
   margin-right: -90px;
-  transform: rotateX(19deg);
+  transform: rotateX(16deg);
 }
 
-.player img {
-  transform: rotateX(19deg);
+.dealer img {
+  transform: scale(.85) rotateX(16deg);
 }
 
 .announce {
@@ -148,7 +148,7 @@ button:active {
   }
 }
 
-.currentBet {
+.currentWager {
   position: absolute;
   top: 200px;
   left: 20px;
@@ -160,16 +160,8 @@ button:active {
   left: 20px;
 }
 
-.bet10 {
-  position: absolute;
-  top: 400px;
-  left: 30px;
-}
-
-.newGame {
-  position: absolute;
-  top: 450px;
-  left: 442px;
+button {
+  //position: absolute;
   background: rgba(154, 185, 133, 0.63);
   font-size: 2em;
   padding: 8px 24px;
@@ -179,30 +171,41 @@ button:active {
   font-family: Tahoma;
 }
 
-.hit {
+.buttons {
   position: absolute;
-  top: 450px;
-  left: 377px;
-  background: rgba(154, 185, 133, 0.63);
-  font-size: 2em;
-  padding: 8px 24px;
-  border: 4px groove rgba(154, 185, 133, 0.63);
-  border-radius: 16px 16px;
-  color: rgb(59, 6, 0);
-  font-family: Tahoma;
+  display: flex;
+  justify-content: space-around;
+  top: 448px;
+  left: 308px;
+  width: 361px;
 }
+
+.bet:disabled {
+  display: inline-block;
+  background: rgba(154, 185, 133, 0.25);
+  border: 4px groove rgba(154, 185, 133, 0.25);
+  color: rgba(59,6,0,0.4);
+}
+
+// .bet {
+//   top: 400px;
+//   left: 30px;
+// }
+
+// .newGame {
+//   top: 450px;
+//   left: 442px;
+// }
+
+// .hit {
+//   top: 450px;
+//   left: 377px;
+// }
 
 .stay {
-  position: absolute;
-  top: 450px;
-  left: 478px;
-  background: rgba(154, 185, 133, 0.63);
-  font-size: 2em;
+//   top: 450px;
+//   left: 478px;
   padding: 8px 16px;
-  border: 4px groove rgba(154, 185, 133, 0.63);
-  border-radius: 16px 16px;
-  color: rgb(59, 6, 0);
-  font-family: Tahoma;
 }
 
 .cardImage {

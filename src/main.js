@@ -7,13 +7,17 @@ var deckId = "";
 var score = 0;
 var count = 0;
 var bank = 500;
+var initialWager = 0;
+var betAmt = 10;
 
 //buttons
+var $bet = $(".bet");
 var $newGame = $(".newGame");
 var $hit = $(".hit");
 var $stay = $(".stay");
 
 //scoreboard divs
+var $bank = $(".bank");
 var $score = $(".score");
 var $count = $(".count");
 var $announce = $(".announce")
@@ -48,8 +52,9 @@ $("button").on("click", function () {
   buttonClick.load();
   buttonClick.play();
 });
-$(".bet10").click(function () {
-  bet(10);
+$bet.click(function () {
+  bet(betAmt);
+  $bet.attr("disabled", true);
 });
 $newGame.on("click", newGame);
 $hit.on("click", hit);
@@ -71,6 +76,7 @@ function Game() {
 
 function newGame() {
   game = new Game();
+  bet(betAmt);
   deal();
 }
 
@@ -135,6 +141,7 @@ function drawCard(options) {
     checkVictory();
     updateCount(data.cards[0].value);
     typeof options.callback === 'function' && options.callback();
+    $bet.attr("disabled", false);
   });
 }
 
@@ -157,20 +164,22 @@ function stay() {
     game.winner = "push";
     announce("PUSH");
     console.log("push");
+    gameEnd();
   } else if (game.dealerTotal < 22) {
     game.dealerTotal > game.playerTotal ? (
       game.winner = "dealer",
       announce("YOU LOSE"),
       score -= 1,
-      console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal)
+      console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal),
+      gameEnd()
     ) : (
       game.winner = "player",
       announce("YOU WIN"),
       score += 1,
-      console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal)
+      console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal),
+      gameEnd()
     );
   }
-  gameEnd();
 }
 
 function checkTotal(person) {
@@ -196,8 +205,13 @@ function checkTotal(person) {
     }
   }
 
-  person === "dealer" ? game.dealerTotal = total : game.playerTotal = total;
-  person === "player" ? $playerTotal.text(game.playerTotal) : $dealerTotal.text(game.dealerTotal);
+  person === "dealer" ? (
+    game.dealerTotal = total,
+    $dealerTotal.text(game.dealerTotal)
+  ) : (
+    game.playerTotal = total,
+    $playerTotal.text(game.playerTotal)
+  );
 }
 
 function checkVictory() {
@@ -211,9 +225,7 @@ function checkVictory() {
     game.winner = "player";
     score += 1;
     announce("YOU WIN");
-  }
-
-  if (game.playerTotal === 21) {
+  } else if (game.playerTotal === 21) {
     console.log("player has 21");
     game.winner = "player";
     score += 1;
@@ -225,15 +237,22 @@ function checkVictory() {
     announce("BUST");
   }
 
-  if (game.winner) {
-    flipCard();
-    $dealerTotal.removeClass("hidden");
-    gameEnd();
-  }
+  game.winner && gameEnd();
 }
 
 function gameEnd() {
+  if (game.winner === "player") {
+    bank += (game.wager * 2);
+    console.log("giving player " + (game.wager * 2));
+  } else if (game.winner === "push") {
+    bank += game.wager;
+    console.log("giving player " + game.wager);
+  }
+  $bank.text("Bank: " + bank);
+  flipCard();
   updateScore();
+  $dealerTotal.removeClass("hidden");
+  $bet.attr("disabled", true);
   $newGame.attr("disabled", false);
   $hit.attr("disabled", true);
   $stay.attr("disabled", true);
@@ -271,8 +290,8 @@ function announce(text) {
 }
 
 function flipCard() {
-  var $flipped = $(".dealer .cardImage");
-  $flipped.first().attr("src", game.hiddenCard);
+  var $flipped = $(".dealer .cardImage").first();
+  $flipped.attr("src", game.hiddenCard);
 }
 
 function updateScore() {
@@ -293,8 +312,10 @@ function updateCount(card) {
 function bet(amt) {
   game.wager += amt;
   bank -= amt;
-  $(".currentBet").text(game.wager);
-  $(".bank").text(bank);
+  $bank.text("Bank: " + bank);
+  $(".currentWager").text("Current Wager: " + game.wager);
+  console.log("betting " + amt);
+  console.log("wager at " + game.wager);
 }
 
 // JSON request function with JSONP proxy
