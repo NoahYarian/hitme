@@ -1,41 +1,57 @@
 /* line 1, /Users/noah/code/hitme/src/_styles/main.scss */
+.hidden {
+  display: none; }
+
+/* line 5, /Users/noah/code/hitme/src/_styles/main.scss */
+.perspectiveReset {
+  perspective: 400px; }
+
+/* line 9, /Users/noah/code/hitme/src/_styles/main.scss */
 h1 {
   color: white;
   background: black; }
 
-/* line 6, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 14, /Users/noah/code/hitme/src/_styles/main.scss */
 p {
   margin: 0; }
 
-/* line 10, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 18, /Users/noah/code/hitme/src/_styles/main.scss */
 body {
   background: black; }
 
-/* line 14, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 22, /Users/noah/code/hitme/src/_styles/main.scss */
 .scoreBoard {
   background: black; }
-  /* line 17, /Users/noah/code/hitme/src/_styles/main.scss */
+  /* line 25, /Users/noah/code/hitme/src/_styles/main.scss */
   .scoreBoard div {
     display: inline-block;
     font-size: 2em; }
 
-/* line 22, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 30, /Users/noah/code/hitme/src/_styles/main.scss */
 .score {
   color: green; }
 
-/* line 26, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 34, /Users/noah/code/hitme/src/_styles/main.scss */
 .count {
   color: yellow; }
 
-/* line 30, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 38, /Users/noah/code/hitme/src/_styles/main.scss */
 .winner {
   color: blue; }
 
-/* line 34, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 42, /Users/noah/code/hitme/src/_styles/main.scss */
 button:disabled {
   display: none; }
 
-/* line 38, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 46, /Users/noah/code/hitme/src/_styles/main.scss */
+button:focus {
+  outline: none; }
+
+/* line 50, /Users/noah/code/hitme/src/_styles/main.scss */
+button:active {
+  color: white; }
+
+/* line 54, /Users/noah/code/hitme/src/_styles/main.scss */
 .table {
   background-image: url("../images/table-graphic.jpg");
   background-size: contain;
@@ -48,7 +64,7 @@ button:disabled {
   height: 540px;
   border: 2px solid white; }
 
-/* line 51, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 67, /Users/noah/code/hitme/src/_styles/main.scss */
 .dealerTotal {
   position: absolute;
   top: 134px;
@@ -56,7 +72,7 @@ button:disabled {
   color: white;
   font-size: 1.5em; }
 
-/* line 59, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 75, /Users/noah/code/hitme/src/_styles/main.scss */
 .playerTotal {
   position: absolute;
   top: 340px;
@@ -64,39 +80,35 @@ button:disabled {
   color: white;
   font-size: 1.5em; }
 
-/* line 67, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 83, /Users/noah/code/hitme/src/_styles/main.scss */
 .dealer {
   position: absolute;
   top: 65px;
   left: 413px;
   perspective: 400px; }
 
-/* line 74, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 90, /Users/noah/code/hitme/src/_styles/main.scss */
 .player {
   position: absolute;
   top: 267px;
   left: 413px;
   perspective: 400px; }
 
-/* line 81, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 97, /Users/noah/code/hitme/src/_styles/main.scss */
 .dealer img, .player img {
   margin-right: -90px;
   transform: rotateX(19deg); }
 
-/* line 86, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 102, /Users/noah/code/hitme/src/_styles/main.scss */
 .player img {
   transform: rotateX(19deg); }
 
-/* line 90, /Users/noah/code/hitme/src/_styles/main.scss */
-.perspectiveReset {
-  perspective: 400px; }
-
-/* line 94, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 106, /Users/noah/code/hitme/src/_styles/main.scss */
 .announce {
   position: absolute;
   background: black;
   display: none; }
-  /* line 98, /Users/noah/code/hitme/src/_styles/main.scss */
+  /* line 110, /Users/noah/code/hitme/src/_styles/main.scss */
   .announce.lose {
     border: 6px double red;
     display: table-cell;
@@ -104,12 +116,12 @@ button:disabled {
     width: 336px;
     top: 186px;
     left: 311px; }
-    /* line 105, /Users/noah/code/hitme/src/_styles/main.scss */
+    /* line 117, /Users/noah/code/hitme/src/_styles/main.scss */
     .announce.lose p {
       color: red;
       font-size: 4em;
       text-align: center; }
-  /* line 111, /Users/noah/code/hitme/src/_styles/main.scss */
+  /* line 123, /Users/noah/code/hitme/src/_styles/main.scss */
   .announce.win {
     border: 6px double lime;
     display: table-cell;
@@ -117,12 +129,12 @@ button:disabled {
     width: 230px;
     top: 205px;
     left: 366px; }
-    /* line 118, /Users/noah/code/hitme/src/_styles/main.scss */
+    /* line 130, /Users/noah/code/hitme/src/_styles/main.scss */
     .announce.win p {
       color: lime;
       font-size: 3em;
       text-align: center; }
-  /* line 124, /Users/noah/code/hitme/src/_styles/main.scss */
+  /* line 136, /Users/noah/code/hitme/src/_styles/main.scss */
   .announce.push {
     border: 6px double white;
     display: table-cell;
@@ -130,43 +142,70 @@ button:disabled {
     width: 208px;
     top: 186px;
     left: 380px; }
-    /* line 131, /Users/noah/code/hitme/src/_styles/main.scss */
+    /* line 143, /Users/noah/code/hitme/src/_styles/main.scss */
     .announce.push p {
       color: #adc78a;
       font-size: 4em;
       text-align: center; }
 
-/* line 139, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 151, /Users/noah/code/hitme/src/_styles/main.scss */
+.currentBet {
+  position: absolute;
+  top: 200px;
+  left: 20px; }
+
+/* line 157, /Users/noah/code/hitme/src/_styles/main.scss */
+.bank {
+  position: absolute;
+  top: 180px;
+  left: 20px; }
+
+/* line 163, /Users/noah/code/hitme/src/_styles/main.scss */
+.bet10 {
+  position: absolute;
+  top: 400px;
+  left: 30px; }
+
+/* line 169, /Users/noah/code/hitme/src/_styles/main.scss */
 .newGame {
   position: absolute;
   top: 450px;
   left: 442px;
-  color: black;
-  background: yellowgreen;
+  background: rgba(154, 185, 133, 0.63);
   font-size: 2em;
-  padding: 10px; }
+  padding: 8px 24px;
+  border: 4px groove rgba(154, 185, 133, 0.63);
+  border-radius: 16px 16px;
+  color: #3b0600;
+  font-family: Tahoma; }
 
-/* line 149, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 182, /Users/noah/code/hitme/src/_styles/main.scss */
 .hit {
   position: absolute;
   top: 450px;
   left: 377px;
-  color: black;
-  background: yellowgreen;
+  background: rgba(154, 185, 133, 0.63);
   font-size: 2em;
-  padding: 10px; }
+  padding: 8px 24px;
+  border: 4px groove rgba(154, 185, 133, 0.63);
+  border-radius: 16px 16px;
+  color: #3b0600;
+  font-family: Tahoma; }
 
-/* line 159, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 195, /Users/noah/code/hitme/src/_styles/main.scss */
 .stay {
   position: absolute;
   top: 450px;
   left: 478px;
-  color: black;
-  background: yellowgreen;
+  background: rgba(154, 185, 133, 0.63);
   font-size: 2em;
-  padding: 10px; }
+  padding: 8px 16px;
+  border: 4px groove rgba(154, 185, 133, 0.63);
+  border-radius: 16px 16px;
+  color: #3b0600;
+  font-family: Tahoma; }
 
-/* line 169, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 208, /Users/noah/code/hitme/src/_styles/main.scss */
 .cardImage {
   width: 113px;
   height: 157px; }

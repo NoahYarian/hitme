@@ -6,6 +6,7 @@ var game;
 var deckId = "";
 var score = 0;
 var count = 0;
+var bank = 500;
 
 //buttons
 var $newGame = $(".newGame");
@@ -22,6 +23,7 @@ var $announceText = $(".announce p")
 var $dealer = $(".dealer");
 var $player = $(".player");
 
+//hand total divs
 var $dealerTotal = $(".dealerTotal");
 var $playerTotal = $(".playerTotal");
 
@@ -46,6 +48,9 @@ $("button").on("click", function () {
   buttonClick.load();
   buttonClick.play();
 });
+$(".bet10").click(function () {
+  bet(10);
+});
 $newGame.on("click", newGame);
 $hit.on("click", hit);
 $stay.on("click", function () {
@@ -60,6 +65,7 @@ function Game() {
   this.playerHand = [];
   this.dealerTotal = 0;
   this.playerTotal = 0;
+  this.wager = 0;
   this.winner = "";
 }
 
@@ -141,7 +147,7 @@ function hit() {
 
 function stay() {
   flipCard();
-  if (game.winner === "" && game.dealerTotal < 17) {
+  if (!game.winner && game.dealerTotal < 17) {
     console.log("dealer hits");
     drawCard({
       person: "dealer",
@@ -191,11 +197,7 @@ function checkTotal(person) {
   }
 
   person === "dealer" ? game.dealerTotal = total : game.playerTotal = total;
-  displayTotal(person);
-}
-
-function displayTotal (person) {
-  person === "player" ? $playerTotal.empty().append(game.playerTotal) : game.winner !== "" ? $dealerTotal.empty().append(game.dealerTotal) : $dealerTotal.empty();
+  person === "player" ? $playerTotal.text(game.playerTotal) : $dealerTotal.text(game.dealerTotal);
 }
 
 function checkVictory() {
@@ -223,8 +225,9 @@ function checkVictory() {
     announce("BUST");
   }
 
-  if (game.winner !== "") {
+  if (game.winner) {
     flipCard();
+    $dealerTotal.removeClass("hidden");
     gameEnd();
   }
 }
@@ -239,6 +242,7 @@ function gameEnd() {
 function clearTable() {
   $dealer.empty();
   $player.empty();
+  $dealerTotal.addClass("hidden");
   $playerTotal.empty();
   $announce.removeClass("win lose push");
   console.log("--table cleared--");
@@ -269,8 +273,6 @@ function announce(text) {
 function flipCard() {
   var $flipped = $(".dealer .cardImage");
   $flipped.first().attr("src", game.hiddenCard);
-  $flipped.first().addClass("perspectiveReset");
-  $flipped.first().removeClass("perspectiveReset");
 }
 
 function updateScore() {
@@ -286,6 +288,13 @@ function updateCount(card) {
   }
   $count.empty();
   $count.append("<p>Count: " + count + "</p>");
+}
+
+function bet(amt) {
+  game.wager += amt;
+  bank -= amt;
+  $(".currentBet").text(game.wager);
+  $(".bank").text(bank);
 }
 
 // JSON request function with JSONP proxy

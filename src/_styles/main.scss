@@ -1,3 +1,11 @@
+.hidden {
+  display: none;
+}
+
+.perspectiveReset {
+  perspective: 400px;
+}
+
 h1 {
   color: white;
   background: black;
@@ -33,6 +41,14 @@ body {
 
 button:disabled {
   display: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:active {
+  color: white;
 }
 
 .table {
@@ -87,10 +103,6 @@ button:disabled {
   transform: rotateX(19deg);
 }
 
-.perspectiveReset {
-  perspective: 400px;
-}
-
 .announce {
   position: absolute;
   background: black;
@@ -136,34 +148,61 @@ button:disabled {
   }
 }
 
+.currentBet {
+  position: absolute;
+  top: 200px;
+  left: 20px;
+}
+
+.bank {
+  position: absolute;
+  top: 180px;
+  left: 20px;
+}
+
+.bet10 {
+  position: absolute;
+  top: 400px;
+  left: 30px;
+}
+
 .newGame {
   position: absolute;
   top: 450px;
   left: 442px;
-  color: black;
-  background: yellowgreen;
+  background: rgba(154, 185, 133, 0.63);
   font-size: 2em;
-  padding: 10px;
+  padding: 8px 24px;
+  border: 4px groove rgba(154, 185, 133, 0.63);
+  border-radius: 16px 16px;
+  color: rgb(59, 6, 0);
+  font-family: Tahoma;
 }
 
 .hit {
   position: absolute;
   top: 450px;
   left: 377px;
-  color: black;
-  background: yellowgreen;
+  background: rgba(154, 185, 133, 0.63);
   font-size: 2em;
-  padding: 10px;
+  padding: 8px 24px;
+  border: 4px groove rgba(154, 185, 133, 0.63);
+  border-radius: 16px 16px;
+  color: rgb(59, 6, 0);
+  font-family: Tahoma;
 }
 
 .stay {
-    position: absolute;
+  position: absolute;
   top: 450px;
   left: 478px;
-  color: black;
-  background: yellowgreen;
+  background: rgba(154, 185, 133, 0.63);
   font-size: 2em;
-  padding: 10px;
+  padding: 8px 16px;
+  border: 4px groove rgba(154, 185, 133, 0.63);
+  border-radius: 16px 16px;
+  color: rgb(59, 6, 0);
+  font-family: Tahoma;
 }
 
 .cardImage {
