@@ -9,9 +9,11 @@ var count = 0;
 var bank = 500;
 var betAmt = 25;
 var betChangeAllowed = true;
+var splitAllowed = false;
+var isFirstTurn = true;
 
 //buttons
-var $bet = $(".bet");
+var $doubleDown = $(".doubleDown");
 var $newGame = $(".newGame");
 var $hit = $(".hit");
 var $stay = $(".stay");
@@ -53,18 +55,24 @@ winWav.setAttribute('src', 'sounds/chipsHandle5.wav');
 var loseWav = document.createElement('audio');
 loseWav.setAttribute('src', 'sounds/cardShove3.wav');
 
+//populate bank amount on page load
+$bank.text("Bank: " + bank);
+
 //button click listeners
-$("button").on("click", function () {
+$("button").click(function () {
   buttonClick.load();
   buttonClick.play();
 });
-$bet.click(function () {
+$doubleDown.click(function () {
+  $doubleDown.attr("disabled", true);
   bet(betAmt);
-  $bet.attr("disabled", true);
+  console.log("double down");
+  hit();
+  stay();
 });
-$newGame.on("click", newGame);
-$hit.on("click", hit);
-$stay.on("click", function () {
+$newGame.click(newGame);
+$hit.click(hit);
+$stay.click(function () {
   console.log("stay");
   stay();
 });
@@ -128,23 +136,35 @@ function newGame() {
 }
 
 function deal() {
-  clearTable();
-  $newGame.attr("disabled", true);
-  $hit.attr("disabled", false);
-  $stay.attr("disabled", false);
-  cardPackage.load();
-  cardPackage.play();
-  if (deckId === "") {
-    getJSON(newDeckURL, function(data) {
-      deckId = data.deck_id;
-      console.log("About to deal from new deck");
+  isFirstTurn = true;
+  if (bank >= betAmt) {
+    clearTable();
+    $newGame.attr("disabled", true);
+    $hit.attr("disabled", false);
+    $stay.attr("disabled", false);
+    cardPackage.load();
+    cardPackage.play();
+    if (deckId === "") {
+      getJSON(newDeckURL, function(data) {
+        deckId = data.deck_id;
+        console.log("About to deal from new deck");
+        draw4();
+      });
+    } else {
+      console.log("About to deal from current deck");
       draw4();
-    });
+    }
+    betChangeAllowed = false;
+    if (game.playerHand[0] === game.playerHand[1]) {
+      splitAllowed = true;
+    }
+    if (bank >= betAmt) {
+      $doubleDown.attr("disabled", false);
+      $doubleDown.attr("id", "");
+    }
   } else {
-    console.log("About to deal from current deck");
-    draw4();
+    console.log("You're too broke!");
   }
-  betChangeAllowed = false;
 }
 
 function draw4() {
@@ -186,8 +206,6 @@ function drawCard(options) {
       checkTotal("player"),
       console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal)
     );
-    $bet.attr("disabled", false);
-    $bet.attr("id", "");
     checkVictory();
     updateCount(data.cards[0].value);
     typeof options.callback === 'function' && options.callback();
@@ -199,6 +217,10 @@ function hit() {
   drawCard({
     person: "player"
   });
+  if (isFirstTurn) {
+    isFirstTurn = false;
+    $doubleDown.attr("disabled", true);
+  }
 }
 
 function stay() {
@@ -264,7 +286,11 @@ function checkTotal(person) {
 }
 
 function checkVictory() {
-  if (game.dealerTotal === 21) {
+  if (game.dealerTotal === 21 && game.playerTotal === 21) {
+    console.log("push");
+    game.winner = "push";
+    announce("PUSH");
+  } else if (game.dealerTotal === 21) {
     console.log("dealer has 21");
     game.winner = "dealer";
     score -= 1;
@@ -279,6 +305,9 @@ function checkVictory() {
     game.winner = "player";
     score += 1;
     announce("21!");
+    if (game.playerHand.length === 2) {
+      game.wager *= 1.25;
+    }
   } else if (game.playerTotal > 21) {
     console.log("player busts");
     game.winner = "dealer";
@@ -295,20 +324,21 @@ function gameEnd() {
     console.log("giving player " + (game.wager * 2));
   } else if (game.winner === "push") {
     bank += game.wager;
-    console.log("giving player " + game.wager);
+    console.log("returning player's " + game.wager);
   }
   $bank.text("Bank: " + bank);
   betChangeAllowed = true;
   flipCard();
   updateScore();
   $dealerTotal.removeClass("hidden");
-  $bet.attr("id", "bet-hidden");
+  $doubleDown.attr("id", "doubleDown-hidden");
   $newGame.attr("disabled", false);
   $hit.attr("disabled", true);
   $stay.attr("disabled", true);
 }
 
 function clearTable() {
+  isFirstTurn = true;
   $dealer.empty();
   $player.empty();
   $dealerTotal.addClass("hidden");
