@@ -8,6 +8,7 @@ var score = 0;
 var count = 0;
 var bank = 500;
 var betAmt = 25;
+var betChangeAllowed = true;
 
 //buttons
 var $bet = $(".bet");
@@ -70,35 +71,43 @@ $stay.on("click", function () {
 
 //chip click listeners
 $chip1.click(function () {
-  $chip1.attr("id", "selectedBet");
-  $chip5.attr("id", "");
-  $chip25.attr("id", "");
-  $chip100.attr("id", "");
-  betAmt = 1;
+  if (betChangeAllowed) {
+    $chip1.attr("id", "selectedBet");
+    $chip5.attr("id", "");
+    $chip25.attr("id", "");
+    $chip100.attr("id", "");
+    betAmt = 1;
+  }
 });
 
 $chip5.click(function () {
-  $chip5.attr("id", "selectedBet");
-  $chip1.attr("id", "");
-  $chip25.attr("id", "");
-  $chip100.attr("id", "");
-  betAmt = 5;
+  if (betChangeAllowed) {
+    $chip5.attr("id", "selectedBet");
+    $chip1.attr("id", "");
+    $chip25.attr("id", "");
+    $chip100.attr("id", "");
+    betAmt = 5;
+  }
 });
 
 $chip25.click(function () {
-  $chip25.attr("id", "selectedBet");
-  $chip5.attr("id", "");
-  $chip1.attr("id", "");
-  $chip100.attr("id", "");
-  betAmt = 25;
+  if (betChangeAllowed) {
+    $chip25.attr("id", "selectedBet");
+    $chip5.attr("id", "");
+    $chip1.attr("id", "");
+    $chip100.attr("id", "");
+    betAmt = 25;
+  }
 });
 
 $chip100.click(function () {
-  $chip100.attr("id", "selectedBet");
-  $chip5.attr("id", "");
-  $chip25.attr("id", "");
-  $chip1.attr("id", "");
-  betAmt = 100;
+  if (betChangeAllowed) {
+    $chip100.attr("id", "selectedBet");
+    $chip5.attr("id", "");
+    $chip25.attr("id", "");
+    $chip1.attr("id", "");
+    betAmt = 100;
+  }
 });
 
 //game object
@@ -135,6 +144,7 @@ function deal() {
     console.log("About to deal from current deck");
     draw4();
   }
+  betChangeAllowed = false;
 }
 
 function draw4() {
@@ -288,6 +298,7 @@ function gameEnd() {
     console.log("giving player " + game.wager);
   }
   $bank.text("Bank: " + bank);
+  betChangeAllowed = true;
   flipCard();
   updateScore();
   $dealerTotal.removeClass("hidden");
@@ -349,12 +360,16 @@ function updateCount(card) {
 }
 
 function bet(amt) {
-  game.wager += amt;
-  bank -= amt;
-  $bank.text("Bank: " + bank);
-  $(".currentWager").text("Current Wager: " + game.wager);
-  console.log("betting " + amt);
-  console.log("wager at " + game.wager);
+  if (bank >= amt) {
+    game.wager += amt;
+    bank -= amt;
+    $bank.text("Bank: " + bank);
+    $(".currentWager").text("Current Wager: " + game.wager);
+    console.log("betting " + amt);
+    console.log("wager at " + game.wager);
+  } else {
+    console.log("Insufficient funds.");
+  }
 }
 
 // JSON request function with JSONP proxy
