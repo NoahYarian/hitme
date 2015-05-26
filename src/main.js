@@ -16,6 +16,12 @@ var $newGame = $(".newGame");
 var $hit = $(".hit");
 var $stay = $(".stay");
 
+//chips
+var $chip1 = $(".chip1");
+var $chip5 = $(".chip5");
+var $chip25 = $(".chip25");
+var $chip100 = $(".chip100");
+
 //scoreboard divs
 var $bank = $(".bank");
 var $score = $(".score");
@@ -61,6 +67,35 @@ $hit.on("click", hit);
 $stay.on("click", function () {
   console.log("stay");
   stay();
+});
+
+//chip click listeners
+$chip1.click(function () {
+  $chip1.attr("id", "selectedBet");
+  $chip5.attr("id", "");
+  $chip25.attr("id", "");
+  $chip100.attr("id", "");
+});
+
+$chip5.click(function () {
+  $chip5.attr("id", "selectedBet");
+  $chip1.attr("id", "");
+  $chip25.attr("id", "");
+  $chip100.attr("id", "");
+});
+
+$chip25.click(function () {
+  $chip25.attr("id", "selectedBet");
+  $chip5.attr("id", "");
+  $chip1.attr("id", "");
+  $chip100.attr("id", "");
+});
+
+$chip100.click(function () {
+  $chip100.attr("id", "selectedBet");
+  $chip5.attr("id", "");
+  $chip25.attr("id", "");
+  $chip1.attr("id", "");
 });
 
 //game object

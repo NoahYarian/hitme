@@ -198,3 +198,38 @@ button {
 .cardImage {
   width: 113px;
   height: 157px; }
+
+/* line 220, /Users/noah/code/hitme/src/_styles/main.scss */
+.chip {
+  position: absolute;
+  width: 60px;
+  -webkit-filter: opacity(25%); }
+
+/* line 226, /Users/noah/code/hitme/src/_styles/main.scss */
+.chip:hover {
+  cursor: pointer;
+  -webkit-filter: opacity(100%); }
+
+/* line 231, /Users/noah/code/hitme/src/_styles/main.scss */
+.chip1 {
+  top: 374px;
+  left: 8px; }
+
+/* line 236, /Users/noah/code/hitme/src/_styles/main.scss */
+.chip5 {
+  top: 395px;
+  left: 66px; }
+
+/* line 241, /Users/noah/code/hitme/src/_styles/main.scss */
+.chip25 {
+  top: 416px;
+  left: 124px; }
+
+/* line 246, /Users/noah/code/hitme/src/_styles/main.scss */
+.chip100 {
+  top: 437px;
+  left: 181px; }
+
+/* line 251, /Users/noah/code/hitme/src/_styles/main.scss */
+#selectedBet {
+  -webkit-filter: opacity(100%); }

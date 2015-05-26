@@ -217,4 +217,37 @@ button {
   height: 157px;
 }
 
+.chip {
+  position: absolute;
+  width: 60px;
+  -webkit-filter: opacity(25%);
+}
 
+.chip:hover {
+  cursor: pointer;
+  -webkit-filter: opacity(100%);
+}
+
+.chip1 {
+  top: 374px;
+  left: 8px;
+}
+
+.chip5 {
+  top: 395px;
+  left: 66px;
+}
+
+.chip25 {
+  top: 416px;
+  left: 124px;
+}
+
+.chip100 {
+  top: 437px;
+  left: 181px;
+}
+
+#selectedBet {
+  -webkit-filter: opacity(100%);
+}
