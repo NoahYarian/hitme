@@ -138,10 +138,11 @@ function drawCard(options) {
       checkTotal("player"),
       console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal)
     );
+    $bet.attr("disabled", false);
+    $bet.attr("id", "");
     checkVictory();
     updateCount(data.cards[0].value);
     typeof options.callback === 'function' && options.callback();
-    $bet.attr("disabled", false);
   });
 }
 
@@ -252,7 +253,7 @@ function gameEnd() {
   flipCard();
   updateScore();
   $dealerTotal.removeClass("hidden");
-  $bet.attr("disabled", true);
+  $bet.attr("id", "bet-hidden");
   $newGame.attr("disabled", false);
   $hit.attr("disabled", true);
   $stay.attr("disabled", true);

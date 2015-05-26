@@ -186,11 +186,15 @@ button {
   border: 4px groove rgba(154, 185, 133, 0.25);
   color: rgba(59, 6, 0, 0.4); }
 
-/* line 205, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 190, /Users/noah/code/hitme/src/_styles/main.scss */
+#bet-hidden {
+  display: none; }
+
+/* line 209, /Users/noah/code/hitme/src/_styles/main.scss */
 .stay {
   padding: 8px 16px; }
 
-/* line 211, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 215, /Users/noah/code/hitme/src/_styles/main.scss */
 .cardImage {
   width: 113px;
   height: 157px; }
