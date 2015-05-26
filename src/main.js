@@ -22,6 +22,9 @@ var $announceText = $(".announce p")
 var $dealer = $(".dealer");
 var $player = $(".player");
 
+var $dealerTotal = $(".dealerTotal");
+var $playerTotal = $(".playerTotal");
+
 //create audio elements
 var cardPlace = document.createElement('audio');
 cardPlace.setAttribute('src', 'sounds/cardPlace1.wav');
@@ -188,6 +191,11 @@ function checkTotal(person) {
   }
 
   person === "dealer" ? game.dealerTotal = total : game.playerTotal = total;
+  displayTotal(person);
+}
+
+function displayTotal (person) {
+  person === "player" ? $playerTotal.empty().append(game.playerTotal) : game.winner !== "" ? $dealerTotal.empty().append(game.dealerTotal) : $dealerTotal.empty();
 }
 
 function checkVictory() {
@@ -231,6 +239,7 @@ function gameEnd() {
 function clearTable() {
   $dealer.empty();
   $player.empty();
+  $playerTotal.empty();
   $announce.removeClass("win lose push");
   console.log("--table cleared--");
 }
@@ -260,6 +269,8 @@ function announce(text) {
 function flipCard() {
   var $flipped = $(".dealer .cardImage");
   $flipped.first().attr("src", game.hiddenCard);
+  $flipped.first().addClass("perspectiveReset");
+  $flipped.first().removeClass("perspectiveReset");
 }
 
 function updateScore() {

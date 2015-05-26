@@ -48,53 +48,60 @@ button:disabled {
   border: 2px solid white;
 }
 
+.dealerTotal {
+  position: absolute;
+  top: 134px;
+  left: 384px;
+  color: white;
+  font-size: 1.5em;
+}
+
+.playerTotal {
+  position: absolute;
+  top: 340px;
+  left: 383px;
+  color: white;
+  font-size: 1.5em;
+}
+
 .dealer {
   position: absolute;
-  top: 50px;
-  left: 350px;
-  perspective: 800px;
+  top: 65px;
+  left: 413px;
+  perspective: 400px;
 }
 
 .player {
   position: absolute;
-  top: 250px;
-  left: 350px;
+  top: 267px;
+  left: 413px;
+  perspective: 400px;
 }
 
-img.dealer:nth-child(n + 2), img.player:nth-child(n + 2) {
-  margin-right: -20px;
+.dealer img, .player img {
+  margin-right: -90px;
+  transform: rotateX(19deg);
 }
 
-// .newGame {
-//   position: absolute;
-//   top: 323px;
-//   left: 433px;
-//   height: 99px;
-//   width: 108px;
-//   background: none;
-//   border: none;
-//   &:active {
-//     outline: none;
-//   }
-//   &:hover {
-//     cursor: pointer;
-//   }
-//   &[disabled]:hover {
-//     cursor: initial;
-//   }
-// }
+.player img {
+  transform: rotateX(19deg);
+}
+
+.perspectiveReset {
+  perspective: 400px;
+}
 
 .announce {
   position: absolute;
-  width: 250px;
-  top: 200px;
-  left: 357px;
   background: black;
   display: none;
   &.lose {
     border: 6px double red;
     display: table-cell;
     vertical-align: middle;
+    width: 336px;
+    top: 186px;
+    left: 311px;
     p {
       color: red;
       font-size: 4em;
@@ -105,6 +112,9 @@ img.dealer:nth-child(n + 2), img.player:nth-child(n + 2) {
     border: 6px double lime;
     display: table-cell;
     vertical-align: middle;
+    width: 230px;
+    top: 205px;
+    left: 366px;
     p {
       color: lime;
       font-size: 3em;
@@ -115,12 +125,25 @@ img.dealer:nth-child(n + 2), img.player:nth-child(n + 2) {
     border: 6px double white;
     display: table-cell;
     vertical-align: middle;
+    width: 208px;
+    top: 186px;
+    left: 380px;
     p {
       color: rgb(173, 199, 138);
       font-size: 4em;
       text-align: center;
     }
   }
+}
+
+.newGame {
+  position: absolute;
+  top: 450px;
+  left: 442px;
+  color: black;
+  background: yellowgreen;
+  font-size: 2em;
+  padding: 10px;
 }
 
 .hit {
