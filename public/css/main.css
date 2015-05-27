@@ -126,9 +126,9 @@ button:active {
     border: 6px double lime;
     display: table-cell;
     vertical-align: middle;
-    width: 230px;
+    width: 313px;
     top: 205px;
-    left: 366px; }
+    left: 324px; }
     /* line 130, /Users/noah/code/hitme/src/_styles/main.scss */
     .announce.win p {
       color: lime;

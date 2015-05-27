@@ -11,6 +11,8 @@ var betAmt = 25;
 var betChangeAllowed = true;
 var splitAllowed = false;
 var isFirstTurn = true;
+var isPlayersTurn = true;
+var isDoubledDown = false;
 
 //buttons
 var $doubleDown = $(".doubleDown");
@@ -67,8 +69,8 @@ $doubleDown.click(function () {
   $doubleDown.attr("disabled", true);
   bet(betAmt);
   console.log("double down");
+  isDoubledDown = true;
   hit();
-  stay();
 });
 $newGame.click(newGame);
 $hit.click(hit);
@@ -87,7 +89,6 @@ $chip1.click(function () {
     betAmt = 1;
   }
 });
-
 $chip5.click(function () {
   if (betChangeAllowed) {
     $chip5.attr("id", "selectedBet");
@@ -97,7 +98,6 @@ $chip5.click(function () {
     betAmt = 5;
   }
 });
-
 $chip25.click(function () {
   if (betChangeAllowed) {
     $chip25.attr("id", "selectedBet");
@@ -107,7 +107,6 @@ $chip25.click(function () {
     betAmt = 25;
   }
 });
-
 $chip100.click(function () {
   if (betChangeAllowed) {
     $chip100.attr("id", "selectedBet");
@@ -215,7 +214,11 @@ function drawCard(options) {
 function hit() {
   console.log("hit");
   drawCard({
-    person: "player"
+    person: "player",
+    callback: function () { if (isDoubledDown && !game.winner) {
+      stay();
+      };
+    }
   });
   if (isFirstTurn) {
     isFirstTurn = false;
@@ -227,6 +230,7 @@ function stay() {
   flipCard();
   if (!game.winner && game.dealerTotal < 17) {
     console.log("dealer hits");
+    isPlayersTurn = false;
     drawCard({
       person: "dealer",
       callback: stay
@@ -286,10 +290,28 @@ function checkTotal(person) {
 }
 
 function checkVictory() {
-  if (game.dealerTotal === 21 && game.playerTotal === 21) {
+  if (game.dealerTotal === 21 && game.dealerHand.length === 2 && game.playerTotal === 21 && game.playerHand.length === 2) {
+    console.log("double blackjack push!");
+    game.winner = "push";
+    announce("PUSH");
+  } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && game.playerTotal === 21) {
+    console.log("dealer has blackjack");
+    game.winner = "dealer";
+    score -= 1;
+    announce("YOU LOSE");
+  } else if (game.playerTotal === 21 && game.playerHand.length === 2) {
+    console.log("player has blackjack");
+    game.winner = "player";
+    score += 1;
+    game.wager *= 1.25;
+    announce("BLACKJACK!");
+  } else if (game.dealerTotal === 21 && game.playerTotal === 21) {
     console.log("push");
     game.winner = "push";
     announce("PUSH");
+  } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && isPlayersTurn) {
+    //do nothing
+    console.log("doing nothing..");
   } else if (game.dealerTotal === 21) {
     console.log("dealer has 21");
     game.winner = "dealer";
@@ -305,9 +327,6 @@ function checkVictory() {
     game.winner = "player";
     score += 1;
     announce("21!");
-    if (game.playerHand.length === 2) {
-      game.wager *= 1.25;
-    }
   } else if (game.playerTotal > 21) {
     console.log("player busts");
     game.winner = "dealer";
