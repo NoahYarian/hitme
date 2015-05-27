@@ -14,6 +14,7 @@ var isPlayersTurn = true;
 var isDoubledDown = false;
 
 //buttons
+var $split = $(".split");
 var $doubleDown = $(".doubleDown");
 var $newGame = $(".newGame");
 var $hit = $(".hit");
@@ -143,6 +144,8 @@ function deal() {
     $newGame.attr("disabled", true);
     $hit.attr("disabled", false);
     $stay.attr("disabled", false);
+    $doubleDown.attr("disabled", false);
+    $doubleDown.attr("id", "");
     cardPackage.load();
     cardPackage.play();
     if (deckId === "") {
@@ -156,13 +159,6 @@ function deal() {
       draw4();
     }
     betChangeAllowed = false;
-    if (game.playerHand[0] === game.playerHand[1]) {
-      splitAllowed = true;
-    }
-    if (bank >= betAmt) {
-      $doubleDown.attr("disabled", false);
-      $doubleDown.attr("id", "");
-    }
   }
 }
 
@@ -178,8 +174,25 @@ function draw4() {
     person: "dealer"
   });
   drawCard({
-    person: "player"
+    person: "player",
+    callback: checkSplit
   });
+}
+
+function checkSplit() {
+  var checkSplitArr = game.playerHand.map(function(card) {
+  if (card === "KING" || card === "QUEEN" || card === "JACK") {
+      return 10;
+    } else if (!isNaN(card)) {
+      return Number(card);
+    } else if (card === "ACE") {
+      return 1;
+    }
+  });
+  if (checkSplitArr[0] === checkSplitArr[1]) {
+    splitAllowed = true;
+    $split.attr("disabled", false);
+  }
 }
 
 function drawCard(options) {
@@ -341,11 +354,13 @@ function gameEnd() {
   betChangeAllowed = true;
   flipCard();
   $dealerTotal.removeClass("hidden");
-  $doubleDown.attr("id", "doubleDown-hidden");
   $newGame.attr("disabled", false);
   $hit.attr("disabled", true);
   $stay.attr("disabled", true);
   isDoubledDown = false;
+  $doubleDown.attr("id", "doubleDown-hidden");
+  splitAllowed = false;
+  $split.attr("disabled", true);
 }
 
 function clearTable() {
