@@ -4,7 +4,6 @@ var cardBack = "http://tinyurl.com/kqzzmbr";
 
 var game;
 var deckId = "";
-var score = 0;
 var count = 0;
 var bank = 500;
 var betAmt = 25;
@@ -26,12 +25,11 @@ var $chip5 = $(".chip5");
 var $chip25 = $(".chip25");
 var $chip100 = $(".chip100");
 
-//scoreboard divs
+//info divs
 var $bank = $(".bank");
-var $score = $(".score");
 var $count = $(".count");
-var $announce = $(".announce")
-var $announceText = $(".announce p")
+var $announce = $(".announce");
+var $announceText = $(".announce p");
 
 //card hand divs
 var $dealer = $(".dealer");
@@ -65,6 +63,7 @@ $("button").click(function () {
   buttonClick.load();
   buttonClick.play();
 });
+
 $doubleDown.click(function () {
   $doubleDown.attr("disabled", true);
   bet(betAmt);
@@ -72,8 +71,11 @@ $doubleDown.click(function () {
   isDoubledDown = true;
   hit();
 });
+
 $newGame.click(newGame);
+
 $hit.click(hit);
+
 $stay.click(function () {
   console.log("stay");
   stay();
@@ -161,8 +163,6 @@ function deal() {
       $doubleDown.attr("disabled", false);
       $doubleDown.attr("id", "");
     }
-  } else {
-    console.log("You're too broke!");
   }
 }
 
@@ -217,7 +217,7 @@ function hit() {
     person: "player",
     callback: function () { if (isDoubledDown && !game.winner) {
       stay();
-      };
+      }
     }
   });
   if (isFirstTurn) {
@@ -244,13 +244,11 @@ function stay() {
     game.dealerTotal > game.playerTotal ? (
       game.winner = "dealer",
       announce("YOU LOSE"),
-      score -= 1,
       console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal),
       gameEnd()
     ) : (
       game.winner = "player",
       announce("YOU WIN"),
-      score += 1,
       console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal),
       gameEnd()
     );
@@ -297,12 +295,10 @@ function checkVictory() {
   } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && game.playerTotal === 21) {
     console.log("dealer has blackjack");
     game.winner = "dealer";
-    score -= 1;
     announce("YOU LOSE");
   } else if (game.playerTotal === 21 && game.playerHand.length === 2) {
     console.log("player has blackjack");
     game.winner = "player";
-    score += 1;
     game.wager *= 1.25;
     announce("BLACKJACK!");
   } else if (game.dealerTotal === 21 && game.playerTotal === 21) {
@@ -311,26 +307,22 @@ function checkVictory() {
     announce("PUSH");
   } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && isPlayersTurn) {
     //do nothing
-    console.log("doing nothing..");
+    console.log("dealer has blackjack, doing nothing..");
   } else if (game.dealerTotal === 21) {
     console.log("dealer has 21");
     game.winner = "dealer";
-    score -= 1;
     announce("YOU LOSE");
   } else if (game.dealerTotal > 21) {
     console.log("dealer busts");
     game.winner = "player";
-    score += 1;
     announce("YOU WIN");
   } else if (game.playerTotal === 21) {
     console.log("player has 21");
     game.winner = "player";
-    score += 1;
     announce("21!");
   } else if (game.playerTotal > 21) {
     console.log("player busts");
     game.winner = "dealer";
-    score -= 1;
     announce("BUST");
   }
 
@@ -348,12 +340,12 @@ function gameEnd() {
   $bank.text("Bank: " + bank);
   betChangeAllowed = true;
   flipCard();
-  updateScore();
   $dealerTotal.removeClass("hidden");
   $doubleDown.attr("id", "doubleDown-hidden");
   $newGame.attr("disabled", false);
   $hit.attr("disabled", true);
   $stay.attr("disabled", true);
+  isDoubledDown = false;
 }
 
 function clearTable() {
@@ -393,11 +385,6 @@ function flipCard() {
   $flipped.attr("src", game.hiddenCard);
 }
 
-function updateScore() {
-  $score.empty();
-  $score.append("<p>Score: " + score + "</p>");
-}
-
 function updateCount(card) {
   if (isNaN(Number(card)) || card === "10") {
     count -= 1;
@@ -406,6 +393,14 @@ function updateCount(card) {
   }
   $count.empty();
   $count.append("<p>Count: " + count + "</p>");
+
+  if (count >= 20) {
+    $count.addClass("hot");
+  } else if (count > -20 && count < 20) {
+    $count.removeClass("hot cold");
+  } else if (count <= -20) {
+    $count.addClass("cold");
+  }
 }
 
 function bet(amt) {
@@ -432,7 +427,7 @@ function getJSON(url, cb) {
       cb(JSON.parse(request.responseText));
     } else {
       cb(JSON.parse(request.responseText));
-    }
+    };
   };
   request.send();
-}
+};

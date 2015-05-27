@@ -27,16 +27,23 @@ body {
     font-size: 2em;
   }
 }
-.score {
-  color: green;
-}
 
 .count {
   color: yellow;
-}
-
-.winner {
-  color: blue;
+  position: absolute;
+  top: 154px;
+  left: 18px;
+  padding: 2px;
+  &.hot {
+    color: red;
+    background: yellow;
+    font-weight: bold;
+  }
+  &.cold {
+    color: blue;
+    background: black;
+    font-weight: bold;
+  }
 }
 
 button:disabled {
@@ -191,24 +198,7 @@ button {
   display: none;
 }
 
-// .bet {
-//   top: 400px;
-//   left: 30px;
-// }
-
-// .newGame {
-//   top: 450px;
-//   left: 442px;
-// }
-
-// .hit {
-//   top: 450px;
-//   left: 377px;
-// }
-
 .stay {
-//   top: 450px;
-//   left: 478px;
   padding: 8px 16px;
 }
 
