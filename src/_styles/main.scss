@@ -2,10 +2,6 @@
   display: none;
 }
 
-.perspectiveReset {
-  perspective: 400px;
-}
-
 h1 {
   color: white;
   background: black;
@@ -17,15 +13,6 @@ p {
 
 body {
   background: black;
-}
-
-.scoreBoard {
-  background: black;
-
-  div {
-    display: inline-block;
-    font-size: 2em;
-  }
 }
 
 .count {
@@ -71,22 +58,27 @@ button:active {
   border: 2px solid white;
 }
 
-.dealerTotal {
+.total {
   position: absolute;
-  top: 134px;
-  left: 384px;
   color: white;
   font-size: 1.5em;
+  &.dealerTotal {
+    top: 134px;
+    left: 384px;
+  }
+  &.playerTotal {
+    top: 340px;
+    left: 383px;
+  }
+  &.hand1Total {
+    top: 66px;
+    left: 0px;
+  }
+  &.hand2Total {
+    top: 66px;
+    left: 250px;
+  }
 }
-
-.playerTotal {
-  position: absolute;
-  top: 340px;
-  left: 383px;
-  color: white;
-  font-size: 1.5em;
-}
-
 .dealer {
   position: absolute;
   top: 65px;
@@ -101,7 +93,7 @@ button:active {
   perspective: 400px;
 }
 
-.dealer img, .player img {
+.dealer img, .player img/*, .playerSplit img*/ {
   margin-right: -90px;
   transform: rotateX(16deg);
 }
@@ -109,6 +101,25 @@ button:active {
 .dealer img {
   transform: scale(.85) rotateX(16deg);
 }
+
+// .playerSplit {
+//   position: absolute;
+//   width: 500px;
+//   top: 267px;
+//   left: 236px;
+//   display: flex;
+//   justify-content: space-around;
+//   perspective: 800px;
+// }
+
+// .hand1, .hand2 {
+//   min-width: 188px;
+// }
+
+// .highlighted {
+//   background: rgba(255,255,0, .5);
+//   border: 4px double black;
+// }
 
 .announce {
   position: absolute;
@@ -202,13 +213,13 @@ button {
   padding: 8px 16px;
 }
 
-.split {
-  position: absolute;
-  top: 356px;
-  left: 424px;
-  background: rgba(154, 185, 133, .9);
-  border: 4px groove rgba(154, 185, 133, .9);
-}
+// .split {
+//   position: absolute;
+//   top: 356px;
+//   left: 424px;
+//   background: rgba(154, 185, 133, .9);
+//   border: 4px groove rgba(154, 185, 133, .9);
+// }
 
 .cardImage {
   width: 113px;

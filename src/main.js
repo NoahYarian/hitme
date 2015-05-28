@@ -8,13 +8,15 @@ var count = 0;
 var bank = 500;
 var betAmt = 25;
 var betChangeAllowed = true;
-var splitAllowed = false;
+// var splitAllowed = false;
 var isFirstTurn = true;
 var isPlayersTurn = true;
 var isDoubledDown = false;
+// var isSplit = false;
+// var gameHand = "";
 
 //buttons
-var $split = $(".split");
+// var $split = $(".split");
 var $doubleDown = $(".doubleDown");
 var $newGame = $(".newGame");
 var $hit = $(".hit");
@@ -35,10 +37,15 @@ var $announceText = $(".announce p");
 //card hand divs
 var $dealer = $(".dealer");
 var $player = $(".player");
+// var $playerSplit = $(".playerSplit");
+// var $hand1 = $(".hand1");
+// var $hand2 = $(".hand2");
 
 //hand total divs
 var $dealerTotal = $(".dealerTotal");
 var $playerTotal = $(".playerTotal");
+// var $hand1Total = $(".hand1Total");
+// var $hand2Total = $(".hand2Total");
 
 //create audio elements
 var cardPlace = document.createElement('audio');
@@ -64,6 +71,13 @@ $("button").click(function () {
   buttonClick.load();
   buttonClick.play();
 });
+
+// $split.click(split);
+
+// $(".giveSplitHand").click(function () {
+//   game.playerHand = ["KING", "JACK"];
+//   checkSplit();
+// });
 
 $doubleDown.click(function () {
   $doubleDown.attr("disabled", true);
@@ -127,6 +141,11 @@ function Game() {
   this.playerHand = [];
   this.dealerTotal = 0;
   this.playerTotal = 0;
+  // this.splitCardImages = [];
+  // this.splitHand1 = [];
+  // this.splitHand2 = [];
+  // this.splitHand1Total = 0;
+  // this.splitHand2Total = 0;
   this.wager = 0;
   this.winner = "";
 }
@@ -168,32 +187,60 @@ function draw4() {
     image: cardBack
   });
   drawCard({
-    person: "player"
+    person: "player",
+    storeImg: true
   });
   drawCard({
     person: "dealer"
   });
   drawCard({
     person: "player",
-    callback: checkSplit
+    storeImg: true//,
+    // callback: checkSplit
   });
 }
 
-function checkSplit() {
-  var checkSplitArr = game.playerHand.map(function(card) {
-  if (card === "KING" || card === "QUEEN" || card === "JACK") {
-      return 10;
-    } else if (!isNaN(card)) {
-      return Number(card);
-    } else if (card === "ACE") {
-      return 1;
-    }
-  });
-  if (checkSplitArr[0] === checkSplitArr[1]) {
-    splitAllowed = true;
-    $split.attr("disabled", false);
-  }
-}
+// function checkSplit() {
+//   var checkSplitArr = game.playerHand.map(function(card) {
+//   if (card === "KING" || card === "QUEEN" || card === "JACK") {
+//       return 10;
+//     } else if (!isNaN(card)) {
+//       return Number(card);
+//     } else if (card === "ACE") {
+//       return 1;
+//     }
+//   });
+//   if (checkSplitArr[0] === checkSplitArr[1]) {
+//     splitAllowed = true;
+//     $split.attr("disabled", false);
+//   }
+// }
+
+// function split () {
+//   game.splitHand1.push(game.playerHand[0]);
+//   game.splitHand2.push(game.playerHand[1]);
+//   isSplit = true;
+//   $split.attr("disabled", true);
+//   $player.addClass("hidden");
+//   $playerTotal.addClass("hidden");
+//   $playerSplit.removeClass("hidden");
+//   $hand1.html(`<img class='cardImage' src='${game.splitCardImages[0]}'>`);
+//   $hand2.html(`<img class='cardImage' src='${game.splitCardImages[1]}'>`);
+//   checkSplitTotal("hand1");
+//   checkSplitTotal("hand2");
+//   gameHand = "hand1";
+//   highlight("hand1");
+// }
+
+// function highlight(hand) {
+//   hand === "hand1" ? (
+//     $hand1.addClass("highlighted"),
+//     $hand2.removeClass("highlighted")
+//   ) : (
+//     $hand2.addClass("highlighted"),
+//     $hand1.removeClass("highlighted")
+//   );
+// }
 
 function drawCard(options) {
   var cardURL = API + "draw/" + deckId + "/?count=1";
@@ -220,6 +267,7 @@ function drawCard(options) {
     );
     checkVictory();
     updateCount(data.cards[0].value);
+    // options.storeImg && game.splitCardImages.push(cardImage(data));
     typeof options.callback === 'function' && options.callback();
   });
 }
@@ -267,6 +315,38 @@ function stay() {
     );
   }
 }
+
+// function checkSplitTotal(handNum) {
+//   var total = 0;
+//   var hand = handNum === "hand1" ? game.splitHand1 : game.splitHand2;
+//   var aces = 0;
+
+//   hand.forEach(function(card) {
+//     if (card === "KING" || card === "QUEEN" || card === "JACK") {
+//       total += 10;
+//     } else if (!isNaN(card)) {
+//       total += Number(card);
+//     } else if (card === "ACE") {
+//       aces += 1;
+//     }
+//   });
+
+//   if (aces > 0) {
+//     if (total + aces + 10 > 21) {
+//       total += aces;
+//     } else {
+//       total += aces + 10;
+//     }
+//   }
+
+//   handNum === "hand1" ? (
+//     game.splitHand1Total = total,
+//     $hand1Total.text(game.splitHand1Total)
+//   ) : (
+//     game.splitHand2Total = total,
+//     $hand2Total.text(game.splitHand2Total)
+//   );
+// }
 
 function checkTotal(person) {
   var total = 0;
@@ -359,8 +439,8 @@ function gameEnd() {
   $stay.attr("disabled", true);
   isDoubledDown = false;
   $doubleDown.attr("id", "doubleDown-hidden");
-  splitAllowed = false;
-  $split.attr("disabled", true);
+  // splitAllowed = false;
+  // $split.attr("disabled", true);
 }
 
 function clearTable() {

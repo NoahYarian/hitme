@@ -8,6 +8,7 @@ html
     link(rel='stylesheet', href='css/main.css')
   body
     .container
+      //- button.giveSplitHand Split Test
       .table
         img.chip.chip1(src="images/chip-1.png")
         img.chip.chip5(src="images/chip-5.png")
@@ -15,11 +16,16 @@ html
         img.chip.chip100(src="images/chip-100nss.png")
         .currentWager
         .bank
-        .dealerTotal
-        .playerTotal
+        .total.dealerTotal
+        .total.playerTotal
         .dealer
         .player
-        button.split(disabled) Split
+        //- .playerSplit.hidden
+        //-   .total.hand1Total
+        //-   .hand1
+        //-   .total.hand2Total
+        //-   .hand2
+        //- button.split(disabled) Split
         .buttons
           button.doubleDown(disabled, id="doubleDown-hidden") Double
           button.newGame Deal
