@@ -649,6 +649,30 @@ $(".testDeal").click(function () {
   checkVictory();
 });
 
+$('.dealerGiveCard').click(function () {
+  giveCard('dealer');
+});
+
+$('.playerGiveCard').click(function () {
+  giveCard('player');
+});
+
+function giveCard(person) {
+  var cardValue = $('.giveCardValue').val();
+  var cardSuit = $('.giveCardSuit').val();
+  var cardSrc = "../images/cards/" + cardValue + "_of_" + cardSuit.toLowerCase() + ".svg";
+  person === 'dealer' ? (
+    game.dealerHand.push(cardValue),
+    checkTotal('dealer'),
+    $dealer.append(`<img src='${cardSrc}' class='cardImage'>`)
+  ) : (
+    game.playerHand.push(cardValue),
+    checkTotal('player'),
+    $player.append(`<img src='${cardSrc}' class='cardImage'>`)
+  )
+  checkVictory();
+}
+
 // JSON request function with JSONP proxy
 function getJSON(url, cb) {
   var JSONP_PROXY = 'https://jsonp.afeld.me/?url=';
