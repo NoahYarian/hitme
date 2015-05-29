@@ -31,7 +31,8 @@ var $chip50 = $(".chip50");
 var $chip100 = $(".chip100");
 
 //info divs
-var $bank = $(".bank");
+var $bankChips = $(".bankChips");
+var $bankTotal = $(".bankTotal");
 var $count = $(".count");
 var $announce = $(".announce");
 var $announceText = $(".announce p");
@@ -66,7 +67,8 @@ var loseWav = document.createElement('audio');
 loseWav.setAttribute('src', 'sounds/cardShove3.wav');
 
 //populate bank amount on page load
-$bank.text("Bank: " + bank);
+$bankTotal.text("Bank: " + bank);
+countChips();
 
 //button click listeners
 $("button").click(function () {
@@ -180,7 +182,7 @@ function Game() {
   // this.splitHand2Total = 0;
   this.wager = 0;
   this.winner = "";
-  this.playerChips = {};
+  // this.playerChips = {};
 }
 
 function newGame() {
@@ -431,7 +433,7 @@ function checkVictory() {
     console.log("push");
     game.winner = "push";
     announce("PUSH");
-  } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && isPlayersTurn) {
+  } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && isPlayersTurn && game.playerTotal < 21) {
     //do nothing
     console.log("dealer has blackjack, doing nothing..");
   } else if (game.dealerTotal === 21) {
@@ -463,7 +465,7 @@ function gameEnd() {
     bank += game.wager;
     console.log("returning player's " + game.wager);
   }
-  $bank.text("Bank: " + bank);
+  $bankTotal.text("Bank: " + bank);
   betChangeAllowed = true;
   flipCard();
   $dealerTotal.removeClass("hidden");
@@ -535,7 +537,8 @@ function bet(amt) {
   if (bank >= amt) {
     game.wager += amt;
     bank -= amt;
-    $bank.text("Bank: " + bank);
+    $bankTotal.text("Bank: " + bank);
+    countChips();
     $(".currentWager").text("Current Wager: " + game.wager);
     console.log("betting " + amt);
     console.log("wager at " + game.wager);
@@ -546,17 +549,42 @@ function bet(amt) {
 
 function countChips() {
   var num100s = Math.floor(bank / 100);
-  var num25s = Math.floor((bank - num100s * 100) / 25);
-  var num5s = Math.floor((bank - num100s * 100 - num25s * 25) / 5);
-  var num1s = Math.floor((bank - num100s * 100 - num25s * 25 - num5s * 5) / 1);
-  var num05s = Math.floor((bank - num100s * 100 - num25s * 25 - num5s * 5 - num1s) / .5);
-  game.playerChips = {
-    "num100s": num100s,
-    "num25s": num25s,
-    "num5s": num5s,
-    "num1s": num1s,
-    "num05s": num05s
+  var num50s = Math.floor((bank - num100s * 100) / 50);
+  var num25s = Math.floor((bank - num100s * 100 - num50s * 50) / 25);
+  var num10s = Math.floor((bank - num100s * 100 - num50s * 50 - num25s * 25) / 10);
+   var num5s = Math.floor((bank - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10) / 5);
+   var num1s = Math.floor((bank - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10 - num5s * 5) / 1);
+  // game.playerChips = {
+  //   "num100s": num100s,
+  //   "num50s": num50s,
+  //   "num25s": num25s,
+  //   "num10s": num10s,
+  //   "num5s": num5s,
+  //   "num1s": num1s
+  // };
+  var html = "";
+  for (var i = 0; i < num100s; i++) {
+    html += "<img src='images/chip-100.png'>";
   };
+  for (var i = 0; i < num50s; i++) {
+    html += "<img src='images/chip-50.png'>";
+  };
+  for (var i = 0; i < num25s; i++) {
+    html += "<img src='images/chip-25.png'>";
+  };
+  for (var i = 0; i < num10s; i++) {
+    html += "<img src='images/chip-10.png'>";
+  };
+  for (var i = 0; i < num5s; i++) {
+    html += "<img src='images/chip-5.png'>";
+  };
+  for (var i = 0; i < num1s; i++) {
+    html += "<img src='images/chip-1.png'>";
+  };
+  $bankChips.html(html);
+  $('.bankChips img').each(function(i, c) {
+    $(c).css('top', -5 * i);
+  });
 }
 
 

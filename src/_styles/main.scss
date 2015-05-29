@@ -172,12 +172,6 @@ button:active {
   left: 20px;
 }
 
-.bank {
-  position: absolute;
-  top: 180px;
-  left: 20px;
-}
-
 button {
   //position: absolute;
   background: rgba(154, 185, 133, 0.63);
@@ -273,3 +267,22 @@ button {
 #selectedBet {
   -webkit-filter: drop-shadow(1px 1px 5px white);
 }
+
+.bankChips {
+  width: 47px;
+  position: absolute;
+  top: 394px;
+  left: 306px;
+  img {
+    width: 47px;
+    position: absolute;
+  }
+}
+
+.bankTotal {
+  position: absolute;
+  top: 418px;
+  left: 299px;
+}
+
+
