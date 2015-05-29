@@ -91,17 +91,11 @@ button:active {
 .player {
   position: absolute;
   top: 267px;
-  left: 413px;
-  perspective: 400px; }
+  left: 413px; }
 
 /* line 96, /Users/noah/code/hitme/src/_styles/main.scss */
 .dealer img, .player img {
-  margin-right: -90px;
-  transform: rotateX(16deg); }
-
-/* line 101, /Users/noah/code/hitme/src/_styles/main.scss */
-.dealer img {
-  transform: scale(0.85) rotateX(16deg); }
+  margin-right: -90px; }
 
 /* line 124, /Users/noah/code/hitme/src/_styles/main.scss */
 .announce {
@@ -180,56 +174,69 @@ button {
   width: 361px; }
 
 /* line 201, /Users/noah/code/hitme/src/_styles/main.scss */
-.bet:disabled {
-  display: inline-block;
-  background: rgba(154, 185, 133, 0.25);
-  border: 4px groove rgba(154, 185, 133, 0.25);
-  color: rgba(59, 6, 0, 0.4); }
-
-/* line 208, /Users/noah/code/hitme/src/_styles/main.scss */
 #doubleDown-hidden {
   display: none; }
 
-/* line 212, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 205, /Users/noah/code/hitme/src/_styles/main.scss */
 .stay {
   padding: 8px 16px; }
 
-/* line 224, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 217, /Users/noah/code/hitme/src/_styles/main.scss */
 .cardImage {
   width: 113px;
   height: 157px; }
 
-/* line 229, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 222, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip {
-  position: absolute;
-  width: 60px;
-  -webkit-filter: opacity(25%); }
+  position: absolute; }
 
-/* line 235, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 226, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip:hover {
   cursor: pointer;
-  -webkit-filter: opacity(100%); }
+  -webkit-filter: drop-shadow(1px 1px 5px white); }
 
-/* line 240, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 231, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip1 {
-  top: 374px;
-  left: 8px; }
+  left: 6px;
+  top: 366px;
+  width: 47px;
+  height: 21px; }
+
+/* line 238, /Users/noah/code/hitme/src/_styles/main.scss */
+.chip5 {
+  left: 48px;
+  top: 380px;
+  width: 45px;
+  height: 22px; }
 
 /* line 245, /Users/noah/code/hitme/src/_styles/main.scss */
-.chip5 {
-  top: 395px;
-  left: 66px; }
+.chip10 {
+  left: 88px;
+  top: 394px;
+  width: 47px;
+  height: 22px; }
 
-/* line 250, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 252, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip25 {
-  top: 416px;
-  left: 124px; }
+  left: 130px;
+  top: 408px;
+  width: 46px;
+  height: 21px; }
 
-/* line 255, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 259, /Users/noah/code/hitme/src/_styles/main.scss */
+.chip50 {
+  left: 171px;
+  top: 422px;
+  width: 47px;
+  height: 22px; }
+
+/* line 266, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip100 {
-  top: 437px;
-  left: 181px; }
+  left: 213px;
+  top: 435px;
+  width: 47px;
+  height: 22px; }
 
-/* line 260, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 273, /Users/noah/code/hitme/src/_styles/main.scss */
 #selectedBet {
-  -webkit-filter: opacity(100%); }
+  -webkit-filter: drop-shadow(1px 1px 5px white); }

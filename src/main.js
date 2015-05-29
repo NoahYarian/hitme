@@ -25,7 +25,9 @@ var $stay = $(".stay");
 //chips
 var $chip1 = $(".chip1");
 var $chip5 = $(".chip5");
+var $chip10 = $(".chip10");
 var $chip25 = $(".chip25");
+var $chip50 = $(".chip50");
 var $chip100 = $(".chip100");
 
 //info divs
@@ -101,35 +103,65 @@ $chip1.click(function () {
   if (betChangeAllowed) {
     $chip1.attr("id", "selectedBet");
     $chip5.attr("id", "");
+    $chip10.attr("id", "");
     $chip25.attr("id", "");
+    $chip50.attr("id", "");
     $chip100.attr("id", "");
     betAmt = 1;
   }
 });
 $chip5.click(function () {
   if (betChangeAllowed) {
-    $chip5.attr("id", "selectedBet");
     $chip1.attr("id", "");
+    $chip5.attr("id", "selectedBet");
+    $chip10.attr("id", "");
     $chip25.attr("id", "");
+    $chip50.attr("id", "");
     $chip100.attr("id", "");
     betAmt = 5;
   }
 });
+$chip10.click(function () {
+  if (betChangeAllowed) {
+    $chip1.attr("id", "");
+    $chip5.attr("id", "");
+    $chip10.attr("id", "selectedBet");
+    $chip25.attr("id", "");
+    $chip50.attr("id", "");
+    $chip100.attr("id", "");
+    betAmt = 10;
+  }
+});
 $chip25.click(function () {
   if (betChangeAllowed) {
-    $chip25.attr("id", "selectedBet");
-    $chip5.attr("id", "");
     $chip1.attr("id", "");
+    $chip5.attr("id", "");
+    $chip10.attr("id", "");
+    $chip25.attr("id", "selectedBet");
+    $chip50.attr("id", "");
     $chip100.attr("id", "");
     betAmt = 25;
   }
 });
+$chip50.click(function () {
+  if (betChangeAllowed) {
+    $chip1.attr("id", "");
+    $chip5.attr("id", "");
+    $chip10.attr("id", "");
+    $chip25.attr("id", "");
+    $chip50.attr("id", "selectedBet");
+    $chip100.attr("id", "");
+    betAmt = 50;
+  }
+});
 $chip100.click(function () {
   if (betChangeAllowed) {
-    $chip100.attr("id", "selectedBet");
-    $chip5.attr("id", "");
-    $chip25.attr("id", "");
     $chip1.attr("id", "");
+    $chip5.attr("id", "");
+    $chip10.attr("id", "");
+    $chip25.attr("id", "");
+    $chip50.attr("id", "");
+    $chip100.attr("id", "selectedBet");
     betAmt = 100;
   }
 });
@@ -148,6 +180,7 @@ function Game() {
   // this.splitHand2Total = 0;
   this.wager = 0;
   this.winner = "";
+  this.playerChips = {};
 }
 
 function newGame() {
@@ -510,6 +543,22 @@ function bet(amt) {
     console.log("Insufficient funds.");
   }
 }
+
+function countChips() {
+  var num100s = Math.floor(bank / 100);
+  var num25s = Math.floor((bank - num100s * 100) / 25);
+  var num5s = Math.floor((bank - num100s * 100 - num25s * 25) / 5);
+  var num1s = Math.floor((bank - num100s * 100 - num25s * 25 - num5s * 5) / 1);
+  var num05s = Math.floor((bank - num100s * 100 - num25s * 25 - num5s * 5 - num1s) / .5);
+  game.playerChips = {
+    "num100s": num100s,
+    "num25s": num25s,
+    "num5s": num5s,
+    "num1s": num1s,
+    "num05s": num05s
+  };
+}
+
 
 // JSON request function with JSONP proxy
 function getJSON(url, cb) {

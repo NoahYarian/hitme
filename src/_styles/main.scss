@@ -90,17 +90,17 @@ button:active {
   position: absolute;
   top: 267px;
   left: 413px;
-  perspective: 400px;
+  //perspective: 400px;
 }
 
 .dealer img, .player img/*, .playerSplit img*/ {
   margin-right: -90px;
-  transform: rotateX(16deg);
+ // transform: rotateX(16deg);
 }
 
-.dealer img {
-  transform: scale(.85) rotateX(16deg);
-}
+// .dealer img {
+//   transform: scale(.85) rotateX(16deg);
+// }
 
 // .playerSplit {
 //   position: absolute;
@@ -198,13 +198,6 @@ button {
   width: 361px;
 }
 
-.bet:disabled {
-  display: inline-block;
-  background: rgba(154, 185, 133, 0.25);
-  border: 4px groove rgba(154, 185, 133, 0.25);
-  color: rgba(59,6,0,0.4);
-}
-
 #doubleDown-hidden {
   display: none;
 }
@@ -228,35 +221,55 @@ button {
 
 .chip {
   position: absolute;
-  width: 60px;
-  -webkit-filter: opacity(25%);
 }
 
 .chip:hover {
   cursor: pointer;
-  -webkit-filter: opacity(100%);
+  -webkit-filter: drop-shadow(1px 1px 5px white);
 }
 
 .chip1 {
-  top: 374px;
-  left: 8px;
+  left: 6px;
+  top: 366px;
+  width: 47px;
+  height: 21px;
 }
 
 .chip5 {
-  top: 395px;
-  left: 66px;
+  left: 48px;
+  top: 380px;
+  width: 45px;
+  height: 22px;
+}
+
+.chip10 {
+  left: 88px;
+  top: 394px;
+  width: 47px;
+  height: 22px;
 }
 
 .chip25 {
-  top: 416px;
-  left: 124px;
+  left: 130px;
+  top: 408px;
+  width: 46px;
+  height: 21px;
+}
+
+.chip50 {
+  left: 171px;
+  top: 422px;
+  width: 47px;
+  height: 22px;
 }
 
 .chip100 {
-  top: 437px;
-  left: 181px;
+  left: 213px;
+  top: 435px;
+  width: 47px;
+  height: 22px;
 }
 
 #selectedBet {
-  -webkit-filter: opacity(100%);
+  -webkit-filter: drop-shadow(1px 1px 5px white);
 }
