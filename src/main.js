@@ -31,6 +31,7 @@ var $chip50 = $(".chip50");
 var $chip100 = $(".chip100");
 
 //info divs
+var $handChips = $(".handChips");
 var $bankChips = $(".bankChips");
 var $bankTotal = $(".bankTotal");
 var $count = $(".count");
@@ -68,7 +69,7 @@ loseWav.setAttribute('src', 'sounds/cardShove3.wav');
 
 //populate bank amount on page load
 $bankTotal.text("Bank: " + bank);
-countChips();
+countChips("bank");
 
 //button click listeners
 $("button").click(function () {
@@ -460,10 +461,10 @@ function checkVictory() {
 function gameEnd() {
   if (game.winner === "player") {
     bank += (game.wager * 2);
-    console.log("giving player " + (game.wager * 2));
+    console.log(`giving player ${game.wager * 2}. Bank at ${bank}.`);
   } else if (game.winner === "push") {
     bank += game.wager;
-    console.log("returning player's " + game.wager);
+    console.log(`returning player's ${game.wager}. Bank at ${bank}.`);
   }
   $bankTotal.text("Bank: " + bank);
   betChangeAllowed = true;
@@ -538,7 +539,8 @@ function bet(amt) {
     game.wager += amt;
     bank -= amt;
     $bankTotal.text("Bank: " + bank);
-    countChips();
+    countChips("bank");
+    countChips("hand");
     $(".currentWager").text("Current Wager: " + game.wager);
     console.log("betting " + amt);
     console.log("wager at " + game.wager);
@@ -547,13 +549,14 @@ function bet(amt) {
   }
 }
 
-function countChips() {
-  var num100s = Math.floor(bank / 100);
-  var num50s = Math.floor((bank - num100s * 100) / 50);
-  var num25s = Math.floor((bank - num100s * 100 - num50s * 50) / 25);
-  var num10s = Math.floor((bank - num100s * 100 - num50s * 50 - num25s * 25) / 10);
-   var num5s = Math.floor((bank - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10) / 5);
-   var num1s = Math.floor((bank - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10 - num5s * 5) / 1);
+function countChips(location) {
+  var amt = location === "bank" ? bank : game.wager;
+  var num100s = Math.floor(amt / 100);
+  var num50s = Math.floor((amt - num100s * 100) / 50);
+  var num25s = Math.floor((amt - num100s * 100 - num50s * 50) / 25);
+  var num10s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25) / 10);
+   var num5s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10) / 5);
+   var num1s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10 - num5s * 5) / 1);
   // game.playerChips = {
   //   "num100s": num100s,
   //   "num50s": num50s,
@@ -581,10 +584,17 @@ function countChips() {
   for (var i = 0; i < num1s; i++) {
     html += "<img src='images/chip-1.png'>";
   };
-  $bankChips.html(html);
-  $('.bankChips img').each(function(i, c) {
-    $(c).css('top', -5 * i);
-  });
+  if (location === "bank") {
+    $bankChips.html(html);
+    $('.bankChips img').each(function(i, c) {
+      $(c).css('top', -5 * i);
+    });
+  } else if (location === "hand") {
+    $handChips.html(html);
+    $('.handChips img').each(function(i, c) {
+      $(c).css('top', -5 * i);
+    });
+  }
 }
 
 

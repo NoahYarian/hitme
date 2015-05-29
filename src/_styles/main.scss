@@ -166,12 +166,6 @@ button:active {
   }
 }
 
-.currentWager {
-  position: absolute;
-  top: 200px;
-  left: 20px;
-}
-
 button {
   //position: absolute;
   background: rgba(154, 185, 133, 0.63);
@@ -285,4 +279,19 @@ button {
   left: 299px;
 }
 
+.handChips {
+  width: 47px;
+  position: absolute;
+  top: 393px;
+  left: 604px;
+  img {
+    width: 47px;
+    position: absolute;
+  }
+}
 
+.currentWager {
+  position: absolute;
+  top: 418px;
+  left: 569px;
+}
