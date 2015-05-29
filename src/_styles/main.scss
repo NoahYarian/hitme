@@ -83,6 +83,7 @@ button:active {
   position: absolute;
   top: 65px;
   left: 413px;
+  -webkit-perspective: 400px;
   perspective: 400px;
 }
 
@@ -90,12 +91,14 @@ button:active {
   position: absolute;
   top: 267px;
   left: 413px;
-  //perspective: 400px;
+  -webkit-perspective: 400px;
+  perspective: 400px;
 }
 
 .dealer img, .player img/*, .playerSplit img*/ {
   margin-right: -90px;
- // transform: rotateX(16deg);
+  -webkit-transform: rotateX(16deg);
+  transform: rotateX(16deg);
 }
 
 // .dealer img {
@@ -294,4 +297,10 @@ button {
   position: absolute;
   top: 418px;
   left: 569px;
+}
+
+.testHand {
+  position: absolute;
+  top: 200px;
+  left: -200px;
 }

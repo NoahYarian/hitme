@@ -417,42 +417,44 @@ function checkTotal(person) {
 }
 
 function checkVictory() {
-  if (game.dealerTotal === 21 && game.dealerHand.length === 2 && game.playerTotal === 21 && game.playerHand.length === 2) {
-    console.log("double blackjack push!");
-    game.winner = "push";
-    announce("PUSH");
-  } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && game.playerTotal === 21) {
-    console.log("dealer has blackjack");
-    game.winner = "dealer";
-    announce("YOU LOSE");
-  } else if (game.playerTotal === 21 && game.playerHand.length === 2) {
-    console.log("player has blackjack");
-    game.winner = "player";
-    game.wager *= 1.25;
-    announce("BLACKJACK!");
-  } else if (game.dealerTotal === 21 && game.playerTotal === 21) {
-    console.log("push");
-    game.winner = "push";
-    announce("PUSH");
-  } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && isPlayersTurn && game.playerTotal < 21) {
-    //do nothing
-    console.log("dealer has blackjack, doing nothing..");
-  } else if (game.dealerTotal === 21) {
-    console.log("dealer has 21");
-    game.winner = "dealer";
-    announce("YOU LOSE");
-  } else if (game.dealerTotal > 21) {
-    console.log("dealer busts");
-    game.winner = "player";
-    announce("YOU WIN");
-  } else if (game.playerTotal === 21) {
-    console.log("player has 21");
-    game.winner = "player";
-    announce("21!");
-  } else if (game.playerTotal > 21) {
-    console.log("player busts");
-    game.winner = "dealer";
-    announce("BUST");
+  if (game.dealerHand.length >= 2 && game.playerHand.length >= 2) {
+    if (game.dealerTotal === 21 && game.dealerHand.length === 2 && game.playerTotal === 21 && game.playerHand.length === 2) {
+      console.log("double blackjack push!");
+      game.winner = "push";
+      announce("PUSH");
+    } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && game.playerTotal === 21) {
+      console.log("dealer has blackjack");
+      game.winner = "dealer";
+      announce("YOU LOSE");
+    } else if (game.playerTotal === 21 && game.playerHand.length === 2) {
+      console.log("player has blackjack");
+      game.winner = "player";
+      game.wager *= 1.25;
+      announce("BLACKJACK!");
+    } else if (game.dealerTotal === 21 && game.playerTotal === 21) {
+      console.log("push");
+      game.winner = "push";
+      announce("PUSH");
+    } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && isPlayersTurn && game.playerTotal < 21) {
+      //do nothing
+      console.log("dealer has blackjack, doing nothing..");
+    } else if (game.dealerTotal === 21) {
+      console.log("dealer has 21");
+      game.winner = "dealer";
+      announce("YOU LOSE");
+    } else if (game.dealerTotal > 21) {
+      console.log("dealer busts");
+      game.winner = "player";
+      announce("YOU WIN");
+    } else if (game.playerTotal === 21) {
+      console.log("player has 21");
+      game.winner = "player";
+      announce("21!");
+    } else if (game.playerTotal > 21) {
+      console.log("player busts");
+      game.winner = "dealer";
+      announce("BUST");
+    }
   }
 
   game.winner && gameEnd();
@@ -461,10 +463,10 @@ function checkVictory() {
 function gameEnd() {
   if (game.winner === "player") {
     bank += (game.wager * 2);
-    console.log(`giving player ${game.wager * 2}. Bank at ${bank}.`);
+    console.log(`giving player ${game.wager * 2}. Bank at ${bank}`);
   } else if (game.winner === "push") {
     bank += game.wager;
-    console.log(`returning player's ${game.wager}. Bank at ${bank}.`);
+    console.log(`returning ${game.wager} to player. Bank at ${bank}`);
   }
   $bankTotal.text("Bank: " + bank);
   betChangeAllowed = true;
@@ -512,8 +514,11 @@ function announce(text) {
 }
 
 function flipCard() {
+  console.log('flip');
   var $flipped = $(".dealer .cardImage").first();
-  $flipped.attr("src", game.hiddenCard);
+  $flipped.remove();
+  var html = `<img src='${game.hiddenCard}' class='cardImage'>`;
+  $dealer.prepend(html);
 }
 
 function updateCount(card) {
@@ -557,13 +562,15 @@ function countChips(location) {
   var num10s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25) / 10);
    var num5s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10) / 5);
    var num1s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10 - num5s * 5) / 1);
+  var num05s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10 - num5s * 5 - num1s * 1) / .5);
   // game.playerChips = {
   //   "num100s": num100s,
   //   "num50s": num50s,
   //   "num25s": num25s,
   //   "num10s": num10s,
   //   "num5s": num5s,
-  //   "num1s": num1s
+  //   "num1s": num1s,
+  //   "num05s": num05s
   // };
   var html = "";
   for (var i = 0; i < num100s; i++) {
@@ -584,6 +591,9 @@ function countChips(location) {
   for (var i = 0; i < num1s; i++) {
     html += "<img src='images/chip-1.png'>";
   };
+  for (var i = 0; i < num05s; i++) {
+    html += "<img src='images/chip-05.png'>";
+  };
   if (location === "bank") {
     $bankChips.html(html);
     $('.bankChips img').each(function(i, c) {
@@ -597,6 +607,27 @@ function countChips(location) {
   }
 }
 
+// Deal specific cards for testing purposes
+$(".testDeal").click(function () {
+  var dealer1Value = $(".dealer1Value").val();
+  var dealer2Value = $(".dealer2Value").val();
+  var player1Value = $(".player1Value").val();
+  var player2Value = $(".player2Value").val();
+  var dealer1Suit = $(".dealer1Suit").val();
+  var dealer2Suit = $(".dealer2Suit").val();
+  var player1Suit = $(".player1Suit").val();
+  var player2Suit = $(".player2Suit").val();
+  var dealer1 = "../images/cards/" + dealer1Value + "_of_" + dealer1Suit.toLowerCase() + ".svg";
+  var dealer2 = "../images/cards/" + dealer2Value + "_of_" + dealer2Suit.toLowerCase() + ".svg";
+  var player1 = "../images/cards/" + player1Value + "_of_" + player1Suit.toLowerCase() + ".svg";
+  var player2 = "../images/cards/" + player2Value + "_of_" + player2Suit.toLowerCase() + ".svg";
+  game.dealerHand = [dealer1Value, dealer2Value];
+  game.playerHand = [player1Value, player2Value];
+  checkTotal("player");
+  checkTotal("dealer");
+  $dealer.empty();
+  $player.empty();
+});
 
 // JSON request function with JSONP proxy
 function getJSON(url, cb) {

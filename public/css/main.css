@@ -85,24 +85,29 @@ button:active {
   position: absolute;
   top: 65px;
   left: 413px;
+  -webkit-perspective: 400px;
   perspective: 400px; }
 
-/* line 89, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 90, /Users/noah/code/hitme/src/_styles/main.scss */
 .player {
   position: absolute;
   top: 267px;
-  left: 413px; }
+  left: 413px;
+  -webkit-perspective: 400px;
+  perspective: 400px; }
 
-/* line 96, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 98, /Users/noah/code/hitme/src/_styles/main.scss */
 .dealer img, .player img {
-  margin-right: -90px; }
+  margin-right: -90px;
+  -webkit-transform: rotateX(16deg);
+  transform: rotateX(16deg); }
 
-/* line 124, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 127, /Users/noah/code/hitme/src/_styles/main.scss */
 .announce {
   position: absolute;
   background: black;
   display: none; }
-  /* line 128, /Users/noah/code/hitme/src/_styles/main.scss */
+  /* line 131, /Users/noah/code/hitme/src/_styles/main.scss */
   .announce.lose {
     border: 6px double red;
     display: table-cell;
@@ -110,12 +115,12 @@ button:active {
     width: 336px;
     top: 186px;
     left: 311px; }
-    /* line 135, /Users/noah/code/hitme/src/_styles/main.scss */
+    /* line 138, /Users/noah/code/hitme/src/_styles/main.scss */
     .announce.lose p {
       color: red;
       font-size: 4em;
       text-align: center; }
-  /* line 141, /Users/noah/code/hitme/src/_styles/main.scss */
+  /* line 144, /Users/noah/code/hitme/src/_styles/main.scss */
   .announce.win {
     border: 6px double lime;
     display: table-cell;
@@ -123,12 +128,12 @@ button:active {
     width: 313px;
     top: 205px;
     left: 324px; }
-    /* line 148, /Users/noah/code/hitme/src/_styles/main.scss */
+    /* line 151, /Users/noah/code/hitme/src/_styles/main.scss */
     .announce.win p {
       color: lime;
       font-size: 3em;
       text-align: center; }
-  /* line 154, /Users/noah/code/hitme/src/_styles/main.scss */
+  /* line 157, /Users/noah/code/hitme/src/_styles/main.scss */
   .announce.push {
     border: 6px double white;
     display: table-cell;
@@ -136,13 +141,13 @@ button:active {
     width: 208px;
     top: 186px;
     left: 380px; }
-    /* line 161, /Users/noah/code/hitme/src/_styles/main.scss */
+    /* line 164, /Users/noah/code/hitme/src/_styles/main.scss */
     .announce.push p {
       color: #adc78a;
       font-size: 4em;
       text-align: center; }
 
-/* line 169, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 172, /Users/noah/code/hitme/src/_styles/main.scss */
 button {
   background: rgba(154, 185, 133, 0.63);
   font-size: 2em;
@@ -152,7 +157,7 @@ button {
   color: #3b0600;
   font-family: Tahoma; }
 
-/* line 180, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 183, /Users/noah/code/hitme/src/_styles/main.scss */
 .buttons {
   position: absolute;
   display: flex;
@@ -161,104 +166,110 @@ button {
   left: 308px;
   width: 361px; }
 
-/* line 189, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 192, /Users/noah/code/hitme/src/_styles/main.scss */
 #doubleDown-hidden {
   display: none; }
 
-/* line 193, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 196, /Users/noah/code/hitme/src/_styles/main.scss */
 .stay {
   padding: 8px 16px; }
 
-/* line 205, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 208, /Users/noah/code/hitme/src/_styles/main.scss */
 .cardImage {
   width: 113px;
   height: 157px; }
 
-/* line 210, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 213, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip {
   position: absolute; }
 
-/* line 214, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 217, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip:hover {
   cursor: pointer;
   -webkit-filter: drop-shadow(1px 1px 5px white); }
 
-/* line 219, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 222, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip1 {
   left: 6px;
   top: 366px;
   width: 47px;
   height: 21px; }
 
-/* line 226, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 229, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip5 {
   left: 48px;
   top: 380px;
   width: 45px;
   height: 22px; }
 
-/* line 233, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 236, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip10 {
   left: 88px;
   top: 394px;
   width: 47px;
   height: 22px; }
 
-/* line 240, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 243, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip25 {
   left: 130px;
   top: 408px;
   width: 46px;
   height: 21px; }
 
-/* line 247, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 250, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip50 {
   left: 171px;
   top: 422px;
   width: 47px;
   height: 22px; }
 
-/* line 254, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 257, /Users/noah/code/hitme/src/_styles/main.scss */
 .chip100 {
   left: 213px;
   top: 435px;
   width: 47px;
   height: 22px; }
 
-/* line 261, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 264, /Users/noah/code/hitme/src/_styles/main.scss */
 #selectedBet {
   -webkit-filter: drop-shadow(1px 1px 5px white); }
 
-/* line 265, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 268, /Users/noah/code/hitme/src/_styles/main.scss */
 .bankChips {
   width: 47px;
   position: absolute;
   top: 394px;
   left: 306px; }
-  /* line 270, /Users/noah/code/hitme/src/_styles/main.scss */
+  /* line 273, /Users/noah/code/hitme/src/_styles/main.scss */
   .bankChips img {
     width: 47px;
     position: absolute; }
 
-/* line 276, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 279, /Users/noah/code/hitme/src/_styles/main.scss */
 .bankTotal {
   position: absolute;
   top: 418px;
   left: 299px; }
 
-/* line 282, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 285, /Users/noah/code/hitme/src/_styles/main.scss */
 .handChips {
   width: 47px;
   position: absolute;
   top: 393px;
   left: 604px; }
-  /* line 287, /Users/noah/code/hitme/src/_styles/main.scss */
+  /* line 290, /Users/noah/code/hitme/src/_styles/main.scss */
   .handChips img {
     width: 47px;
     position: absolute; }
 
-/* line 293, /Users/noah/code/hitme/src/_styles/main.scss */
+/* line 296, /Users/noah/code/hitme/src/_styles/main.scss */
 .currentWager {
   position: absolute;
   top: 418px;
   left: 569px; }
+
+/* line 302, /Users/noah/code/hitme/src/_styles/main.scss */
+.testHand {
+  position: absolute;
+  top: 200px;
+  left: -200px; }
