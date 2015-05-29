@@ -223,15 +223,15 @@ function draw4() {
     image: cardBack
   });
   drawCard({
-    person: "player",
-    storeImg: true
+    person: "player"//,
+    // storeImg: true
   });
   drawCard({
     person: "dealer"
   });
   drawCard({
-    person: "player",
-    storeImg: true//,
+    person: "player"//,
+    // storeImg: true,
     // callback: checkSplit
   });
 }
@@ -482,7 +482,6 @@ function gameEnd() {
 }
 
 function clearTable() {
-  isFirstTurn = true;
   $dealer.empty();
   $player.empty();
   $dealerTotal.addClass("hidden");
@@ -609,6 +608,23 @@ function countChips(location) {
 
 // Deal specific cards for testing purposes
 $(".testDeal").click(function () {
+  game = new Game();
+  bet(betAmt);
+  isFirstTurn = true;
+  betChangeAllowed = false;
+  if (bank >= betAmt) {
+    clearTable();
+    $newGame.attr("disabled", true);
+    $hit.attr("disabled", false);
+    $stay.attr("disabled", false);
+    $doubleDown.attr("disabled", false);
+    $doubleDown.attr("id", "");
+    cardPackage.load();
+    cardPackage.play();
+    getJSON(newDeckURL, function(data) {
+      deckId = data.deck_id;
+    });
+  }
   var dealer1Value = $(".dealer1Value").val();
   var dealer2Value = $(".dealer2Value").val();
   var player1Value = $(".player1Value").val();
@@ -623,10 +639,14 @@ $(".testDeal").click(function () {
   var player2 = "../images/cards/" + player2Value + "_of_" + player2Suit.toLowerCase() + ".svg";
   game.dealerHand = [dealer1Value, dealer2Value];
   game.playerHand = [player1Value, player2Value];
-  checkTotal("player");
+  game.hiddenCard = dealer1;
+  $dealer.append(`<img src='${cardBack}' class='cardImage'>`);
+  $dealer.append(`<img src='${dealer2}' class='cardImage'>`);
+  $player.append(`<img src='${player1}' class='cardImage'>`);
+  $player.append(`<img src='${player2}' class='cardImage'>`);
   checkTotal("dealer");
-  $dealer.empty();
-  $player.empty();
+  checkTotal("player");
+  checkVictory();
 });
 
 // JSON request function with JSONP proxy
