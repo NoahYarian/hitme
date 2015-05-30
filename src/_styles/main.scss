@@ -171,8 +171,10 @@ button:focus {
   width: 361px;
 }
 
-#doubleDown-hidden {
-  display: none;
+#doubleDown-disabled {
+  background: rgba(154, 154, 154, 0.63);
+  border: 4px groove rgba(154, 154, 154, 0.63);
+  color: rgba(59, 59, 59, .63);
 }
 
 .stay {

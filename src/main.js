@@ -91,6 +91,8 @@ $("button").click(function () {
 
 $doubleDown.click(function () {
   $doubleDown.attr("disabled", true);
+  $hit.attr("disabled", true);
+  $stay.attr("disabled", true);
   bet(betAmt);
   console.log("double down");
   isDoubledDown = true;
@@ -263,14 +265,15 @@ function hit() {
   console.log("hit");
   drawCard({
     person: "player",
-    callback: function () { if (isDoubledDown && !game.winner) {
-      stay();
+    callback: function () {
+      if (isDoubledDown && !game.winner) {
+        stay();
       }
     }
   });
   if (isFirstTurn) {
     isFirstTurn = false;
-    $doubleDown.attr("disabled", true);
+    $doubleDown.attr("id", "doubleDown-disabled");
   }
 }
 
@@ -436,7 +439,7 @@ function gameEnd() {
   $hit.attr("disabled", true);
   $stay.attr("disabled", true);
   isDoubledDown = false;
-  $doubleDown.attr("id", "doubleDown-hidden");
+  $doubleDown.attr("disabled", true);
   // splitAllowed = false;
   // $split.attr("disabled", true);
 }
