@@ -15,32 +15,6 @@ body {
   background: black;
 }
 
-.count {
-  color: yellow;
-  position: absolute;
-  top: 154px;
-  left: 18px;
-  padding: 2px;
-  &.hot {
-    color: red;
-    background: yellow;
-    font-weight: bold;
-  }
-  &.cold {
-    color: blue;
-    background: black;
-    font-weight: bold;
-  }
-}
-
-.trueCount {
-  color: yellow;
-  position: absolute;
-  top: 170px;
-  left: 18px;
-  padding: 2px;
-}
-
 button:disabled {
   display: none;
 }
@@ -72,12 +46,12 @@ button:active {
   font-size: 1.5em;
     text-shadow: 1px 1px 0 black;
   &.dealerTotal {
-    top: 134px;
-    left: 384px;
+    top: 66px;
+    left: 385px;
   }
   &.playerTotal {
-    top: 340px;
-    left: 383px;
+    top: 285px;
+    left: 380px;
   }
   // &.hand1Total {
   //   top: 66px;
@@ -90,7 +64,7 @@ button:active {
 }
 .dealer {
   position: absolute;
-  top: 65px;
+  top: 0px;
   left: 413px;
   -webkit-perspective: 400px;
   perspective: 400px;
@@ -98,7 +72,7 @@ button:active {
 
 .player {
   position: absolute;
-  top: 267px;
+  top: 216px;
   left: 413px;
   -webkit-perspective: 400px;
   perspective: 400px;
@@ -137,25 +111,23 @@ button:active {
   position: absolute;
   background: black;
   display: none;
+  top: 152px;
+  vertical-align: middle;
   &.lose {
     border: 6px double red;
     display: table-cell;
-    vertical-align: middle;
     width: 336px;
-    top: 186px;
     left: 311px;
     p {
       color: red;
-      font-size: 4em;
+      font-size: 3em;
       text-align: center;
     }
   }
   &.win {
     border: 6px double lime;
     display: table-cell;
-    vertical-align: middle;
     width: 313px;
-    top: 205px;
     left: 324px;
     p {
       color: lime;
@@ -166,13 +138,11 @@ button:active {
   &.push {
     border: 6px double white;
     display: table-cell;
-    vertical-align: middle;
     width: 208px;
-    top: 186px;
     left: 380px;
     p {
       color: rgb(173, 199, 138);
-      font-size: 4em;
+      font-size: 3em;
       text-align: center;
     }
   }
@@ -295,7 +265,7 @@ button {
   width: 47px;
   position: absolute;
   top: 393px;
-  left: 604px;
+  left: 462px;
   img {
     width: 47px;
     position: absolute;
@@ -305,7 +275,7 @@ button {
 .currentWager {
   position: absolute;
   top: 418px;
-  left: 569px;
+  left: 428px;
 }
 
 .testHand {
@@ -339,9 +309,9 @@ $needle-origin: 8px 84px;
   border-radius: 0 100% 0 0;
 }
 
-.activity-gauge {
-  top: 221px;
-  left: 21px;
+.advantage-gauge {
+  top: 15px;
+  left: 20px;
   //border-radius: 220px 220px 0 0;
   display: inline-block;
   height: 110px;
@@ -421,4 +391,22 @@ $needle-origin: 8px 84px;
     top: 64px;
     left: 7px;
   }
+}
+
+.count {
+  color: white;
+  position: absolute;
+  top: 149px;
+  left: 18px;
+  padding: 2px;
+  text-shadow: 1px 1px 0 black;
+}
+
+.trueCount {
+  color: white;
+  position: absolute;
+  top: 170px;
+  left: 18px;
+  padding: 2px;
+  text-shadow: 1px 1px 0 black;
 }

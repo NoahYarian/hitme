@@ -548,19 +548,11 @@ function updateCount(card) {
   $count.append("<p>Count: " + count + "</p>");
   $trueCount.empty();
   $trueCount.append("<p>True Count: " + trueCount + "</p>");
-
-  if (count >= 20) {
-    $count.addClass("hot");
-  } else if (count > -20 && count < 20) {
-    $count.removeClass("hot cold");
-  } else if (count <= -20) {
-    $count.addClass("cold");
-  }
 }
 
 function getTrueCount() {
   var decksLeft = cardsLeft / 52;
-  trueCount = count / decksLeft;
+  trueCount = (count / decksLeft).toPrecision(2);
 }
 
 function getAdvantage() {
