@@ -279,3 +279,98 @@ button {
   top: 200px;
   left: -200px;
   width: 200px; }
+
+/* line 326, /Users/noah/code/hitme/src/_styles/main.scss */
+.red {
+  height: 104px;
+  width: 104px;
+  background: #e93e3c;
+  display: inline-block;
+  border-radius: 100% 0 0 0; }
+
+/* line 334, /Users/noah/code/hitme/src/_styles/main.scss */
+.green {
+  height: 104px;
+  width: 104px;
+  background: #9ead3a;
+  display: inline-block;
+  border-radius: 0 100% 0 0; }
+
+/* line 342, /Users/noah/code/hitme/src/_styles/main.scss */
+.activity-gauge {
+  top: 221px;
+  left: 21px;
+  display: inline-block;
+  height: 110px;
+  position: relative;
+  width: 208px; }
+  /* line 351, /Users/noah/code/hitme/src/_styles/main.scss */
+  .activity-gauge .levels {
+    border-bottom: 2px solid #464646;
+    height: 104px; }
+
+/* line 357, /Users/noah/code/hitme/src/_styles/main.scss */
+.gauge-needle {
+  background: url("http://f.cl.ly/items/2d3Q26031W0O0R2o1j3V/gauge-needle.svg") 0 0 no-repeat;
+  width: 17px;
+  height: 94px;
+  display: block;
+  margin-left: -8px;
+  margin-bottom: -3px;
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  transform: rotate(-18deg);
+  -webkit-transform-origin: 8px 84px;
+  -moz-transform-origin: 8px 84px;
+  -ms-transform-origin: 8px 84px;
+  transform-origin: 8px 84px;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -ms-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out; }
+
+/* line 383, /Users/noah/code/hitme/src/_styles/main.scss */
+.houseText {
+  position: absolute;
+  top: 87px;
+  left: 34px; }
+
+/* line 389, /Users/noah/code/hitme/src/_styles/main.scss */
+.playerText {
+  position: absolute;
+  top: 87px;
+  right: 34px; }
+
+/* line 395, /Users/noah/code/hitme/src/_styles/main.scss */
+.advantageText {
+  position: absolute;
+  left: 50px;
+  top: 109px;
+  color: white;
+  text-shadow: 1px 1px 0 black; }
+
+/* line 404, /Users/noah/code/hitme/src/_styles/main.scss */
+.percentMarkers > * {
+  position: absolute;
+  font-size: .8em; }
+
+/* line 408, /Users/noah/code/hitme/src/_styles/main.scss */
+.percentMarkers .pos1 {
+  top: 20px;
+  left: 145px; }
+
+/* line 412, /Users/noah/code/hitme/src/_styles/main.scss */
+.percentMarkers .pos2 {
+  top: 64px;
+  left: 178px; }
+
+/* line 416, /Users/noah/code/hitme/src/_styles/main.scss */
+.percentMarkers .neg1 {
+  top: 20px;
+  left: 39px; }
+
+/* line 420, /Users/noah/code/hitme/src/_styles/main.scss */
+.percentMarkers .neg2 {
+  top: 64px;
+  left: 7px; }

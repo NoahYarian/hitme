@@ -8,6 +8,7 @@ var deckId = "";
 var count = 0;
 var trueCount = 0;
 var cardsLeft = 312;
+var advantage = -.5;
 var bank = 500;
 var betAmt = 25;
 var betChangeAllowed = true;
@@ -541,6 +542,8 @@ function updateCount(card) {
     count += 1;
   }
   getTrueCount();
+  getAdvantage();
+  setNeedle();
   $count.empty();
   $count.append("<p>Count: " + count + "</p>");
   $trueCount.empty();
@@ -558,6 +561,15 @@ function updateCount(card) {
 function getTrueCount() {
   var decksLeft = cardsLeft / 52;
   trueCount = count / decksLeft;
+}
+
+function getAdvantage() {
+  advantage = (trueCount * .5) - .5;
+}
+
+function setNeedle() {
+  var num = advantage * 36;
+  $(".gauge-needle").css("transform", "rotate(" + num + "deg)");
 }
 
 function bet(amt) {
