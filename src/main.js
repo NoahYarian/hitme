@@ -1,10 +1,13 @@
 var API = "http://deckofcardsapi.com/api/";
 var newDeckURL = API + "shuffle/?deck_count=6";
-var cardBack = "http://tinyurl.com/kqzzmbr";
+//var cardBack = "http://tinyurl.com/kqzzmbr";
+var cardBack = "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Card_back_16.svg/209px-Card_back_16.svg.png";
 
 var game;
 var deckId = "";
 var count = 0;
+var trueCount = 0;
+var cardsLeft = 312;
 var bank = 500;
 var betAmt = 25;
 var betChangeAllowed = true;
@@ -35,6 +38,7 @@ var $handChips = $(".handChips");
 var $bankChips = $(".bankChips");
 var $bankTotal = $(".bankTotal");
 var $count = $(".count");
+var $trueCount = $(".trueCount");
 var $announce = $(".announce");
 var $announceText = $(".announce p");
 
@@ -306,6 +310,7 @@ function drawCard(options) {
     // options.storeImg && game.splitCardImages.push(cardImage(data));
     typeof options.callback === 'function' && options.callback();
   });
+  cardsLeft--;
 }
 
 function hit() {
@@ -406,13 +411,21 @@ function checkTotal(person) {
       total += aces + 10;
     }
   }
+  var textColor = "white"
+  if (total === 21) {
+    textColor = "lime";
+  } else if (total > 21) {
+    textColor = "red";
+  }
 
   person === "dealer" ? (
     game.dealerTotal = total,
-    $dealerTotal.text(game.dealerTotal)
+    $dealerTotal.text(game.dealerTotal),
+    $dealerTotal.css("color", textColor)
   ) : (
     game.playerTotal = total,
-    $playerTotal.text(game.playerTotal)
+    $playerTotal.text(game.playerTotal),
+    $playerTotal.css("color", textColor)
   );
 }
 
@@ -470,6 +483,7 @@ function gameEnd() {
   }
   $bankTotal.text("Bank: " + bank);
   betChangeAllowed = true;
+  isPlayersTurn = true;
   flipCard();
   $dealerTotal.removeClass("hidden");
   $newGame.attr("disabled", false);
@@ -526,8 +540,11 @@ function updateCount(card) {
   } else if (card < 7) {
     count += 1;
   }
+  getTrueCount();
   $count.empty();
   $count.append("<p>Count: " + count + "</p>");
+  $trueCount.empty();
+  $trueCount.append("<p>True Count: " + trueCount + "</p>");
 
   if (count >= 20) {
     $count.addClass("hot");
@@ -536,6 +553,11 @@ function updateCount(card) {
   } else if (count <= -20) {
     $count.addClass("cold");
   }
+}
+
+function getTrueCount() {
+  var decksLeft = cardsLeft / 52;
+  trueCount = count / decksLeft;
 }
 
 function bet(amt) {

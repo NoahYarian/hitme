@@ -33,6 +33,14 @@ body {
   }
 }
 
+.trueCount {
+  color: yellow;
+  position: absolute;
+  top: 170px;
+  left: 18px;
+  padding: 2px;
+}
+
 button:disabled {
   display: none;
 }
@@ -62,6 +70,7 @@ button:active {
   position: absolute;
   color: white;
   font-size: 1.5em;
+    text-shadow: 1px 1px 0 black;
   &.dealerTotal {
     top: 134px;
     left: 384px;
@@ -70,14 +79,14 @@ button:active {
     top: 340px;
     left: 383px;
   }
-  &.hand1Total {
-    top: 66px;
-    left: 0px;
-  }
-  &.hand2Total {
-    top: 66px;
-    left: 250px;
-  }
+  // &.hand1Total {
+  //   top: 66px;
+  //   left: 0px;
+  // }
+  // &.hand2Total {
+  //   top: 66px;
+  //   left: 250px;
+  // }
 }
 .dealer {
   position: absolute;
@@ -101,9 +110,9 @@ button:active {
   transform: rotateX(16deg);
 }
 
-// .dealer img {
-//   transform: scale(.85) rotateX(16deg);
-// }
+.dealer img {
+  transform: scale(.85) rotateX(16deg);
+}
 
 // .playerSplit {
 //   position: absolute;
