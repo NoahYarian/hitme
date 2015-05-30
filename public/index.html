@@ -20,10 +20,10 @@
         <div class="dealer"></div>
         <div class="player"></div>
         <div class="buttons">
-          <button disabled id="doubleDown-hidden" class="doubleDown">Double</button>
-          <button class="newGame">Deal</button>
-          <button disabled class="hit">Hit</button>
-          <button disabled class="stay">Stay</button>
+          <button disabled id="doubleDown-hidden" class="btn doubleDown">Double</button>
+          <button class="btn newGame">Deal</button>
+          <button disabled class="btn hit">Hit</button>
+          <button disabled class="btn stay">Stay</button>
         </div>
         <div class="announce">
           <p></p>
@@ -43,8 +43,10 @@
             <div class="pos2">+2%</div>
           </div>
         </div>
+        <button class="toggleTestPanel"></button>
         <div class="testHand">
           <div class="dealer1">
+            <p>To Dealer</p>
             <select class="dealer1Value">
               <option>ACE</option>
               <option>2</option>
@@ -91,6 +93,7 @@
             </select>
           </div>
           <div class="player1">
+            <p>To Player</p>
             <select class="player1Value">
               <option>ACE</option>
               <option>2</option>
@@ -136,7 +139,7 @@
               <option>SPADES</option>
             </select>
           </div>
-          <button class="testDeal">Test Deal</button>
+          <button class="testDeal">Deal Cards</button>
           <div class="testCard">
             <select class="giveCardValue">
               <option>ACE</option>

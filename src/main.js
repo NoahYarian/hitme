@@ -106,6 +106,11 @@ $stay.click(function () {
   stay();
 });
 
+$(".toggleTestPanel").click(function () {
+  console.log("click");
+  $("div.testHand").toggleClass("hidden");
+});
+
 //chip click listeners
 $chip1.click(function () {
   if (betChangeAllowed) {
@@ -633,6 +638,9 @@ function countChips(location) {
 }
 
 // Deal specific cards for testing purposes
+
+
+
 $(".testDeal").click(function () {
   game = new Game();
   bet(betAmt);
