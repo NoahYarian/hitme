@@ -107,75 +107,15 @@ $stay.click(function () {
 });
 
 $(".toggleTestPanel").click(function () {
-  console.log("click");
   $("div.testHand").toggleClass("hidden");
 });
 
-//chip click listeners
-$chip1.click(function () {
+//chip click listener
+$(".chip").click(function() {
   if (betChangeAllowed) {
-    $chip1.attr("id", "selectedBet");
-    $chip5.attr("id", "");
-    $chip10.attr("id", "");
-    $chip25.attr("id", "");
-    $chip50.attr("id", "");
-    $chip100.attr("id", "");
-    betAmt = 1;
-  }
-});
-$chip5.click(function () {
-  if (betChangeAllowed) {
-    $chip1.attr("id", "");
-    $chip5.attr("id", "selectedBet");
-    $chip10.attr("id", "");
-    $chip25.attr("id", "");
-    $chip50.attr("id", "");
-    $chip100.attr("id", "");
-    betAmt = 5;
-  }
-});
-$chip10.click(function () {
-  if (betChangeAllowed) {
-    $chip1.attr("id", "");
-    $chip5.attr("id", "");
-    $chip10.attr("id", "selectedBet");
-    $chip25.attr("id", "");
-    $chip50.attr("id", "");
-    $chip100.attr("id", "");
-    betAmt = 10;
-  }
-});
-$chip25.click(function () {
-  if (betChangeAllowed) {
-    $chip1.attr("id", "");
-    $chip5.attr("id", "");
-    $chip10.attr("id", "");
-    $chip25.attr("id", "selectedBet");
-    $chip50.attr("id", "");
-    $chip100.attr("id", "");
-    betAmt = 25;
-  }
-});
-$chip50.click(function () {
-  if (betChangeAllowed) {
-    $chip1.attr("id", "");
-    $chip5.attr("id", "");
-    $chip10.attr("id", "");
-    $chip25.attr("id", "");
-    $chip50.attr("id", "selectedBet");
-    $chip100.attr("id", "");
-    betAmt = 50;
-  }
-});
-$chip100.click(function () {
-  if (betChangeAllowed) {
-    $chip1.attr("id", "");
-    $chip5.attr("id", "");
-    $chip10.attr("id", "");
-    $chip25.attr("id", "");
-    $chip50.attr("id", "");
-    $chip100.attr("id", "selectedBet");
-    betAmt = 100;
+    $(".chip").attr("id", "");
+    $(this).attr("id", "selectedBet");
+    betAmt = Number($(this).attr("data-id"));
   }
 });
 
@@ -296,7 +236,7 @@ function drawCard(options) {
     cardPlace.play();
     options.image ? (
       html = "<img class='cardImage' src='" + options.image + "'>",
-      $("." + options.person).append(html),
+      $("." + options.person).prepend(html),
       game.hiddenCard = cardImage(data)
     ) : (
       html = "<img class='cardImage' src='" + cardImage(data) + "'>",
@@ -674,7 +614,7 @@ $(".testDeal").click(function () {
   game.dealerHand = [dealer1Value, dealer2Value];
   game.playerHand = [player1Value, player2Value];
   game.hiddenCard = dealer1;
-  $dealer.append(`<img src='${cardBack}' class='cardImage'>`);
+  $dealer.prepend(`<img src='${cardBack}' class='cardImage'>`);
   $dealer.append(`<img src='${dealer2}' class='cardImage'>`);
   $player.append(`<img src='${player1}' class='cardImage'>`);
   $player.append(`<img src='${player2}' class='cardImage'>`);
