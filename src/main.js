@@ -4,9 +4,10 @@ var cardBack = "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Card_ba
 
 var game;
 var deckId = "";
+var decks = 6;
 var count = 0;
-var trueCount = 0;
-var cardsLeft = 312;
+var trueCount = count / decks;
+var cardsLeft = 52 * decks;
 var advantage = -.5;
 var bank = 500;
 var betAmt = 25;
@@ -23,7 +24,7 @@ var betChangeAllowed = true;
 var $deal = $(".deal");
 var $hit = $(".hit");
 var $stay = $(".stay");
-var $doubleDown = $(".doubleDown");
+var $double = $(".double");
 var $splitButton = $(".splitButton");
 var $split1Button = $(".split1Button");
 var $split2Button = $(".split2Button");
@@ -147,8 +148,8 @@ $splitButton.click(split);
 $split1Button.click(split);
 $split2Button.click(split);
 
-$doubleDown.click(function () {
-  $doubleDown.attr("disabled", true);
+$double.click(function () {
+  $double.attr("disabled", true);
   $hit.attr("disabled", true);
   $stay.attr("disabled", true);
   bet(betAmt);
@@ -207,18 +208,14 @@ function newGame() {
 }
 
 function deal() {
-  game.player.canDouble = true;
-  game.isFlipped = false;
   betChangeAllowed = false;
   clearTable();
-  $newGame.attr("disabled", true);
-  $hit.attr("disabled", false);
-  $stay.attr("disabled", false);
-  $doubleDown.attr("disabled", false);
-  $doubleDown.attr("id", "");
+  $deal.attr("disabled", true);
+  $(".hit, .stay, .double").attr("disabled", false);
+  $double.attr("id", "");
   cardPackage.load();
   cardPackage.play();
-  if (deckId === "" || cardsLeft < 20) {
+  if (deckId === "" || cardsLeft < 33) {
     getJSON(newDeckURL, function(data) {
       deckId = data.deck_id;
       console.log("About to deal from new deck");
@@ -236,19 +233,17 @@ function deal() {
 
 function draw4() {
   drawCard({
-    person: "dealer",
+    hand: "dealer",
     image: cardBack
   });
   drawCard({
-    person: "player",
-    storeImg: true
+    hand: "player"
   });
   drawCard({
-    person: "dealer"
+    hand: "dealer"
   });
   drawCard({
-    person: "player",
-    storeImg: true,
+    hand: "player",
     callback: checkSplit
   });
 }
@@ -296,36 +291,36 @@ function highlight(hand) {
 }
 
 function drawCard(options) {
-  var cardURL = API + "draw/" + deckId + "/?count=1";
+  var cardURL = `${API}draw/${deckId}/?count=${decks}`;
   getJSON(cardURL, function(data, cb) {
     var html;
+    var cardImage = cardImage(data);
+    $(`game[options.hand].cardImages`).push(cardImage);
     cardPlace.load();
     cardPlace.play();
     options.image ? (
-      html = "<img class='cardImage' src='" + options.image + "'>",
-      $("." + options.person).prepend(html),
-      game.hiddenCard = cardImage(data)
+      html = `<img class="cardImage" src="${options.image}">`,
+      $dealerHand.prepend(html)
     ) : (
-      html = "<img class='cardImage' src='" + cardImage(data) + "'>",
-      $("." + options.person).append(html)
+      html = `<img class="cardImage" src="${cardImage(data)}">`,
+      $("." + options.hand).append(html)
     );
     if (options.person === "dealer") {
       if (options.image) {
-        game.dealerHand.unshift(data.cards[0].value);
+        game.dealer.cardValues.unshift(data.cards[0].value);
       } else {
-        game.dealerHand.push(data.cards[0].value);
+        game.dealer.cardValues.push(data.cards[0].value);
         updateCount(data.cards[0].value);
       }
       checkTotal("dealer");
-      console.log("dealer's hand - " + game.dealerHand + " **** dealer is at " + game.dealerTotal);
-    } else if (options.person === "player") {
-      game.playerHand.push(data.cards[0].value);
+      console.log(`dealer - ${game.dealer.cardValues} **** dealer is at ${game.dealer.total}`);
+    } else {
+      game[options.hand].cardValues.push(data.cards[0].value);
       updateCount(data.cards[0].value);
-      checkTotal("player");
-      console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal);
+      checkTotal(options.hand);
+      console.log(`${options.hand} - ${game[options.hand].cardValues} **** ${options.hand} is at ${game.playerTotal}`);
     }
     checkVictory();
-    options.storeImg && game.splitCardImages.push(cardImage(data));
     typeof options.callback === 'function' && options.callback();
   });
   cardsLeft--;
@@ -514,7 +509,7 @@ function gameEnd() {
 }
 
 function clearTable() {
-  $(".hand, .wager, .total, .chips").empty;
+  $(".hand, .wager, .total, .chips").empty();
   $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup").addClass("hidden");
   $(".popup").removeClass("win lose push");
   console.log("------------table cleared------------");
