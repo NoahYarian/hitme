@@ -11,35 +11,63 @@ html
   body
     .container
       .table
+        .dealer
+          .total.dealerTotal
+        .player
+          .total.playerTotal
+          .playerChips
+          .playerWager
+          button.btn.splitButton(disabled) Split
+          .announce.hidden
+        .playerSplit.hidden
+          .split1
+            .total.split1Total
+            .split1Chips
+            .split1Wager
+            button.btn.split1Button(disabled) Split
+            .announce1.hidden
+          .split2
+            .total.split2Total
+            .split2Chips
+            .split2Wager
+            button.btn.split2Button(disabled) Split
+            .announce2.hidden
+        .playerSplit1.hidden
+          .split1a
+            .total.split1aTotal
+            .split1aChips
+            .split1aWager
+            .announce1a.hidden
+          .split1b
+            .total.split1bTotal
+            .split1bChips
+            .split1bWager
+            .announce1b.hidden
+        .playerSplit2.hidden
+          .split2a
+            .total.split2aTotal
+            .split2aChips
+            .split2aWager
+            .announce2a.hidden
+          .split2b
+            .total.split2bTotal
+            .split2bChips
+            .split2bWager
+            .announce2b.hidden
+        .bankChips
+        .bankTotal
+
+        .buttons
+          button.btn.newGame Deal
+          button.btn.doubleDown(disabled) Double
+          button.btn.hit(disabled) Hit
+          button.btn.stay(disabled) Stay
         img.chip.chip1(data-id="1", src="images/chip-1.png")
         img.chip.chip5(data-id="5", src="images/chip-5.png")
         img.chip.chip10(data-id="10", src="images/chip-10.png")
         img.chip.chip25(data-id="25", id="selectedBet", src="images/chip-25.png")
         img.chip.chip50(data-id="50", src="images/chip-50.png")
         img.chip.chip100(data-id="100", src="images/chip-100.png")
-        .handChips
-        .currentWager
-        .bankChips
-        .bankTotal
-        .total.dealerTotal
-        .total.playerTotal
-        .dealer
-        .player
-        .playerSplit.hidden
-          .total.hand1Total
-          .hand1
-          .total.hand2Total
-          .hand2
-        button.btn.split(disabled) Split
-        .buttons
-          button.btn.doubleDown(disabled) Double
-          button.btn.newGame Deal
-          button.btn.hit(disabled) Hit
-          button.btn.stay(disabled) Stay
-        .announce
-          p
-        .count Count: 0
-        .trueCount True Count: 0
         .advantage-gauge
           .levels
               span.red
@@ -53,8 +81,14 @@ html
             .neg2 -2%
             .pos1 +1%
             .pos2 +2%
+        button.toggleCountInfo
+        .countInfo.hidden
+          .count Count: 0
+          .trueCount True Count: 0
+          .cardsLeft 312
+          .decksLeft 6
         button.toggleTestPanel
-        .testHand.hidden
+        .testPanel.hidden
           .dealer1
             p To Dealer
             select.dealer1Value

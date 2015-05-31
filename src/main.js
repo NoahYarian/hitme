@@ -11,20 +11,22 @@ var advantage = -.5;
 var bank = 500;
 var betAmt = 25;
 var betChangeAllowed = true;
-var splitAllowed = false;
-var isFirstTurn = true;
-var isPlayersTurn = true;
-var isDoubledDown = false;
-var isFlipped = false;
-var isSplit = false;
-var gameHand = "";
+// var splitAllowed = false;
+// var isFirstTurn = true;
+// var isPlayersTurn = true;
+// var isDoubledDown = false;
+// var isFlipped = false;
+// var isSplit = false;
+// var gameHand = "";
 
-//buttons
-var $split = $(".split");
-var $doubleDown = $(".doubleDown");
+//game buttons
 var $newGame = $(".newGame");
 var $hit = $(".hit");
 var $stay = $(".stay");
+var $doubleDown = $(".doubleDown");
+var $splitButton = $(".splitButton");
+var $split1Button = $(".split1Button");
+var $split2Button = $(".split2Button");
 
 //chips
 var $chip1 = $(".chip1");
@@ -35,20 +37,32 @@ var $chip50 = $(".chip50");
 var $chip100 = $(".chip100");
 
 //info divs
-var $handChips = $(".handChips");
-var $bankChips = $(".bankChips");
-var $bankTotal = $(".bankTotal");
 var $count = $(".count");
 var $trueCount = $(".trueCount");
-var $announce = $(".announce");
-var $announceText = $(".announce p");
+
+// Chip stacks
+var $bankChips = $(".bankChips");
+var $playerChips = $(".playerChips");
+var $split1Chips = $(".split1Chips");
+var $split2Chips = $(".split2Chips");
+var $split1aChips = $(".split1aChips");
+var $split1bChips = $(".split1bChips");
+var $split2aChips = $(".split2aChips");
+var $split2bChips = $(".split2bChips");
+
+// Chip totals
+var $bankTotal = $(".bankTotal");
+var $playerWager = $(".playerWager");
+var $split1Wager = $(".split1Wager");
+var $split2Wager = $(".split2Wager");
+var $split1aWager = $(".split1aWager");
+var $split1bWager = $(".split1bWager");
+var $split2aWager = $(".split2aWager");
+var $split2bWager = $(".split2bWager");
 
 //card hand divs
 var $dealer = $(".dealer");
 var $player = $(".player");
-var $playerSplit = $(".playerSplit");
-// var $hand1 = $(".hand1");
-// var $hand2 = $(".hand2");
 var $split1 = $(".split1");
 var $split2 = $(".split2");
 var $split1a = $(".split1a");
@@ -56,25 +70,46 @@ var $split1b = $(".split1b");
 var $split2a = $(".split2a");
 var $split2b = $(".split2b");
 
+//card split divs
+var $playerSplit = $(".playerSplit");
+var $playerSplit1 = $(".playerSplit1");
+var $playerSplit2 = $(".playerSplit2");
+
 //hand total divs
 var $dealerTotal = $(".dealerTotal");
 var $playerTotal = $(".playerTotal");
-var $hand1Total = $(".hand1Total");
-var $hand2Total = $(".hand2Total");
+var $split1Total = $(".split1Total");
+var $split2Total = $(".split2Total");
+var $split1aTotal = $(".split1aTotal");
+var $split1bTotal = $(".split1bTotal");
+var $split2aTotal = $(".split2aTotal");
+var $split2bTotal = $(".split2bTotal");
+
+// win - lose - push - blackjack announce divs and text
+var $announce = $(".announce");
+var $announceText = $(".announce p");
+var $announce1 = $(".announce1");
+var $announceText1 = $(".announce1 p");
+var $announce2 = $(".announce2");
+var $announceText2 = $(".announce2 p");
+var $announce1a = $(".announce1a");
+var $announceText1a = $(".announce1a p");
+var $announce1b = $(".announce1b");
+var $announceText1b = $(".announce1b p");
+var $announce2a = $(".announce2a");
+var $announceText2a = $(".announce2a p");
+var $announce2b = $(".announce2b");
+var $announceText2b = $(".announce2b p");
 
 //create audio elements
 var cardPlace = document.createElement('audio');
 cardPlace.setAttribute('src', 'sounds/cardPlace1.wav');
-
 var cardPackage = document.createElement('audio');
 cardPackage.setAttribute('src', 'sounds/cardOpenPackage2.wav');
-
 var buttonClick = document.createElement('audio');
 buttonClick.setAttribute('src', 'sounds/click1.wav');
-
 var winWav = document.createElement('audio');
 winWav.setAttribute('src', 'sounds/chipsHandle5.wav');
-
 var loseWav = document.createElement('audio');
 loseWav.setAttribute('src', 'sounds/cardShove3.wav');
 
@@ -88,7 +123,9 @@ $("button").click(function () {
   buttonClick.play();
 });
 
-$split.click(split);
+$splitButton.click(split);
+$split1Button.click(split);
+$split2Button.click(split);
 
 $doubleDown.click(function () {
   $doubleDown.attr("disabled", true);

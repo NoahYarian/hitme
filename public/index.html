@@ -11,33 +11,69 @@
   </head>
   <body>
     <div class="container">
-      <div class="table"><img data-id="1" src="images/chip-1.png" class="chip chip1"><img data-id="5" src="images/chip-5.png" class="chip chip5"><img data-id="10" src="images/chip-10.png" class="chip chip10"><img data-id="25" id="selectedBet" src="images/chip-25.png" class="chip chip25"><img data-id="50" src="images/chip-50.png" class="chip chip50"><img data-id="100" src="images/chip-100.png" class="chip chip100">
-        <div class="handChips"></div>
-        <div class="currentWager"></div>
+      <div class="table">
+        <div class="dealer">
+          <div class="total dealerTotal"></div>
+        </div>
+        <div class="player">
+          <div class="total playerTotal"></div>
+          <div class="playerChips"></div>
+          <div class="playerWager"></div>
+          <button disabled class="btn splitButton">Split</button>
+          <div class="announce hidden"></div>
+        </div>
+        <div class="playerSplit hidden">
+          <div class="split1">
+            <div class="total split1Total"></div>
+            <div class="split1Chips"></div>
+            <div class="split1Wager"></div>
+            <button disabled class="btn split1Button">Split</button>
+            <div class="announce1 hidden"></div>
+          </div>
+          <div class="split2">
+            <div class="total split2Total"></div>
+            <div class="split2Chips"></div>
+            <div class="split2Wager"></div>
+            <button disabled class="btn split2Button">Split</button>
+            <div class="announce2 hidden"></div>
+          </div>
+        </div>
+        <div class="playerSplit1 hidden">
+          <div class="split1a">
+            <div class="total split1aTotal"></div>
+            <div class="split1aChips"></div>
+            <div class="split1aWager"></div>
+            <div class="announce1a hidden"></div>
+          </div>
+          <div class="split1b">
+            <div class="total split1bTotal"></div>
+            <div class="split1bChips"></div>
+            <div class="split1bWager"></div>
+            <div class="announce1b hidden"></div>
+          </div>
+        </div>
+        <div class="playerSplit2 hidden">
+          <div class="split2a">
+            <div class="total split2aTotal"></div>
+            <div class="split2aChips"></div>
+            <div class="split2aWager"></div>
+            <div class="announce2a hidden"></div>
+          </div>
+          <div class="split2b">
+            <div class="total split2bTotal"></div>
+            <div class="split2bChips"></div>
+            <div class="split2bWager"></div>
+            <div class="announce2b hidden"></div>
+          </div>
+        </div>
         <div class="bankChips"></div>
         <div class="bankTotal"></div>
-        <div class="total dealerTotal"></div>
-        <div class="total playerTotal"></div>
-        <div class="dealer"></div>
-        <div class="player"></div>
-        <div class="playerSplit hidden">
-          <div class="total hand1Total"></div>
-          <div class="hand1"></div>
-          <div class="total hand2Total"></div>
-          <div class="hand2"></div>
-        </div>
-        <button disabled class="btn split">Split</button>
         <div class="buttons">
-          <button disabled class="btn doubleDown">Double</button>
           <button class="btn newGame">Deal</button>
+          <button disabled class="btn doubleDown">Double</button>
           <button disabled class="btn hit">Hit</button>
           <button disabled class="btn stay">Stay</button>
-        </div>
-        <div class="announce">
-          <p></p>
-        </div>
-        <div class="count">Count: 0</div>
-        <div class="trueCount">True Count: 0</div>
+        </div><img data-id="1" src="images/chip-1.png" class="chip chip1"><img data-id="5" src="images/chip-5.png" class="chip chip5"><img data-id="10" src="images/chip-10.png" class="chip chip10"><img data-id="25" id="selectedBet" src="images/chip-25.png" class="chip chip25"><img data-id="50" src="images/chip-50.png" class="chip chip50"><img data-id="100" src="images/chip-100.png" class="chip chip100">
         <div class="advantage-gauge">
           <div class="levels"><span class="red"></span><span class="green"></span></div>
           <div class="gauge-needle"></div>
@@ -51,8 +87,15 @@
             <div class="pos2">+2%</div>
           </div>
         </div>
+        <button class="toggleCountInfo"></button>
+        <div class="countInfo hidden">
+          <div class="count">Count: 0</div>
+          <div class="trueCount">True Count: 0</div>
+          <div class="cardsLeft">312</div>
+          <div class="decksLeft">6</div>
+        </div>
         <button class="toggleTestPanel"></button>
-        <div class="testHand hidden">
+        <div class="testPanel hidden">
           <div class="dealer1">
             <p>To Dealer</p>
             <select class="dealer1Value">
