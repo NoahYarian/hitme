@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HIT ME</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
   </head>
   <body>
@@ -19,6 +20,13 @@
         <div class="total playerTotal"></div>
         <div class="dealer"></div>
         <div class="player"></div>
+        <div class="playerSplit hidden">
+          <div class="total hand1Total"></div>
+          <div class="hand1"></div>
+          <div class="total hand2Total"></div>
+          <div class="hand2"></div>
+        </div>
+        <button disabled class="btn split">Split</button>
         <div class="buttons">
           <button disabled class="btn doubleDown">Double</button>
           <button class="btn newGame">Deal</button>
@@ -163,8 +171,14 @@
               <option>SPADES</option>
             </select>
           </div>
-          <button class="dealerGiveCard">To Dealer</button>
-          <button class="playerGiveCard">To Player</button>
+          <button data-id="dealer" class="giveCard dealerGiveCard">To Dealer</button>
+          <button data-id="player" class="giveCard playerGiveCard">To Player</button>
+          <button data-id="split1" class="giveCard split1GiveCard">To Split1</button>
+          <button data-id="split2" class="giveCard split2GiveCard">To Split2</button>
+          <button data-id="split1a" class="giveCard split1aGiveCard">To Split1a</button>
+          <button data-id="split1b" class="giveCard split1bGiveCard">To Split1b</button>
+          <button data-id="split2a" class="giveCard split2aGiveCard">To Split2a</button>
+          <button data-id="split2b" class="giveCard split2bGiveCard">To Split2b</button>
         </div>
       </div>
     </div>

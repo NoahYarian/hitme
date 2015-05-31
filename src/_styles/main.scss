@@ -25,9 +25,7 @@ button:focus {
 
 .btn:active, .testHand button:active {
   color: white;
-  position: relative;
-  top: 1px;
-  left: 1px;
+  transform: translate(2px, 2px);
 }
 
 .table {
@@ -56,14 +54,14 @@ button:focus {
     top: 285px;
     left: 380px;
   }
-  // &.hand1Total {
-  //   top: 66px;
-  //   left: 0px;
-  // }
-  // &.hand2Total {
-  //   top: 66px;
-  //   left: 250px;
-  // }
+  &.hand1Total {
+    top: 66px;
+    left: 0px;
+  }
+  &.hand2Total {
+    top: 66px;
+    left: 250px;
+  }
 }
 .dealer {
   position: absolute;
@@ -81,7 +79,7 @@ button:focus {
   perspective: 400px;
 }
 
-.dealer img, .player img/*, .playerSplit img*/ {
+.dealer img, .player img, .playerSplit img {
   margin-right: -90px;
   -webkit-transform: rotateX(16deg);
   transform: rotateX(16deg);
@@ -91,24 +89,24 @@ button:focus {
   transform: scale(.85) rotateX(16deg);
 }
 
-// .playerSplit {
-//   position: absolute;
-//   width: 500px;
-//   top: 267px;
-//   left: 236px;
-//   display: flex;
-//   justify-content: space-around;
-//   perspective: 800px;
-// }
+.playerSplit {
+  position: absolute;
+  width: 500px;
+  top: 204px;
+  left: 275px;
+  display: flex;
+  justify-content: space-around;
+  //perspective: 800px;
+}
 
-// .hand1, .hand2 {
-//   min-width: 188px;
-// }
+.hand1, .hand2 {
+  min-width: 188px;
+}
 
-// .highlighted {
-//   background: rgba(255,255,0, .5);
-//   border: 4px double black;
-// }
+.highlighted {
+  background: rgba(255,255,0, .5);
+  border: 4px double black;
+}
 
 .announce {
   position: absolute;
@@ -152,7 +150,6 @@ button:focus {
 }
 
 .btn {
-  //position: absolute;
   background: rgba(154, 185, 133, 0.63);
   font-size: 2em;
   padding: 8px 24px;
@@ -181,13 +178,13 @@ button:focus {
   padding: 8px 16px;
 }
 
-// .split {
-//   position: absolute;
-//   top: 356px;
-//   left: 424px;
-//   background: rgba(154, 185, 133, .9);
-//   border: 4px groove rgba(154, 185, 133, .9);
-// }
+.split {
+  position: absolute;
+  top: 306px;
+  left: 424px;
+  background: rgba(154, 185, 133, .9);
+  border: 4px groove rgba(154, 185, 133, .9);
+}
 
 .cardImage {
   width: 113px;
@@ -365,7 +362,6 @@ $needle-origin: 8px 84px;
 .advantage-gauge {
   top: 15px;
   left: 20px;
-  //border-radius: 220px 220px 0 0;
   display: inline-block;
   height: 110px;
   position: relative;
@@ -395,7 +391,6 @@ $needle-origin: 8px 84px;
       -ms-transform-origin: $needle-origin;
           transform-origin: $needle-origin;
 
-  // Set the rotation point for the fulcrum
   -webkit-transition: all 1s ease-in-out;
      -moz-transition: all 1s ease-in-out;
       -ms-transition: all 1s ease-in-out;

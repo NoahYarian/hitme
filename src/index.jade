@@ -6,11 +6,10 @@ html
     meta(name='viewport', content='width=device-width, initial-scale=1')
     title HIT ME
     link(rel='stylesheet', href='css/main.css')
-    //- link(rel="icon", type="image/png", href="images/favicon-32x32.png", sizes="32x32")
+    link(rel="icon", type="image/png", href="images/favicon-32x32.png", sizes="32x32")
     link(rel="icon", type="image/png", href="images/favicon-16x16.png", sizes="16x16")
   body
     .container
-      //- button.giveSplitHand Split Test
       .table
         img.chip.chip1(data-id="1", src="images/chip-1.png")
         img.chip.chip5(data-id="5", src="images/chip-5.png")
@@ -26,12 +25,12 @@ html
         .total.playerTotal
         .dealer
         .player
-        //- .playerSplit.hidden
-        //-   .total.hand1Total
-        //-   .hand1
-        //-   .total.hand2Total
-        //-   .hand2
-        //- button.btn.split(disabled) Split
+        .playerSplit.hidden
+          .total.hand1Total
+          .hand1
+          .total.hand2Total
+          .hand2
+        button.btn.split(disabled) Split
         .buttons
           button.btn.doubleDown(disabled) Double
           button.btn.newGame Deal
@@ -159,8 +158,14 @@ html
               option DIAMONDS
               option HEARTS
               option SPADES
-          button.dealerGiveCard To Dealer
-          button.playerGiveCard To Player
+          button.giveCard.dealerGiveCard(data-id="dealer") To Dealer
+          button.giveCard.playerGiveCard(data-id="player") To Player
+          button.giveCard.split1GiveCard(data-id="split1") To Split1
+          button.giveCard.split2GiveCard(data-id="split2") To Split2
+          button.giveCard.split1aGiveCard(data-id="split1a") To Split1a
+          button.giveCard.split1bGiveCard(data-id="split1b") To Split1b
+          button.giveCard.split2aGiveCard(data-id="split2a") To Split2a
+          button.giveCard.split2bGiveCard(data-id="split2b") To Split2b
     script(src="lib/build.js")
     script(src="main.js")
 
