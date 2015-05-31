@@ -620,7 +620,7 @@ function bet(hand, amt) {
 }
 
 function countChips(location) {
-  var amt = location === "bank" ? bank : game.wager;
+  var amt = location === "bank" ? bank : game[location].wager;
   var num100s = Math.floor(amt / 100);
   var num50s = Math.floor((amt - num100s * 100) / 50);
   var num25s = Math.floor((amt - num100s * 100 - num50s * 50) / 25);
@@ -657,9 +657,9 @@ function countChips(location) {
     $('.bankChips img').each(function(i, c) {
       $(c).css('top', -5 * i);
     });
-  } else if (location === "hand") {
-    $handChips.html(html);
-    $('.handChips img').each(function(i, c) {
+  } else {
+    $(`.${location}Chips`).html(html);
+    $(`.${location}Chips img`).each(function(i, c) {
       $(c).css('top', -5 * i);
     });
   }
