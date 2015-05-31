@@ -61,6 +61,16 @@ var $split2aWager = $(".split2aWager");
 var $split2bWager = $(".split2bWager");
 
 //card hand divs
+var $dealerHand = $(".dealerHand");
+var $playerHand = $(".playerHand");
+var $split1Hand = $(".split1Hand");
+var $split2Hand = $(".split2Hand");
+var $split1aHand = $(".split1aHand");
+var $split1bHand = $(".split1bHand");
+var $split2aHand = $(".split2aHand");
+var $split2bHand = $(".split2bHand");
+
+//card hand parent divs
 var $dealer = $(".dealer");
 var $player = $(".player");
 var $split1 = $(".split1");
@@ -70,7 +80,7 @@ var $split1b = $(".split1b");
 var $split2a = $(".split2a");
 var $split2b = $(".split2b");
 
-//card split divs
+//card split parent divs
 var $playerSplit = $(".playerSplit");
 var $playerSplit1 = $(".playerSplit1");
 var $playerSplit2 = $(".playerSplit2");
@@ -166,31 +176,6 @@ $(".chip").click(function() {
 
 //game object
 function Game() {
-  // this.hiddenCard = "";
-  // this.dealerHand = [];
-  // this.playerHand = [];
-  // this.dealerTotal = 0;
-  // this.playerTotal = 0;
-  // this.wager = 0;
-  // this.winner = "";
-
-  // this.splitCardImages = []; //fix this idea
-  // this.split1Hand = [];
-  // this.split2Hand = [];
-  // this.split1aHand = [];
-  // this.split1bHand = [];
-  // this.split2aHand = [];
-  // this.split2bHand = [];
-  // this.split1Total = 0;
-  // this.split2Total = 0;
-  // this.split1aTotal = 0;
-  // this.split1bTotal = 0;
-  // this.split2aTotal = 0;
-  // this.split2bTotal = 0;
-  // this.splitHand1 = [];
-  // this.splitHand2 = [];
-  // this.splitHand1Total = 0;
-  // this.splitHand2Total = 0;
   this.dealer = new Hand();
   this.player = new Hand();
   this.split1 = new Hand();
@@ -222,8 +207,8 @@ function newGame() {
 }
 
 function deal() {
-  isFirstTurn = true;
-  isFlipped = false;
+  game.player.canDouble = true;
+  game.isFlipped = false;
   betChangeAllowed = false;
   clearTable();
   $newGame.attr("disabled", true);
@@ -529,11 +514,9 @@ function gameEnd() {
 }
 
 function clearTable() {
-  $dealer.empty();
-  $player.empty();
-  $dealerTotal.addClass("hidden");
-  $playerTotal.empty();
-  $announce.removeClass("win lose push");
+  $(".hand, .wager, .total, .chips").empty;
+  $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup").addClass("hidden");
+  $(".popup").removeClass("win lose push");
   console.log("------------table cleared------------");
 }
 

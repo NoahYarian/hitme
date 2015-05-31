@@ -12,48 +12,56 @@ html
     .container
       .table
         .dealer
+          .hand.dealerHand
           .total.dealerTotal
         .player
+          .hand.playerHand
           .total.playerTotal
-          .playerChips
-          .playerWager
+          .chips.playerChips
+          .wager.playerWager
           button.btn.splitButton(disabled) Split
-          .announce.hidden
-        .playerSplit.hidden
+          .popup.announce
+        .playerSplit
           .split1
+            .hand.split1Hand
             .total.split1Total
-            .split1Chips
-            .split1Wager
+            .chips.split1Chips
+            .wager.split1Wager
             button.btn.split1Button(disabled) Split
-            .announce1.hidden
+            .popup.announce1
           .split2
+            .hand.split2Hand
             .total.split2Total
-            .split2Chips
-            .split2Wager
+            .chips.split2Chips
+            .wager.split2Wager
             button.btn.split2Button(disabled) Split
-            .announce2.hidden
-        .playerSplit1.hidden
+            .popup.announce2
+        .playerSplit1
           .split1a
+            .hand.split1aHand
             .total.split1aTotal
-            .split1aChips
-            .split1aWager
-            .announce1a.hidden
+            .chips.split1aChips
+            .wager.split1aWager
+            .popup.announce1a
           .split1b
+            .hand.split1bHand
             .total.split1bTotal
-            .split1bChips
-            .split1bWager
-            .announce1b.hidden
-        .playerSplit2.hidden
+            .chips.split1bChips
+            .wager.split1bWager
+            .popup.announce1b
+        .playerSplit2
           .split2a
+            .hand.split2aHand
             .total.split2aTotal
-            .split2aChips
-            .split2aWager
-            .announce2a.hidden
+            .chips.split2aChips
+            .wager.split2aWager
+            .popup.announce2a
           .split2b
+            .hand.split2bHand
             .total.split2bTotal
-            .split2bChips
-            .split2bWager
-            .announce2b.hidden
+            .chips.split2bChips
+            .wager.split2bWager
+            .popup.announce2b
         .bankChips
         .bankTotal
         .buttons
