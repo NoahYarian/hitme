@@ -20,7 +20,7 @@ var betChangeAllowed = true;
 // var gameHand = "";
 
 //game buttons
-var $newGame = $(".newGame");
+var $deal = $(".deal");
 var $hit = $(".hit");
 var $stay = $(".stay");
 var $doubleDown = $(".doubleDown");
@@ -123,6 +123,16 @@ $("button").click(function () {
   buttonClick.play();
 });
 
+$deal.click(newGame);
+
+$hit.click(hit);
+
+$stay.click(function () {
+  console.log("stay");
+  flipCard();
+  stay();
+});
+
 $splitButton.click(split);
 $split1Button.click(split);
 $split2Button.click(split);
@@ -137,18 +147,12 @@ $doubleDown.click(function () {
   hit();
 });
 
-$newGame.click(newGame);
-
-$hit.click(hit);
-
-$stay.click(function () {
-  console.log("stay");
-  flipCard();
-  stay();
+$(".toggleCountInfo").click(function () {
+  $(".countInfo").toggleClass("hidden");
 });
 
 $(".toggleTestPanel").click(function () {
-  $("div.testHand").toggleClass("hidden");
+  $(".testPanel").toggleClass("hidden");
 });
 
 //chip click listener
@@ -214,7 +218,7 @@ function Hand() {
 
 function newGame() {
   game = new Game();
-  bet(betAmt) && deal();
+  bet("player", betAmt) && deal();
 }
 
 function deal() {
@@ -598,16 +602,16 @@ function setNeedle() {
   $(".gauge-needle").css("transform", "rotate(" + num + "deg)");
 }
 
-function bet(amt) {
+function bet(hand, amt) {
   if (bank >= amt) {
-    game.wager += amt;
+    game[hand].wager += amt;
     bank -= amt;
     $bankTotal.text("Bank: " + bank);
     countChips("bank");
-    countChips("hand");
-    $(".currentWager").text("Current Wager: " + game.wager);
-    console.log("betting " + amt);
-    console.log("wager at " + game.wager);
+    countChips(hand);
+    $(`.${hand}Wager`).text(game[hand].wager);
+    console.log(`betting ${amt} on ${hand}`);
+    console.log(`${hand} wager at ${game[hand].wager}`);
     return true;
   } else {
     console.log("Insufficient funds.");
