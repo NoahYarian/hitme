@@ -16,6 +16,7 @@ var betChangeAllowed = true;
 var isFirstTurn = true;
 var isPlayersTurn = true;
 var isDoubledDown = false;
+var isFlipped = false;
 // var isSplit = false;
 // var gameHand = "";
 
@@ -105,6 +106,7 @@ $hit.click(hit);
 
 $stay.click(function () {
   console.log("stay");
+  flipCard();
   stay();
 });
 
@@ -140,32 +142,34 @@ function Game() {
 
 function newGame() {
   game = new Game();
-  bet(betAmt);
-  deal();
+  bet(betAmt) && deal();
 }
 
 function deal() {
   isFirstTurn = true;
-  if (bank >= betAmt) {
-    clearTable();
-    $newGame.attr("disabled", true);
-    $hit.attr("disabled", false);
-    $stay.attr("disabled", false);
-    $doubleDown.attr("disabled", false);
-    $doubleDown.attr("id", "");
-    cardPackage.load();
-    cardPackage.play();
-    if (deckId === "") {
-      getJSON(newDeckURL, function(data) {
-        deckId = data.deck_id;
-        console.log("About to deal from new deck");
-        draw4();
-      });
-    } else {
-      console.log("About to deal from current deck");
+  isFlipped = false;
+  betChangeAllowed = false;
+  clearTable();
+  $newGame.attr("disabled", true);
+  $hit.attr("disabled", false);
+  $stay.attr("disabled", false);
+  $doubleDown.attr("disabled", false);
+  $doubleDown.attr("id", "");
+  cardPackage.load();
+  cardPackage.play();
+  if (deckId === "" || cardsLeft < 20) {
+    getJSON(newDeckURL, function(data) {
+      deckId = data.deck_id;
+      console.log("About to deal from new deck");
       draw4();
-    }
-    betChangeAllowed = false;
+      count = 0;
+      trueCount = 0;
+      cardsLeft = 312;
+      advantage = -.5;
+    });
+  } else {
+    console.log("About to deal from current deck");
+    draw4();
   }
 }
 
@@ -244,17 +248,22 @@ function drawCard(options) {
       html = "<img class='cardImage' src='" + cardImage(data) + "'>",
       $("." + options.person).append(html)
     );
-    options.person === "dealer" ? (
-      game.dealerHand.push(data.cards[0].value),
-      checkTotal("dealer"),
-      console.log("dealer's hand - " + game.dealerHand + " **** dealer is at " + game.dealerTotal)
-    ) : (
-      game.playerHand.push(data.cards[0].value),
-      checkTotal("player"),
-      console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal)
-    );
+    if (options.person === "dealer") {
+      if (options.image) {
+        game.dealerHand.unshift(data.cards[0].value);
+      } else {
+        game.dealerHand.push(data.cards[0].value);
+        updateCount(data.cards[0].value);
+      }
+      checkTotal("dealer");
+      console.log("dealer's hand - " + game.dealerHand + " **** dealer is at " + game.dealerTotal);
+    } else if (options.person === "player") {
+      game.playerHand.push(data.cards[0].value);
+      updateCount(data.cards[0].value);
+      checkTotal("player");
+      console.log("player's hand - " + game.playerHand + " **** player is at " + game.playerTotal);
+    }
     checkVictory();
-    updateCount(data.cards[0].value);
     // options.storeImg && game.splitCardImages.push(cardImage(data));
     typeof options.callback === 'function' && options.callback();
   });
@@ -278,7 +287,6 @@ function hit() {
 }
 
 function stay() {
-  flipCard();
   if (!game.winner && game.dealerTotal < 17) {
     console.log("dealer hits");
     isPlayersTurn = false;
@@ -431,9 +439,9 @@ function gameEnd() {
     console.log(`returning ${game.wager} to player. Bank at ${bank}`);
   }
   $bankTotal.text("Bank: " + bank);
+  !isFlipped && flipCard();
   betChangeAllowed = true;
   isPlayersTurn = true;
-  flipCard();
   $dealerTotal.removeClass("hidden");
   $newGame.attr("disabled", false);
   $hit.attr("disabled", true);
@@ -450,7 +458,7 @@ function clearTable() {
   $dealerTotal.addClass("hidden");
   $playerTotal.empty();
   $announce.removeClass("win lose push");
-  console.log("--table cleared--");
+  console.log("------------table cleared------------");
 }
 
 function cardImage(data) {
@@ -477,17 +485,23 @@ function announce(text) {
 
 function flipCard() {
   console.log('flip');
+  isFlipped = true;
   var $flipped = $(".dealer .cardImage").first();
   $flipped.remove();
   var html = `<img src='${game.hiddenCard}' class='cardImage'>`;
   $dealer.prepend(html);
+  updateCount(game.dealerHand[0]);
 }
 
 function updateCount(card) {
   if (isNaN(Number(card)) || card === "10") {
     count -= 1;
+    console.log(`${card} --> count -1 --> ${count}`);
   } else if (card < 7) {
     count += 1;
+    console.log(`${card} --> count +1 --> ${count}`);
+  } else if (card >= 7 && card <= 9) {
+    console.log(`${card} --> count +0 --> ${count}`);
   }
   getTrueCount();
   getAdvantage();
@@ -495,12 +509,12 @@ function updateCount(card) {
   $count.empty();
   $count.append("<p>Count: " + count + "</p>");
   $trueCount.empty();
-  $trueCount.append("<p>True Count: " + trueCount + "</p>");
+  $trueCount.append("<p>True Count: " + trueCount.toPrecision(2) + "</p>");
 }
 
 function getTrueCount() {
   var decksLeft = cardsLeft / 52;
-  trueCount = (count / decksLeft).toPrecision(2);
+  trueCount = count / decksLeft;
 }
 
 function getAdvantage() {
@@ -522,8 +536,10 @@ function bet(amt) {
     $(".currentWager").text("Current Wager: " + game.wager);
     console.log("betting " + amt);
     console.log("wager at " + game.wager);
+    return true;
   } else {
     console.log("Insufficient funds.");
+    return false;
   }
 }
 

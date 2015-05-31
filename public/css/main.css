@@ -352,14 +352,14 @@ button:focus {
 /* line 406, /Users/noah/code/hitme/src/_styles/main.scss */
 .houseText {
   position: absolute;
-  top: 87px;
-  left: 34px; }
+  top: 83px;
+  left: 25px; }
 
 /* line 412, /Users/noah/code/hitme/src/_styles/main.scss */
 .playerText {
   position: absolute;
-  top: 87px;
-  right: 34px; }
+  top: 83px;
+  right: 25px; }
 
 /* line 418, /Users/noah/code/hitme/src/_styles/main.scss */
 .advantageText {
