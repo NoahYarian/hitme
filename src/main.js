@@ -272,44 +272,50 @@ function split(hand) {
   var hand2;
   var $button;
   if (hand === "player") {
-    hand1 = game.splitHand1.cards;
-    hand2 = game.splitHand2.cards;
+    hand1 = game.splitHand1;
+    hand2 = game.splitHand2;
     $button = $splitButton;
   } else if (hand === "split1") {
-    hand1 = game.splitHand1a.cards;
-    hand2 = game.splitHand1b.cards;
+    hand1 = game.splitHand1a;
+    hand2 = game.splitHand1b;
     $button = $splitButton1;
   } else if (hand === "split2") {
-    hand1 = game.splitHand2a.cards;
-    hand2 = game.splitHand2b.cards;
+    hand1 = game.splitHand2a;
+    hand2 = game.splitHand2b;
     $button = $splitButton2;
   }
   game[hand1].cards.push(game[hand].cards[0]);
   game[hand2].cards.push(game[hand].cards[1]);
   game[hand].isSplit = true;
-  // game.splitHand1.push(game.playerHand[0]);
-  // game.splitHand2.push(game.playerHand[1]);
-  // isSplit = true;
-  // $split.attr("disabled", true);
-  // $player.addClass("hidden");
-  // $playerTotal.addClass("hidden");
-  // $playerSplit.removeClass("hidden");
-  // $hand1.html(`<img class='cardImage' src='${game.splitCardImages[0]}'>`);
-  // $hand2.html(`<img class='cardImage' src='${game.splitCardImages[1]}'>`);
-  // checkSplitTotal("hand1");
-  // checkSplitTotal("hand2");
-  // gameHand = "hand1";
-  // highlight("hand1");
+  game[hand].isDone = true;
+  game[hand1].isDone = false;
+  game[hand2].isDone = false;
+  $button.attr("disabled", true);
+  $(`.${hand}`).addClass("hidden");
+  $(`.${hand1}, .${hand2}`).removeClass("hidden");
+  game[hand1].cardImages.push(game[hand].cardImages.shift());
+  game[hand2].cardImages.push(game[hand].cardImages.shift());
+  $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[0]}'>`);
+  $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[0]}'>`);
+  drawCard({
+    hand: hand1,
+    callback: function () {
+      checkSplit(hand1);
+    }
+  });
+  drawCard({
+    hand: hand2,
+    callback: function () {
+      checkSplit(hand2);
+    }
+  });
+  game.currentHand = hand1;
+  highlight(hand1);
 }
 
 function highlight(hand) {
-  // hand === "hand1" ? (
-  //   $hand1.addClass("highlighted"),
-  //   $hand2.removeClass("highlighted")
-  // ) : (
-  //   $hand2.addClass("highlighted"),
-  //   $hand1.removeClass("highlighted")
-  // );
+  $(".hand").removeClass("highlighted");
+  $(`.${hand}Hand`).addClass("highlighted");
 }
 
 function drawCard(options) {
@@ -326,7 +332,7 @@ function drawCard(options) {
       $dealerHand.prepend(html)
     ) : (
       html = `<img class="cardImage" src="${cardImage(data)}">`,
-      $("." + hand).append(html)
+      $(`.${hand}Hand`).append(html)
     );
     if (options.person === "dealer") {
       if (options.image) {
@@ -448,30 +454,6 @@ function checkTotal(hand) {
 }
 
 function checkLoss21(hand) {
-  // if (hand === "dealer") {
-  //   if (game.dealer.total > 21) {
-  //     console.log("dealer busts");
-
-  //   } else if (game.dealer.total === 21) {
-  //     console.log("dealer has 21");
-  //     checkVictory("player");
-  //     checkVictory("split1");
-  //     checkVictory("split2");
-  //     checkVictory("split1a");
-  //     checkVictory("split1b");
-  //     checkVictory("split2a");
-  //     checkVictory("split2b");
-  //   } else if (game.dealer.total < 17 && game.dealer.total < 21) {
-  //     console.log(`dealer stays with ${game.dealer.total}`);
-  //     checkVictory("player");
-  //     checkVictory("split1");
-  //     checkVictory("split2");
-  //     checkVictory("split1a");
-  //     checkVictory("split1b");
-  //     checkVictory("split2a");
-  //     checkVictory("split2b");
-  //   }
-  // } else {
     if (game[hand].total > 21) {
       console.log("player busts");
       game[hand].winner = "dealer";
@@ -480,7 +462,6 @@ function checkLoss21(hand) {
     } else if (game[hand].total === 21) {
       handEnd(hand);
     }
-  //}
 }
 
 function checkVictory(hand) {
@@ -523,10 +504,6 @@ function checkVictory(hand) {
       announce(hand, "BUST");
     }
   }
-}
-
-function checkVictoryAll() {
-
 }
 
 function handEnd(hand) {
@@ -574,7 +551,7 @@ function gameEnd() {
 }
 
 function clearTable() {
-  $(".hand, .wager, .total, .chips").empty();
+  $(".hand, .total").empty();
   $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup").addClass("hidden");
   $(".popup").removeClass("win lose push");
   console.log("------------table cleared------------");
