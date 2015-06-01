@@ -140,8 +140,7 @@ $hit.click(hit);
 
 $stay.click(function () {
   console.log("stay");
-  flipCard();
-  stay();
+  handEnd(game.currentHand);
 });
 
 $splitButton.click(split);
@@ -188,6 +187,7 @@ function Game() {
   this.isFlipped = false;
   this.isPlayersTurn = true;
   this.currentHand = "player";
+  this.handsToPlay = 1;
 }
 
 function Hand() {
@@ -267,30 +267,37 @@ function checkSplit(hand) {
   }
 }
 
-function split () {
-  game.splitHand1.push(game.playerHand[0]);
-  game.splitHand2.push(game.playerHand[1]);
-  isSplit = true;
-  $split.attr("disabled", true);
-  $player.addClass("hidden");
-  $playerTotal.addClass("hidden");
-  $playerSplit.removeClass("hidden");
-  $hand1.html(`<img class='cardImage' src='${game.splitCardImages[0]}'>`);
-  $hand2.html(`<img class='cardImage' src='${game.splitCardImages[1]}'>`);
-  checkSplitTotal("hand1");
-  checkSplitTotal("hand2");
-  gameHand = "hand1";
-  highlight("hand1");
+function split(hand) {
+  if (hand === "player") {
+    hand1 = game.splitHand1.cards;
+    hand2 = game.splitHand2.cards;
+  } else if (hand === "split1") {
+    hand1 = game.splitHand1a.cards;
+    hand2 = game.splitHand1b.cards;
+  } else if
+  // game.splitHand1.push(game.playerHand[0]);
+  // game.splitHand2.push(game.playerHand[1]);
+  // isSplit = true;
+  // $split.attr("disabled", true);
+  // $player.addClass("hidden");
+  // $playerTotal.addClass("hidden");
+  // $playerSplit.removeClass("hidden");
+  // $hand1.html(`<img class='cardImage' src='${game.splitCardImages[0]}'>`);
+  // $hand2.html(`<img class='cardImage' src='${game.splitCardImages[1]}'>`);
+  // checkSplitTotal("hand1");
+  // checkSplitTotal("hand2");
+  // gameHand = "hand1";
+  // highlight("hand1");
 }
 
 function highlight(hand) {
-  hand === "hand1" ? (
-    $hand1.addClass("highlighted"),
-    $hand2.removeClass("highlighted")
-  ) : (
-    $hand2.addClass("highlighted"),
-    $hand1.removeClass("highlighted")
-  );
+  // hand === "hand1" ? (
+  //   $hand1.addClass("highlighted"),
+  //   $hand2.removeClass("highlighted")
+  // ) : (
+  //   $hand2.addClass("highlighted"),
+  //   $hand1.removeClass("highlighted")
+  // );
 }
 
 function drawCard(options) {
@@ -324,7 +331,7 @@ function drawCard(options) {
       checkTotal(hand);
       console.log(`${hand} - ${game[hand].cards} **** ${hand} is at ${game.player.total}`);
     }
-    checkLoss21(game.currentHand);
+    hand !== "dealer" && checkLoss21(game.currentHand);
     typeof options.callback === 'function' && options.callback();
   });
   cardsLeft--;
@@ -346,34 +353,53 @@ function hit() {
     $doubled.attr("id", "doubled-disabled");
   }
 }
-
-function stay() {
-  if (!game.winner && game.dealerTotal < 17) {
-    console.log("dealer hits");
-    isPlayersTurn = false;
+function dealerTurn() {
+  if (game.dealer.total < 17) {
+    console.log(`dealer hits on ${game.dealer.total}`);
     drawCard({
-      person: "dealer",
-      callback: stay
+      hand: "dealer",
+      callback: dealerTurn
     });
-  } else if (game.dealerTotal === game.playerTotal) {
-    game.winner = "push";
-    announce("PUSH");
-    console.log("push");
+  } else if (game.dealer.total >= 17) {
+    console.log(`dealer is finished with ${game.dealer.total}`);
+    game.player.cards.length > 0 && checkVictory("player");
+    game.split1.cards.length > 0 && checkVictory("split1");
+    game.split2.cards.length > 0 && checkVictory("split2");
+    game.split1a.cards.length > 0 && checkVictory("split1a");
+    game.split1b.cards.length > 0 && checkVictory("split1b");
+    game.split2a.cards.length > 0 && checkVictory("split2a");
+    game.split2b.cards.length > 0 && checkVictory("split2b");
     gameEnd();
-  } else if (game.dealerTotal < 22) {
-    game.dealerTotal > game.playerTotal ? (
-      game.winner = "dealer",
-      announce("YOU LOSE"),
-      console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal),
-      gameEnd()
-    ) : (
-      game.winner = "player",
-      announce("YOU WIN"),
-      console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal),
-      gameEnd()
-    );
   }
 }
+
+// function stay() {
+//   if (!game.winner && game.dealerTotal < 17) {
+//     console.log("dealer hits");
+//     isPlayersTurn = false;
+//     drawCard({
+//       person: "dealer",
+//       callback: stay
+//     });
+//   } else if (game.dealerTotal === game.playerTotal) {
+//     game.winner = "push";
+//     announce("PUSH");
+//     console.log("push");
+//     gameEnd();
+//   } else if (game.dealerTotal < 22) {
+//     game.dealerTotal > game.playerTotal ? (
+//       game.winner = "dealer",
+//       announce("YOU LOSE"),
+//       console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal),
+//       gameEnd()
+//     ) : (
+//       game.winner = "player",
+//       announce("YOU WIN"),
+//       console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal),
+//       gameEnd()
+//     );
+//   }
+// }
 
 function checkTotal(hand) {
   var total = 0;
@@ -410,36 +436,30 @@ function checkTotal(hand) {
 }
 
 function checkLoss21(hand) {
-  if (hand === "dealer") {
-    if (game.dealer.total > 21) {
-      console.log("dealer busts");
-      checkVictory("player");
-      checkVictory("split1");
-      checkVictory("split2");
-      checkVictory("split1a");
-      checkVictory("split1b");
-      checkVictory("split2a");
-      checkVictory("split2b");
-    } else if (game.dealer.total === 21) {
-      console.log("dealer has 21");
-      checkVictory("player");
-      checkVictory("split1");
-      checkVictory("split2");
-      checkVictory("split1a");
-      checkVictory("split1b");
-      checkVictory("split2a");
-      checkVictory("split2b");
-    } else if (game.dealer.total < 17 && game.dealer.total < 21) {
-      console.log(`dealer stays with ${game.dealer.total}`);
-      checkVictory("player");
-      checkVictory("split1");
-      checkVictory("split2");
-      checkVictory("split1a");
-      checkVictory("split1b");
-      checkVictory("split2a");
-      checkVictory("split2b");
-    }
-  } else {
+  // if (hand === "dealer") {
+  //   if (game.dealer.total > 21) {
+  //     console.log("dealer busts");
+
+  //   } else if (game.dealer.total === 21) {
+  //     console.log("dealer has 21");
+  //     checkVictory("player");
+  //     checkVictory("split1");
+  //     checkVictory("split2");
+  //     checkVictory("split1a");
+  //     checkVictory("split1b");
+  //     checkVictory("split2a");
+  //     checkVictory("split2b");
+  //   } else if (game.dealer.total < 17 && game.dealer.total < 21) {
+  //     console.log(`dealer stays with ${game.dealer.total}`);
+  //     checkVictory("player");
+  //     checkVictory("split1");
+  //     checkVictory("split2");
+  //     checkVictory("split1a");
+  //     checkVictory("split1b");
+  //     checkVictory("split2a");
+  //     checkVictory("split2b");
+  //   }
+  // } else {
     if (game[hand].total > 21) {
       console.log("player busts");
       game[hand].winner = "dealer";
@@ -448,7 +468,7 @@ function checkLoss21(hand) {
     } else if (game[hand].total === 21) {
       handEnd(hand);
     }
-  }
+  //}
 }
 
 function checkVictory(hand) {
@@ -491,8 +511,10 @@ function checkVictory(hand) {
       announce(hand, "BUST");
     }
   }
+}
 
-  //game[hand].winner && handEnd(hand);
+function checkVictoryAll() {
+
 }
 
 function handEnd(hand) {
@@ -513,7 +535,7 @@ function handEnd(hand) {
     game.currentHand = "split2";
     highlight("split2");
   } else {
-    gameEnd();
+    dealerTurn();
   }
 }
 
