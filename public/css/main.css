@@ -166,7 +166,7 @@ button:focus {
   width: 361px; }
 
 /* line 168, /Users/noah/code/hitme/src/_styles/main.scss */
-#doubleDown-disabled {
+#doubled-disabled {
   background: rgba(154, 154, 154, 0.63);
   border: 4px groove rgba(154, 154, 154, 0.63);
   color: rgba(59, 59, 59, 0.63); }
