@@ -45,14 +45,14 @@ button:focus {
   position: absolute;
   color: white;
   font-size: 1.5em;
-    text-shadow: 1px 1px 0 black;
+  text-shadow: 1px 1px 0 black;
   &.dealerTotal {
     top: 66px;
     left: 385px;
   }
   &.playerTotal {
-    top: 285px;
-    left: 380px;
+    top: 68px;
+    left: -32px;
   }
   &.hand1Total {
     top: 66px;
@@ -79,7 +79,7 @@ button:focus {
   perspective: 400px;
 }
 
-.dealer img, .player img, .playerSplit img {
+.hand img {
   margin-right: -90px;
   -webkit-transform: rotateX(16deg);
   transform: rotateX(16deg);
@@ -97,10 +97,6 @@ button:focus {
   display: flex;
   justify-content: space-around;
   //perspective: 800px;
-}
-
-.hand1, .hand2 {
-  min-width: 188px;
 }
 
 .highlighted {
@@ -237,6 +233,27 @@ button:focus {
   top: 435px;
   width: 47px;
   height: 22px;
+}
+
+.chips {
+  position: absolute;
+  img {
+    width: 47px;
+  }
+}
+
+.playerChips {
+  top: 174px;
+  left: 42px;
+}
+
+.wager {
+  position: absolute;
+}
+
+.playerWager {
+  top: 200px;
+  left: 57px;
 }
 
 #selectedBet {
