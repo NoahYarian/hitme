@@ -370,44 +370,12 @@ function stay() {
   }
 }
 
-function checkSplitTotal(handNum) {
+function checkTotal(hand) {
   var total = 0;
-  var hand = handNum === "hand1" ? game.splitHand1 : game.splitHand2;
+  var handToCheck = person === "dealer" ? game.dealer.cards : game[hand].cards;
   var aces = 0;
 
-  hand.forEach(function(card) {
-    if (card === "KING" || card === "QUEEN" || card === "JACK") {
-      total += 10;
-    } else if (!isNaN(card)) {
-      total += Number(card);
-    } else if (card === "ACE") {
-      aces += 1;
-    }
-  });
-
-  if (aces > 0) {
-    if (total + aces + 10 > 21) {
-      total += aces;
-    } else {
-      total += aces + 10;
-    }
-  }
-
-  handNum === "hand1" ? (
-    game.splitHand1Total = total,
-    $hand1Total.text(game.splitHand1Total)
-  ) : (
-    game.splitHand2Total = total,
-    $hand2Total.text(game.splitHand2Total)
-  );
-}
-
-function checkTotal(person) {
-  var total = 0;
-  var hand = person === "dealer" ? game.dealerHand : game.playerHand;
-  var aces = 0;
-
-  hand.forEach(function(card) {
+  handToCheck.forEach(function(card) {
     if (card === "KING" || card === "QUEEN" || card === "JACK") {
       total += 10;
     } else if (!isNaN(card)) {
@@ -432,15 +400,8 @@ function checkTotal(person) {
     textColor = "red";
   }
 
-  person === "dealer" ? (
-    game.dealerTotal = total,
-    $dealerTotal.text(game.dealerTotal),
-    $dealerTotal.css("color", textColor)
-  ) : (
-    game.playerTotal = total,
-    $playerTotal.text(game.playerTotal),
-    $playerTotal.css("color", textColor)
-  );
+  game[hand].total = total;
+  $(`.${hand}Total`).text(total).css("color", textColor);
 }
 
 function checkVictory(hand) {
