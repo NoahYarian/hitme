@@ -1,5 +1,5 @@
 var API = "http://deckofcardsapi.com/api/";
-var newDeckURL = API + "shuffle/?deck_count=6";
+var newDeckURL = API + "shuffle/?deck_count=";
 var cardBack = "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Card_back_16.svg/209px-Card_back_16.svg.png";
 
 var game;
@@ -216,7 +216,7 @@ function deal() {
   cardPackage.load();
   cardPackage.play();
   if (deckId === "" || cardsLeft < 33) {
-    getJSON(newDeckURL, function(data) {
+    getJSON(newDeckURL + decks, function(data) {
       deckId = data.deck_id;
       console.log("About to deal from new deck");
       draw4();
@@ -244,23 +244,23 @@ function draw4() {
   });
   drawCard({
     hand: "player",
-    callback: checkSplit
+    callback: function () {
+      checkSplit("player");
+    }
   });
 }
 
-function checkSplit() {
-  var checkSplitArr = game.playerHand.map(function(card) {
+function checkSplit(hand) {
+  var checkSplitArr = game[hand].cards.map(function(card) {
     if (card === "KING" || card === "QUEEN" || card === "JACK") {
-      return 10;
-    } else if (!isNaN(card)) {
-      return Number(card);
-    } else if (card === "ACE") {
-      return 1;
+      return "10";
+    } else {
+      return card;
     }
   });
   if (checkSplitArr[0] === checkSplitArr[1]) {
-    splitAllowed = true;
-    $split.attr("disabled", false);
+    game[hand].canSplit = true;
+    $(`.${hand} > button`).attr("disabled", false);
   }
 }
 
@@ -291,11 +291,12 @@ function highlight(hand) {
 }
 
 function drawCard(options) {
-  var cardURL = `${API}draw/${deckId}/?count=${decks}`;
+  var cardURL = `${API}draw/${deckId}/?count=1`;
   getJSON(cardURL, function(data, cb) {
     var html;
-    var cardImage = cardImage(data);
-    $(`game[options.hand].cardImages`).push(cardImage);
+    var hand = options.hand;
+    var cardImageSrc = cardImage(data);
+    game[hand].cardImages.push(cardImageSrc);
     cardPlace.load();
     cardPlace.play();
     options.image ? (
@@ -303,7 +304,7 @@ function drawCard(options) {
       $dealerHand.prepend(html)
     ) : (
       html = `<img class="cardImage" src="${cardImage(data)}">`,
-      $("." + options.hand).append(html)
+      $("." + hand).append(html)
     );
     if (options.person === "dealer") {
       if (options.image) {
@@ -315,12 +316,12 @@ function drawCard(options) {
       checkTotal("dealer");
       console.log(`dealer - ${game.dealer.cards} **** dealer is at ${game.dealer.total}`);
     } else {
-      game[options.hand].cards.push(data.cards[0].value);
+      game[hand].cards.push(data.cards[0].value);
       updateCount(data.cards[0].value);
-      checkTotal(options.hand);
-      console.log(`${options.hand} - ${game[options.hand].cards} **** ${options.hand} is at ${game.playerTotal}`);
+      checkTotal(hand);
+      console.log(`${hand} - ${game[hand].cards} **** ${hand} is at ${game.player.total}`);
     }
-    checkVictory(options.hand);
+    checkVictory(hand);
     typeof options.callback === 'function' && options.callback();
   });
   cardsLeft--;
@@ -372,7 +373,7 @@ function stay() {
 
 function checkTotal(hand) {
   var total = 0;
-  var handToCheck = person === "dealer" ? game.dealer.cards : game[hand].cards;
+  var handToCheck = hand === "dealer" ? game.dealer.cards : game[hand].cards;
   var aces = 0;
 
   handToCheck.forEach(function(card) {
