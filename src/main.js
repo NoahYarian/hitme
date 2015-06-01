@@ -190,7 +190,7 @@ function Game() {
 }
 
 function Hand() {
-  this.cardValues = [];
+  this.cards = [];
   this.cardImages = [];
   this.total = 0;
   this.winner = "";
@@ -307,20 +307,20 @@ function drawCard(options) {
     );
     if (options.person === "dealer") {
       if (options.image) {
-        game.dealer.cardValues.unshift(data.cards[0].value);
+        game.dealer.cards.unshift(data.cards[0].value);
       } else {
-        game.dealer.cardValues.push(data.cards[0].value);
+        game.dealer.cards.push(data.cards[0].value);
         updateCount(data.cards[0].value);
       }
       checkTotal("dealer");
-      console.log(`dealer - ${game.dealer.cardValues} **** dealer is at ${game.dealer.total}`);
+      console.log(`dealer - ${game.dealer.cards} **** dealer is at ${game.dealer.total}`);
     } else {
-      game[options.hand].cardValues.push(data.cards[0].value);
+      game[options.hand].cards.push(data.cards[0].value);
       updateCount(data.cards[0].value);
       checkTotal(options.hand);
-      console.log(`${options.hand} - ${game[options.hand].cardValues} **** ${options.hand} is at ${game.playerTotal}`);
+      console.log(`${options.hand} - ${game[options.hand].cards} **** ${options.hand} is at ${game.playerTotal}`);
     }
-    checkVictory();
+    checkVictory(options.hand);
     typeof options.callback === 'function' && options.callback();
   });
   cardsLeft--;
@@ -443,47 +443,50 @@ function checkTotal(person) {
   );
 }
 
-function checkVictory() {
-  if (game.dealerHand.length >= 2 && game.playerHand.length >= 2) {
-    if (game.dealerTotal === 21 && game.dealerHand.length === 2 && game.playerTotal === 21 && game.playerHand.length === 2) {
+function checkVictory(hand) {
+  //guards against checking before the deal is complete
+  if (game.dealer.cards.length >= 2 && game.player.cards.length >= 2) {
+    if (game.dealer.total === 21 && game.dealer.cards.length === 2 && game[hand].total === 21 && game[hand].cards.length === 2) {
       console.log("double blackjack push!");
-      game.winner = "push";
-      announce("PUSH");
-    } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && game.playerTotal === 21) {
+      game[hand].winner = "push";
+      announce(hand, "PUSH");
+    } else if (game.dealer.total === 21 && game.dealer.cards.length === 2 && game[hand].total === 21) {
       console.log("dealer has blackjack");
-      game.winner = "dealer";
-      announce("YOU LOSE");
-    } else if (game.playerTotal === 21 && game.playerHand.length === 2) {
+      game[hand].winner = "dealer";
+      announce(hand, "YOU LOSE");
+    } else if (game[hand].total === 21 && game[hand].cards.length === 2) {
       console.log("player has blackjack");
-      game.winner = "player";
-      game.wager *= 1.25;
-      announce("BLACKJACK!");
-    } else if (game.dealerTotal === 21 && game.playerTotal === 21) {
+      game[hand].winner = "player";
+      game[hand].wager *= 1.25;
+      announce(hand, "BLACKJACK!");
+    } else if (game.dealer.total === 21 && game[hand].total === 21) {
       console.log("push");
-      game.winner = "push";
-      announce("PUSH");
-    } else if (game.dealerTotal === 21 && game.dealerHand.length === 2 && isPlayersTurn && game.playerTotal < 21) {
-      console.log("dealer has blackjack, doing nothing..");
-    } else if (game.dealerTotal === 21) {
+      game[hand].winner = "push";
+      announce(hand, "PUSH");
+    } else if (game.dealer.total === 21 && game.dealer.cards.length === 2 && game.isPlayersTurn && game[hand].total < 21) {
+      console.log("dealer has blackjack, doing nothing...");
+    } else if (game.dealer.total === 21) {
       console.log("dealer has 21");
-      game.winner = "dealer";
-      announce("YOU LOSE");
-    } else if (game.dealerTotal > 21) {
+      game[hand].winner = "dealer";
+      announce(hand, "YOU LOSE");
+    } else if (game.dealer.total > 21) {
       console.log("dealer busts");
-      game.winner = "player";
-      announce("YOU WIN");
-    } else if (game.playerTotal === 21) {
+      game[hand].winner = "player";
+      announce(hand, "YOU WIN");
+    } else if (game[hand].total === 21) {
       console.log("player has 21");
-      game.winner = "player";
-      announce("21!");
-    } else if (game.playerTotal > 21) {
+      game[hand].winner = "player";
+      announce(hand, "21!");
+    } else if (game[hand].total > 21) {
       console.log("player busts");
-      game.winner = "dealer";
-      announce("BUST");
+      game[hand].winner = "dealer";
+      announce(hand, "BUST");
     }
   }
 
-  game.winner && gameEnd();
+//  Need to replace this with something elsewhere
+
+//  game.winner && gameEnd();
 }
 
 function gameEnd() {
