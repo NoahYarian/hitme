@@ -268,13 +268,25 @@ function checkSplit(hand) {
 }
 
 function split(hand) {
+  var hand1;
+  var hand2;
+  var $button;
   if (hand === "player") {
     hand1 = game.splitHand1.cards;
     hand2 = game.splitHand2.cards;
+    $button = $splitButton;
   } else if (hand === "split1") {
     hand1 = game.splitHand1a.cards;
     hand2 = game.splitHand1b.cards;
-  } else if
+    $button = $splitButton1;
+  } else if (hand === "split2") {
+    hand1 = game.splitHand2a.cards;
+    hand2 = game.splitHand2b.cards;
+    $button = $splitButton2;
+  }
+  game[hand1].cards.push(game[hand].cards[0]);
+  game[hand2].cards.push(game[hand].cards[1]);
+  game[hand].isSplit = true;
   // game.splitHand1.push(game.playerHand[0]);
   // game.splitHand2.push(game.playerHand[1]);
   // isSplit = true;
