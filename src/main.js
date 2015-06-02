@@ -323,6 +323,7 @@ function split(hand, test) {
   $button.attr("disabled", true);
   $(`.${hand}`).addClass("hidden");
   $(`.${hand1}, .${hand2}`).removeClass("hidden");
+  debugger;
   game[hand1].cardImages.push(game[hand].cardImages.shift());
   game[hand2].cardImages.push(game[hand].cardImages.shift());
   $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[0]}'>`);
