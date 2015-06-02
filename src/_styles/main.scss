@@ -79,10 +79,26 @@ button:focus {
   perspective: 400px;
 }
 
+.split1 {
+  position: absolute;
+  top: 178px;
+  left: 284px;
+}
+
+.split2 {
+  position: absolute;
+  top: 178px;
+  left: 560px;
+}
+
 .hand img {
-  margin-right: -90px;
+  margin: 3px -95px -1px 4px;
   -webkit-transform: rotateX(16deg);
   transform: rotateX(16deg);
+}
+
+.hand img:last-child {
+  margin-right: 5px;
 }
 
 .dealer img {
@@ -100,8 +116,7 @@ button:focus {
 }
 
 .highlighted {
-  background: rgba(255,255,0, .5);
-  border: 4px double black;
+  background: rgba(255,255,0, .75);
 }
 
 .announce {
@@ -171,12 +186,34 @@ button:focus {
   padding: 8px 16px;
 }
 
-.split {
+.splitButton {
   position: absolute;
-  top: 306px;
-  left: 424px;
+  top: 88px;
+  left: 10px;
   background: rgba(154, 185, 133, .9);
   border: 4px groove rgba(154, 185, 133, .9);
+}
+
+.split1Button {
+  position: absolute;
+  top: 99px;
+  left: 24px;
+  background: rgba(154, 185, 133, .9);
+  border: 4px groove rgba(154, 185, 133, .9);
+}
+
+.split2Button {
+  position: absolute;
+  top: 96px;
+  left: 20px;
+  background: rgba(154, 185, 133, .9);
+  border: 4px groove rgba(154, 185, 133, .9);
+}
+
+.split1Total, .split2Total {
+  position: absolute;
+  top: 68px;
+  left: -34px;
 }
 
 .cardImage {
