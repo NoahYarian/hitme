@@ -298,18 +298,10 @@ button:focus {
   }
 }
 
-.playerChips {
-  top: 174px;
-  left: 42px;
-}
-
 .wager {
   position: absolute;
-}
-
-.playerWager {
-  top: 200px;
-  left: 57px;
+  bottom: -49px;
+  left: 61px;
 }
 
 #selectedBet {
@@ -320,7 +312,7 @@ button:focus {
   width: 47px;
   position: absolute;
   top: 387px;
-  left: 306px;
+  left: 287px;
   img {
     width: 47px;
     position: absolute;
@@ -330,25 +322,9 @@ button:focus {
 .bankTotal {
   position: absolute;
   top: 418px;
-  left: 299px;
+  left: 277px;
 }
 
-.handChips {
-  width: 47px;
-  position: absolute;
-  top: 393px;
-  left: 462px;
-  img {
-    width: 47px;
-    position: absolute;
-  }
-}
-
-.currentWager {
-  position: absolute;
-  top: 418px;
-  left: 428px;
-}
 
 //////////////////
 // Hand Testing //

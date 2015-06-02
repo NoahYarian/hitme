@@ -329,6 +329,8 @@ function split(hand, test) {
   bank -= betAmt;
   countChips(hand1);
   countChips(hand2);
+  $(`.${hand1}Wager`).text(game[hand1].wager);
+  $(`.${hand2}Wager`).text(game[hand2].wager);
   game[hand1].cardImages.push(game[hand].cardImages.shift());
   game[hand2].cardImages.push(game[hand].cardImages.shift());
   $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[0]}'>`);
