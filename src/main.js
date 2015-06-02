@@ -144,10 +144,28 @@ $stay.click(function () {
 });
 
 $splitButton.click(function () {
-  split("player");
+  if ($(".splitTesting").is(":checked")) {
+    split("player", true);
+  } else {
+    split("player");
+  }
 });
-$split1Button.click(split);
-$split2Button.click(split);
+
+$split1Button.click(function () {
+  if ($(".splitTesting").is(":checked")) {
+    split("split1", true);
+  } else {
+    split("split1");
+  }
+});
+
+$split2Button.click(function () {
+  if ($(".splitTesting").is(":checked")) {
+    split("split2", true);
+  } else {
+    split("split2");
+  }
+});
 
 $double.click(function () {
   $double.attr("disabled", true);
@@ -271,7 +289,7 @@ function checkSplit(hand) {
   }
 }
 
-function split(hand) {
+function split(hand, test) {
   // var hand1Cards;
   // var hand2Cards;
   // var handThatSplit;
@@ -288,11 +306,11 @@ function split(hand) {
   } else if (hand === "split1") {
     hand1 = "split1a";
     hand2 = "split1b";
-    $button = $splitButton1;
+    $button = $split1Button;
   } else if (hand === "split2") {
     hand1 = "split2a";
     hand2 = "split2b";
-    $button = $splitButton2;
+    $button = $split2Button;
   }
   // hand1Cards.push(handThatSplit[0]);
   // hand2Cards.push(handThatSplit[1]);
@@ -309,18 +327,27 @@ function split(hand) {
   game[hand2].cardImages.push(game[hand].cardImages.shift());
   $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[0]}'>`);
   $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[0]}'>`);
-  drawCard({
-    hand: hand1,
-    callback: function () {
-      checkSplit(hand1);
-    }
-  });
-  drawCard({
-    hand: hand2,
-    callback: function () {
-      checkSplit(hand2);
-    }
-  });
+  if (test === true) {
+    game[hand1].cards.push(game[hand].cards[0]);
+    game[hand2].cards.push(game[hand].cards[1]);
+    $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[0]}'>`);
+    $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[0]}'>`);
+    checkSplit(hand1);
+    checkSplit(hand2);
+  } else {
+    drawCard({
+      hand: hand1,
+      callback: function () {
+        checkSplit(hand1);
+      }
+    });
+    drawCard({
+      hand: hand2,
+      callback: function () {
+        checkSplit(hand2);
+      }
+    });
+  }
   game.handsToPlay++;
   game.currentHand = hand1;
   highlight(hand1);
