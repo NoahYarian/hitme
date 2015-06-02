@@ -283,7 +283,7 @@ function checkSplit(hand) {
       return card;
     }
   });
-  if (checkSplitArr[0] === checkSplitArr[1]) {
+  if (checkSplitArr[0] === checkSplitArr[1] && bank >= betAmt) {
     game[hand].canSplit = true;
     $(`.${hand} > button`).attr("disabled", false);
   }
@@ -323,7 +323,12 @@ function split(hand, test) {
   $button.attr("disabled", true);
   $(`.${hand}`).addClass("hidden");
   $(`.${hand1}, .${hand2}`).removeClass("hidden");
-  debugger;
+  game[hand1].wager = betAmt;
+  game[hand2].wager = betAmt;
+  game[hand].wager = 0;
+  bank -= betAmt;
+  countChips(hand1);
+  countChips(hand2);
   game[hand1].cardImages.push(game[hand].cardImages.shift());
   game[hand2].cardImages.push(game[hand].cardImages.shift());
   $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[0]}'>`);
@@ -717,12 +722,12 @@ function countChips(location) {
   if (location === "bank") {
     $bankChips.html(html);
     $('.bankChips img').each(function(i, c) {
-      $(c).css('top', -5 * i);
+      $(c).css('top', -5 * i + 7);
     });
   } else {
     $(`.${location}Chips`).html(html);
     $(`.${location}Chips img`).each(function(i, c) {
-      $(c).css('top', -5 * i);
+      $(c).css('top', -5 * i + 7);
     });
   }
 }

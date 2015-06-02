@@ -94,25 +94,25 @@ button:focus {
 .split1a {
   position: absolute;
   top: 178px;
-  left: 23px;
+  left: 73px;
 }
 
 .split1b {
   position: absolute;
   top: 178px;
-  left: 248px;
+  left: 298px;
 }
 
 .split2a {
   position: absolute;
   top: 178px;
-  left: 473px;
+  left: 523px;
 }
 
 .split2b {
   position: absolute;
   top: 178px;
-  left: 698px;
+  left: 748px;
 }
 
 
@@ -291,7 +291,10 @@ button:focus {
 .chips {
   position: absolute;
   img {
+    position: absolute;
     width: 47px;
+    top: 7px;
+    left: 46px;
   }
 }
 
@@ -316,7 +319,7 @@ button:focus {
 .bankChips {
   width: 47px;
   position: absolute;
-  top: 394px;
+  top: 387px;
   left: 306px;
   img {
     width: 47px;
