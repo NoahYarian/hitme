@@ -91,6 +91,31 @@ button:focus {
   left: 560px;
 }
 
+.split1a {
+  position: absolute;
+  top: 178px;
+  left: 23px;
+}
+
+.split1b {
+  position: absolute;
+  top: 178px;
+  left: 248px;
+}
+
+.split2a {
+  position: absolute;
+  top: 178px;
+  left: 473px;
+}
+
+.split2b {
+  position: absolute;
+  top: 178px;
+  left: 698px;
+}
+
+
 .hand img {
   margin: 3px -95px -1px 4px;
   -webkit-transform: rotateX(16deg);
@@ -187,26 +212,10 @@ button:focus {
   padding: 8px 16px;
 }
 
-.splitButton {
+.splitButton, .split1Button, .split2Button {
   position: absolute;
   top: 88px;
-  left: 10px;
-  background: rgba(154, 185, 133, .9);
-  border: 4px groove rgba(154, 185, 133, .9);
-}
-
-.split1Button {
-  position: absolute;
-  top: 99px;
-  left: 24px;
-  background: rgba(154, 185, 133, .9);
-  border: 4px groove rgba(154, 185, 133, .9);
-}
-
-.split2Button {
-  position: absolute;
-  top: 96px;
-  left: 20px;
+  left: 12px;
   background: rgba(154, 185, 133, .9);
   border: 4px groove rgba(154, 185, 133, .9);
 }
@@ -215,6 +224,12 @@ button:focus {
   position: absolute;
   top: 68px;
   left: -34px;
+}
+
+.split1aTotal, .split1bTotal, .split2aTotal, .split2bTotal {
+  position: absolute;
+  top: -28px;
+  left: 58px;
 }
 
 .cardImage {
