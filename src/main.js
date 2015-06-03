@@ -341,6 +341,8 @@ function split(hand, test) {
     $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[1]}'>`);
     checkSplit(hand1);
     checkSplit(hand2);
+    checkTotal(hand1);
+    checkTotal(hand2);
   } else {
     drawCard({
       hand: hand1,
@@ -767,10 +769,10 @@ $(".testDeal").click(function () {
       deckId = data.deck_id;
     });
   }
-  var dealer1Value = $(".dealer1Value").val();
-  var dealer2Value = $(".dealer2Value").val();
-  var player1Value = $(".player1Value").val();
-  var player2Value = $(".player2Value").val();
+  var dealer1Value = $(".dealer1Value").val().toUpperCase();
+  var dealer2Value = $(".dealer2Value").val().toUpperCase();
+  var player1Value = $(".player1Value").val().toUpperCase();
+  var player2Value = $(".player2Value").val().toUpperCase();
   var dealer1Suit = $(".dealer1Suit").val();
   var dealer2Suit = $(".dealer2Suit").val();
   var player1Suit = $(".player1Suit").val();
@@ -794,16 +796,14 @@ $(".testDeal").click(function () {
   checkSplit("player");
 });
 
-$(".giveCard").click(function() {
-  giveCard($(this).attr("data-id"));
-})
+$(".giveCardButton").click(giveCard);
 
-function giveCard(hand) {
+function giveCard() {
   var cardValue = $('.giveCardValue').val();
   var cardSuit = $('.giveCardSuit').val();
-  var cardSrc = "../images/cards/" + cardValue + "_of_" + cardSuit.toLowerCase() + ".svg";
-
-  game[hand].cards.push(cardValue);
+  var cardSrc = "../images/cards/" + cardValue + "_of_" + cardSuit + ".svg";
+  var hand = $('.giveCardToHand').val();
+  game[hand].cards.push(cardValue.toUpperCase());
   checkTotal(hand);
   $(`.${hand}Hand`).append(`<img src='${cardSrc}' class='cardImage'>`);
   hand !== "dealer" && checkLoss21(hand);
