@@ -168,13 +168,16 @@ $split2Button.click(function () {
 });
 
 $double.click(function () {
-  $double.attr("disabled", true);
-  $hit.attr("disabled", true);
-  $stay.attr("disabled", true);
-  bet(betAmt);
-  console.log("double down");
-  isDoubledDown = true;
-  hit();
+  var hand = game.currentHand;
+  if (game[hand].isFirstTurn) {
+    $double.attr("disabled", true);
+    $hit.attr("disabled", true);
+    $stay.attr("disabled", true);
+    bet(hand, betAmt);
+    console.log("double down");
+    game[hand].isDoubled = true;
+    hit();
+  }
 });
 
 $(".toggleCountInfo").click(function () {
@@ -205,7 +208,6 @@ function Game() {
   this.split2a = new Hand();
   this.split2b = new Hand();
   this.isFlipped = false;
-  this.isPlayersTurn = true;
   this.currentHand = "player";
   this.handsToPlay = 1;
   this.unbustedHands = 1;
@@ -225,7 +227,6 @@ function Hand() {
   this.isDone = true;
   this.has21 = false;
   this.isFirstTurn = true;
-  this.needsCheck = false;
 }
 
 function newGame() {
@@ -236,7 +237,6 @@ function newGame() {
 function deal() {
   betChangeAllowed = false;
   game.player.isDone = false;
-  game.player.needsCheck = true;
   clearTable();
   $deal.attr("disabled", true);
   $(".hit, .stay, .double").attr("disabled", false);
@@ -310,9 +310,6 @@ function split(hand, test) {
     hand2 = "split2b";
     $button = $split2Button;
   }
-  game[hand].needsCheck = false;
-  game[hand1].needsCheck = true;
-  game[hand2].needsCheck = true;
   game[hand1].cards.push(game[hand].cards.shift());
   game[hand2].cards.push(game[hand].cards.shift());
   game[hand].isSplit = true;
@@ -337,8 +334,10 @@ function split(hand, test) {
   if (test) {
     game[hand1].cards.push(game[hand1].cards[0]);
     game[hand2].cards.push(game[hand2].cards[0]);
-    $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[0]}'>`);
-    $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[0]}'>`);
+    game[hand1].cardImages[1] = game[hand1].cardImages[0];
+    game[hand2].cardImages[1] = game[hand2].cardImages[0];
+    $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[1]}'>`);
+    $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[1]}'>`);
     checkSplit(hand1);
     checkSplit(hand2);
   } else {
@@ -365,6 +364,8 @@ function checkFocus() {
     game.currentHand = "split1a";
   } else if (game.split1b.isDone === false) {
     game.currentHand = "split1b";
+  } else if (game.split1.isDone === false) {
+    game.currentHand = "split1";
   } else if (game.split2.isDone === false) {
     game.currentHand = "split2";
   } else if (game.split2a.isDone === false) {
@@ -392,7 +393,7 @@ function drawCard(options) {
       html = `<img class="cardImage" src="${options.image}">`,
       $dealerHand.prepend(html)
     ) : (
-      html = `<img class="cardImage" src="${cardImage(data)}">`,
+      html = `<img class="cardImage" src="${cardImageSrc}">`,
       $(`.${hand}Hand`).append(html)
     );
     if (options.person === "dealer") {
@@ -424,7 +425,7 @@ function hit() {
     hand: hand,
     callback: function () {
       if (game[hand].isDoubled) {
-        handEnd(game.currentHand);
+        handEnd(hand);
       }
     }
   });
@@ -452,13 +453,13 @@ function dealerTurn() {
     });
   } else if (game.dealer.total >= 17 || game.unbustedHands === 0 || game.player.has21 === true) {
     console.log(`dealer is finished with ${game.dealer.total}`);
-    game.player.needsCheck && checkVictory("player");
-    game.split1.needsCheck && checkVictory("split1");
-    game.split2.needsCheck && checkVictory("split2");
-    game.split1a.needsCheck && checkVictory("split1a");
-    game.split1b.needsCheck && checkVictory("split1b");
-    game.split2a.needsCheck && checkVictory("split2a");
-    game.split2b.needsCheck && checkVictory("split2b");
+    game.player.cards.length >= 2 && checkVictory("player");
+    game.split1.cards.length >= 2 && checkVictory("split1");
+    game.split2.cards.length >= 2 && checkVictory("split2");
+    game.split1a.cards.length >= 2 && checkVictory("split1a");
+    game.split1b.cards.length >= 2 && checkVictory("split1b");
+    game.split2a.cards.length >= 2 && checkVictory("split2a");
+    game.split2b.cards.length >= 2 && checkVictory("split2b");
     gameEnd();
   }
 }
