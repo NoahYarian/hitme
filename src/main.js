@@ -227,6 +227,7 @@ function Hand() {
   this.isDone = true;
   this.has21 = false;
   this.isFirstTurn = true;
+  this.isBusted = false;
 }
 
 function newGame() {
@@ -355,6 +356,7 @@ function split(hand, test) {
     });
   }
   game.handsToPlay++;
+  game.unbustedHands++;
   checkFocus();
   highlight(game.currentHand);
 }
@@ -366,18 +368,23 @@ function checkFocus() {
     game.currentHand = "split1b";
   } else if (game.split1.isDone === false) {
     game.currentHand = "split1";
-  } else if (game.split2.isDone === false) {
-    game.currentHand = "split2";
   } else if (game.split2a.isDone === false) {
     game.currentHand = "split2a";
   } else if (game.split2b.isDone === false) {
     game.currentHand = "split2b";
+  } else if (game.split2.isDone === false) {
+    game.currentHand = "split2";
+  } else {
+    dealerTurn();
   }
 }
 
 function highlight(hand) {
   $(".hand").removeClass("highlighted");
   $(`.${hand}Hand`).addClass("highlighted");
+  game[hand].canDouble && $double.attr("disabled", false).attr("id", "");;
+  $hit.attr("disabled", false);
+  $stay.attr("disabled", false);
 }
 
 function drawCard(options) {
@@ -396,7 +403,7 @@ function drawCard(options) {
       html = `<img class="cardImage" src="${cardImageSrc}">`,
       $(`.${hand}Hand`).append(html)
     );
-    if (options.person === "dealer") {
+    if (hand === "dealer") {
       if (options.image) {
         game.dealer.cards.unshift(data.cards[0].value);
       } else {
@@ -411,7 +418,7 @@ function drawCard(options) {
       checkTotal(hand);
       console.log(`${hand} - ${game[hand].cards} **** ${hand} is at ${game.player.total}`);
     }
-    hand !== "dealer" && checkLoss21(game.currentHand);
+    hand !== "dealer" && checkLoss21(hand);
     typeof options.callback === 'function' && options.callback();
   });
   cardsLeft--;
@@ -464,34 +471,6 @@ function dealerTurn() {
   }
 }
 
-// function stay() {
-//   if (!game.winner && game.dealerTotal < 17) {
-//     console.log("dealer hits");
-//     isPlayersTurn = false;
-//     drawCard({
-//       person: "dealer",
-//       callback: stay
-//     });
-//   } else if (game.dealerTotal === game.playerTotal) {
-//     game.winner = "push";
-//     announce("PUSH");
-//     console.log("push");
-//     gameEnd();
-//   } else if (game.dealerTotal < 22) {
-//     game.dealerTotal > game.playerTotal ? (
-//       game.winner = "dealer",
-//       announce("YOU LOSE"),
-//       console.log("dealer's " + game.dealerTotal + " beats player's " + game.playerTotal),
-//       gameEnd()
-//     ) : (
-//       game.winner = "player",
-//       announce("YOU WIN"),
-//       console.log("player's " + game.playerTotal + " beats dealer's " + game.dealerTotal),
-//       gameEnd()
-//     );
-//   }
-// }
-
 function checkTotal(hand) {
   var total = 0;
   var handToCheck = hand === "dealer" ? game.dealer.cards : game[hand].cards;
@@ -529,8 +508,8 @@ function checkTotal(hand) {
 function checkLoss21(hand) {
     if (game[hand].total > 21) {
       console.log("player busts");
-      announce(hand, "BUST");
       game[hand].winner = "dealer";
+      announce(hand, "BUST");
       game.unbustedHands--
       handEnd(hand);
     } else if (game[hand].total === 21) {
@@ -561,7 +540,7 @@ function checkVictory(hand) {
       console.log("dealer has 21");
       game[hand].winner = "dealer";
       announce(hand, "YOU LOSE");
-    } else if (game.dealer.total > 21) {
+    } else if (game.dealer.total > 21 && game[hand].total < 22) {
       console.log("dealer busts");
       game[hand].winner = "player";
       announce(hand, "YOU WIN");
@@ -594,21 +573,8 @@ function checkVictory(hand) {
 function handEnd(hand) {
   game[hand].isDone = true;
   game.handsToPlay--;
-  if (game.split1b.isDone === false) {
-    game.currentHand = "split1b";
-    highlight("split1b");
-  } else if (game.split2a.isDone === false) {
-    game.currentHand = "split2a";
-    highlight("split2a");
-  } else if (game.split2b.isDone === false) {
-    game.currentHand = "split2b";
-    highlight("split2b");
-  } else if (game.split2.isDone === false) {
-    game.currentHand = "split2";
-    highlight("split2");
-  } else {
-    dealerTurn();
-  }
+  checkFocus();
+  game.handsToPlay > 0 && highlight(game.currentHand);
 }
 
 function handPayout(hand) {
@@ -633,7 +599,7 @@ function gameEnd() {
 }
 
 function clearTable() {
-  $(".hand, .total").empty();
+  $(".hand, .total, .chips, .wager").empty();
   $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup").addClass("hidden");
   $player.removeClass("hidden");
   $(".popup").removeClass("win lose push");
@@ -845,11 +811,6 @@ function giveCard(hand) {
   var cardSuit = $('.giveCardSuit').val();
   var cardSrc = "../images/cards/" + cardValue + "_of_" + cardSuit.toLowerCase() + ".svg";
 
-  //This is maybe how it can look in the future:
-  //game.hand[hand].push(cardValue);
-  //checkTotal(hand);
-  //$(hand).append(`<img src='${cardSrc}' class='cardImage'>`);
-
   if (person === 'dealer') {
     game.dealerHand.push(cardValue);
     checkTotal('dealer');
@@ -883,16 +844,6 @@ function giveCard(hand) {
     checkTotal('split2b');
     $split2b.append(`<img src='${cardSrc}' class='cardImage'>`);
   }
-
-  // person === 'dealer' ? (
-  //   game.dealerHand.push(cardValue),
-  //   checkTotal('dealer'),
-  //   $dealer.append(`<img src='${cardSrc}' class='cardImage'>`)
-  // ) : (
-  //   game.playerHand.push(cardValue),
-  //   checkTotal('player'),
-  //   $player.append(`<img src='${cardSrc}' class='cardImage'>`)
-  // )
   checkVictory();
 }
 
