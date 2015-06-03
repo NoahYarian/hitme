@@ -229,17 +229,18 @@ function Hand() {
   this.has21 = false;
   this.isFirstTurn = true;
   this.isBusted = false;
+  this.winnings = 0;
 }
 
 function newGame() {
   game = new Game();
+  clearTable();
   bet("player", betAmt) && deal();
 }
 
 function deal() {
   betChangeAllowed = false;
   game.player.isDone = false;
-  clearTable();
   $deal.attr("disabled", true);
   $(".hit, .stay, .double").attr("disabled", false);
   $double.attr("id", "");
@@ -267,7 +268,11 @@ function draw4() {
     image: cardBack
   });
   drawCard({
-    hand: "player"
+    hand: "player",
+    callback: function () {
+      $playerChips.removeClass("hidden");
+      $playerWager.removeClass("hidden");
+    }
   });
   drawCard({
     hand: "dealer"
@@ -586,13 +591,16 @@ function handEnd(hand) {
 
 function handPayout(hand) {
 if (game[hand].winner === "player") {
-    bank += (game[hand].wager * 2);
-    console.log(`giving player ${game[hand].wager * 2}. Bank at ${bank}`);
+    game[hand].winnings = game[hand].wager * 2;
+    console.log(`giving player ${game[hand].wager * 2}. Bank was at ${bank}`);
   } else if (game[hand].winner === "push") {
-    bank += game[hand].wager;
-    console.log(`returning ${game[hand].wager} to player. Bank at ${bank}`);
+    game[hand].winnings = game[hand].wager;
+    console.log(`returning ${game[hand].wager} to player. Bank was at ${bank}`);
   }
-  $bankTotal.text("Bank: " + bank);
+  bank += game[hand].winnings;
+  countChips(hand, true);
+  game[hand].winnings > 0 ? $(`.${hand}Wager`).text(game[hand].winnings) : $(`.${hand}Wager`).empty();
+  // $bankTotal.text("Bank: " + bank);
 }
 
 function gameEnd() {
@@ -607,7 +615,7 @@ function gameEnd() {
 
 function clearTable() {
   $(".hand, .total, .chips, .wager").empty();
-  $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup").addClass("hidden");
+  $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup, .playerChips, .playerWager").addClass("hidden");
   $player.removeClass("hidden");
   $(".popup").removeClass("win lose push");
   console.log("------------table cleared------------");
@@ -709,8 +717,8 @@ function bet(hand, amt) {
   }
 }
 
-function countChips(location) {
-  var amt = location === "bank" ? bank : game[location].wager;
+function countChips(location, winnings) {
+  var amt = location === "bank" ? bank : winnings ? game[location].winnings : game[location].wager;
   var num100s = Math.floor(amt / 100);
   var num50s = Math.floor((amt - num100s * 100) / 50);
   var num25s = Math.floor((amt - num100s * 100 - num50s * 50) / 25);
