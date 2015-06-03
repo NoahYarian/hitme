@@ -6,7 +6,8 @@ var game;
 var deckId = "";
 var decks = 6;
 var count = 0;
-var trueCount = count / decks;
+var trueCount = count / decksLeft;
+var decksLeft = cardsLeft / 52;
 var cardsLeft = 52 * decks;
 var advantage = -.5;
 var bank = 500;
@@ -295,6 +296,7 @@ function checkSplit(hand) {
 }
 
 function split(hand, test) {
+  console.log("splitting " + hand);
   var hand1;
   var hand2;
   var $button;
@@ -458,7 +460,10 @@ function dealerTurn() {
     console.log(`dealer hits on ${game.dealer.total}`);
     drawCard({
       hand: "dealer",
-      callback: dealerTurn
+      callback: function () {
+        checkTotal("dealer");
+        dealerTurn();
+      }
     });
   } else if (game.dealer.total >= 17 || game.unbustedHands === 0 || game.player.has21 === true) {
     console.log(`dealer is finished with ${game.dealer.total}`);
@@ -667,10 +672,14 @@ function updateCount(card) {
   $count.append("<p>Count: " + count + "</p>");
   $trueCount.empty();
   $trueCount.append("<p>True Count: " + trueCount.toPrecision(2) + "</p>");
+  $('.cardsLeft').empty();
+  $('.cardsLeft').append("<p>Cards left: " + cardsLeft + "</p>");
+  $('.decksLeft').empty();
+  $('.decksLeft').append("<p>Decks left: " + decksLeft.toPrecision(2) + " of " + decks + "</p>");
 }
 
 function getTrueCount() {
-  var decksLeft = cardsLeft / 52;
+  decksLeft = cardsLeft / 52;
   trueCount = count / decksLeft;
 }
 
@@ -679,7 +688,7 @@ function getAdvantage() {
 }
 
 function setNeedle() {
-  var num = advantage * 36;
+  var num = advantage * 18;
   $(".gauge-needle").css("transform", "rotate(" + num + "deg)");
 }
 

@@ -278,13 +278,7 @@ button:focus {
   border: 4px groove rgba(154, 185, 133, .9);
 }
 
-.split1Total, .split2Total {
-  position: absolute;
-  top: 68px;
-  left: -34px;
-}
-
-.split1aTotal, .split1bTotal, .split2aTotal, .split2bTotal {
+.split1Total, .split2Total, .split1aTotal, .split1bTotal, .split2aTotal, .split2bTotal {
   position: absolute;
   top: -28px;
   left: 58px;
@@ -401,9 +395,9 @@ button:focus {
 
 .testPanel {
   position: absolute;
-  top: 101px;
-  right: -40px;
-  width: 200px;
+  top: 99px;
+  right: 0px;
+  width: 160px;
   p {
     color: white;
     margin-top: 10px;
@@ -504,7 +498,7 @@ $needle-origin: 8px 84px;
   position: absolute;
   left: 50%;
   bottom: 2px;
-  transform: rotate(-18deg);
+  transform: rotate(-9deg);
 
   // Set the rotation point for the fulcrum
   -webkit-transform-origin: $needle-origin;
@@ -555,19 +549,19 @@ $needle-origin: 8px 84px;
     position: absolute;
     font-size: .8em;
   }
-  .pos1 {
+  .pos2 {
     top: 20px;
     left: 145px;
   }
-  .pos2 {
+  .pos4 {
     top: 64px;
     left: 178px;
   }
-  .neg1 {
+  .neg2 {
     top: 20px;
     left: 39px;
   }
-  .neg2 {
+  .neg4 {
     top: 64px;
     left: 7px;
   }
@@ -576,8 +570,8 @@ $needle-origin: 8px 84px;
 .count {
   color: white;
   position: absolute;
-  top: 13px;
-  left: 231px;
+  top: 14px;
+  left: 200px;
   padding: 2px;
   text-shadow: 1px 1px 0 black;
 }
@@ -586,7 +580,25 @@ $needle-origin: 8px 84px;
   color: white;
   position: absolute;
   top: 35px;
+  left: 218px;
+  padding: 2px;
+  text-shadow: 1px 1px 0 black;
+}
+
+.cardsLeft {
+  color: white;
+  position: absolute;
+  top: 58px;
   left: 231px;
+  padding: 2px;
+  text-shadow: 1px 1px 0 black;
+}
+
+.decksLeft {
+  color: white;
+  position: absolute;
+  top: 81px;
+  left: 237px;
   padding: 2px;
   text-shadow: 1px 1px 0 black;
 }
