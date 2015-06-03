@@ -224,6 +224,7 @@ function Hand() {
   this.isCurrentTurn = false;
   this.isDone = true;
   this.has21 = false;
+  this.isFirstTurn = true;
 }
 
 function newGame() {
@@ -405,22 +406,32 @@ function drawCard(options) {
 
 function hit() {
   console.log("hit");
+  var $thisSplitButton;
   var hand = game.currentHand;
   drawCard({
     hand: hand,
     callback: function () {
-      if (game[hand].isDoubled && !game[hand].winner) {
-        stay();
+      if (game[hand].isDoubled) {
+        handEnd(game.currentHand);
       }
     }
   });
+  if (hand === "player") {
+    $thisSplitButton = $splitButton;
+  } else if (hand === "split1") {
+    $thisSplitButton = $split1Button;
+  } else if (hand === "split2") {
+    $thisSplitButton = $split2Button;
+  }
   if (game[hand].isFirstTurn) {
     game[hand].isFirstTurn = false;
-    $doubled.attr("id", "doubled-disabled");
+    $double.attr("id", "double-disabled");
+    $thisSplitButton.addClass("hidden");
   }
 }
 
 function dealerTurn() {
+  flipCard();
   if (game.dealer.total < 17 && game.unbustedHands > 0 && game.player.has21 === false) {
     console.log(`dealer hits on ${game.dealer.total}`);
     drawCard({
@@ -530,7 +541,7 @@ function checkVictory(hand) {
       console.log("player has blackjack");
       game[hand].winner = "player";
       game[hand].wager *= 1.25;
-      announce(hand, "BLACKJACK!");
+      announce(hand, "21!");
     } else if (game.dealer.total === 21 && game[hand].total === 21) {
       console.log("push");
       game[hand].winner = "push";
@@ -586,17 +597,13 @@ function gameEnd() {
     console.log(`returning ${game.wager} to player. Bank at ${bank}`);
   }
   $bankTotal.text("Bank: " + bank);
-  !isFlipped && flipCard();
+  !game.isFlipped && flipCard();
   betChangeAllowed = true;
-  isPlayersTurn = true;
   $dealerTotal.removeClass("hidden");
-  $newGame.attr("disabled", false);
+  $deal.attr("disabled", false);
   $hit.attr("disabled", true);
   $stay.attr("disabled", true);
-  isDoubledDown = false;
-  $doubleDown.attr("disabled", true);
-  splitAllowed = false;
-  $split.attr("disabled", true);
+  $double.attr("disabled", true);
 }
 
 function clearTable() {
@@ -613,29 +620,39 @@ function cardImage(data) {
   return filename;
 }
 
-function announce(text) {
-  if (game.winner === "dealer") {
-    $announce.addClass("lose");
+function announce(hand, text) {
+  var popupWidth = 113 + (game[hand].cards.length - 1) * 22;
+  if (game[hand].winner === "dealer") {
+    $(`.announce${_.capitalize(hand)}`).addClass("lose");
     loseWav.load();
     loseWav.play();
-  } else if (game.winner === "player") {
-    $announce.addClass("win");
+  } else if (game[hand].winner === "player") {
+    $(`.announce${_.capitalize(hand)}`).addClass("win");
     winWav.load();
     winWav.play();
-  } else if (game.winner === "push") {
-    $announce.addClass("push");
+  } else if (game[hand].winner === "push") {
+    $(`.announce${_.capitalize(hand)}`).addClass("push");
   }
-  $announceText.text(text);
+  if (hand !== "player") {
+    $(`.announce${_.capitalize(hand)}`).css("width", popupWidth);
+    // if (text === "BLACKJACK!") {
+    //   $(`.announce${_.capitalize(hand)}`).css("left", "-38px");
+    //   $(`.announce${_.capitalize(hand)} > p`).css("margin-right", "-85px");
+    //   $(`.announce${_.capitalize(hand)} > p`).css("font-size", "2em");
+    // }
+  }
+  $(`.announce${_.capitalize(hand)}`).removeClass("hidden");
+  $(`.announce${_.capitalize(hand)}`).html(`<p>${text}</p>`);
 }
 
 function flipCard() {
   console.log('flip');
-  isFlipped = true;
-  var $flipped = $(".dealer .cardImage").first();
+  game.isFlipped = true;
+  var $flipped = $(".dealerHand .cardImage").first();
   $flipped.remove();
-  var html = `<img src='${game.hiddenCard}' class='cardImage'>`;
-  $dealer.prepend(html);
-  updateCount(game.dealerHand[0]);
+  var html = `<img src='${game.dealer.cardImages[0]}' class='cardImage'>`;
+  $dealerHand.prepend(html);
+  updateCount(game.dealer.cards[0]);
 }
 
 function updateCount(card) {
