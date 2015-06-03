@@ -401,13 +401,24 @@ button:focus {
 
 .testPanel {
   position: absolute;
-  top: 114px;
-  right: -16px;
+  top: 101px;
+  right: -40px;
   width: 200px;
   p {
     color: white;
     margin-top: 10px;
   }
+}
+
+.testPanel label {
+  left: 120px;
+  position: absolute;
+  color: white;
+  top: 144px;
+}
+
+.testPanel > button {
+  margin: 8px 0 0;
 }
 
 .testPanel button {
@@ -420,7 +431,7 @@ button:focus {
   -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
          border-radius: 4px;
-  padding: 2px 15px;
+  padding: 2px 13px;
   display: inline-block;
   line-height: 20px;
   color: rgba(0,0,0,1);
@@ -441,15 +452,8 @@ button:focus {
 
 .splitTesting {
   position: absolute;
-  top: 229px;
-  left: 0px;
-}
-
-.testPanel label {
-  left: 24px;
-  position: absolute;
-  bottom: -17px;
-  color: white;
+  top: 144px;
+  left: 99px;
 }
 
 ////////////
@@ -515,6 +519,17 @@ $needle-origin: 8px 84px;
 
 } // .gauge-needle
 
+.toggleCountInfo {
+  width: 209px;
+  height: 107px;
+  position: absolute;
+  top: 14px;
+  left: 19px;
+  border-radius: 104px 104px 0 0;
+  border: none;
+  background: none;
+}
+
 .houseText {
   position: absolute;
   top: 83px;
@@ -561,8 +576,8 @@ $needle-origin: 8px 84px;
 .count {
   color: white;
   position: absolute;
-  top: 149px;
-  left: 18px;
+  top: 13px;
+  left: 231px;
   padding: 2px;
   text-shadow: 1px 1px 0 black;
 }
@@ -570,8 +585,8 @@ $needle-origin: 8px 84px;
 .trueCount {
   color: white;
   position: absolute;
-  top: 170px;
-  left: 18px;
+  top: 35px;
+  left: 231px;
   padding: 2px;
   text-shadow: 1px 1px 0 black;
 }

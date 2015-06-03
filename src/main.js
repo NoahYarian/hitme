@@ -775,10 +775,10 @@ $(".testDeal").click(function () {
   var dealer2Suit = $(".dealer2Suit").val();
   var player1Suit = $(".player1Suit").val();
   var player2Suit = $(".player2Suit").val();
-  var dealer1 = "../images/cards/" + dealer1Value + "_of_" + dealer1Suit.toLowerCase() + ".svg";
-  var dealer2 = "../images/cards/" + dealer2Value + "_of_" + dealer2Suit.toLowerCase() + ".svg";
-  var player1 = "../images/cards/" + player1Value + "_of_" + player1Suit.toLowerCase() + ".svg";
-  var player2 = "../images/cards/" + player2Value + "_of_" + player2Suit.toLowerCase() + ".svg";
+  var dealer1 = "../images/cards/" + dealer1Value + "_of_" + dealer1Suit + ".svg";
+  var dealer2 = "../images/cards/" + dealer2Value + "_of_" + dealer2Suit + ".svg";
+  var player1 = "../images/cards/" + player1Value + "_of_" + player1Suit + ".svg";
+  var player2 = "../images/cards/" + player2Value + "_of_" + player2Suit + ".svg";
   game.player.cardImages.push(player1);
   game.player.cardImages.push(player2);
   game.dealer.cards = [dealer1Value, dealer2Value];
@@ -798,53 +798,15 @@ $(".giveCard").click(function() {
   giveCard($(this).attr("data-id"));
 })
 
-// $('.dealerGiveCard').click(function () {
-//   giveCard('dealer');
-// });
-
-// $('.playerGiveCard').click(function () {
-//   giveCard('player');
-// });
-
 function giveCard(hand) {
   var cardValue = $('.giveCardValue').val();
   var cardSuit = $('.giveCardSuit').val();
   var cardSrc = "../images/cards/" + cardValue + "_of_" + cardSuit.toLowerCase() + ".svg";
 
-  if (person === 'dealer') {
-    game.dealerHand.push(cardValue);
-    checkTotal('dealer');
-    $dealer.append(`<img src='${cardSrc}' class='cardImage'>`);
-  } else if (person === 'player') {
-    game.playerHand.push(cardValue);
-    checkTotal('player');
-    $player.append(`<img src='${cardSrc}' class='cardImage'>`);
-  } else if (person === 'split1') {
-    game.split1Hand.push(cardValue);
-    checkTotal('split1');
-    $split1.append(`<img src='${cardSrc}' class='cardImage'>`);
-  } else if (person === 'split2') {
-    game.split2Hand.push(cardValue);
-    checkTotal('split2');
-    $split2.append(`<img src='${cardSrc}' class='cardImage'>`);
-  } else if (person === 'split1a') {
-    game.split1aHand.push(cardValue);
-    checkTotal('split1a');
-    $split1a.append(`<img src='${cardSrc}' class='cardImage'>`);
-  } else if (person === 'split1b') {
-    game.split1bHand.push(cardValue);
-    checkTotal('split1b');
-    $split1b.append(`<img src='${cardSrc}' class='cardImage'>`);
-  } else if (person === 'split2a') {
-    game.split2aHand.push(cardValue);
-    checkTotal('split2a');
-    $split2a.append(`<img src='${cardSrc}' class='cardImage'>`);
-  } else if (person === 'split2b') {
-    game.split2bHand.push(cardValue);
-    checkTotal('split2b');
-    $split2b.append(`<img src='${cardSrc}' class='cardImage'>`);
-  }
-  checkVictory();
+  game[hand].cards.push(cardValue);
+  checkTotal(hand);
+  $(`.${hand}Hand`).append(`<img src='${cardSrc}' class='cardImage'>`);
+  hand !== "dealer" && checkLoss21(hand);
 }
 
 // JSON request function with JSONP proxy

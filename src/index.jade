@@ -89,14 +89,14 @@ html
         .countInfo
           .count Count: 0
           .trueCount True Count: 0
-          .cardsLeft 312
-          .decksLeft 6
+          .cardsLeft.hidden 312
+          .decksLeft.hidden 6
         button.toggleTestPanel
         .testPanel
           .dealer1
             p To Dealer
             select.dealer1Value
-              option ACE
+              option ace
               option 2
               option 3
               option 4
@@ -106,17 +106,17 @@ html
               option 8
               option 9
               option 10
-              option JACK
-              option QUEEN
-              option KING
+              option jack
+              option queen
+              option king
             select.dealer1Suit
-              option CLUBS
-              option DIAMONDS
-              option HEARTS
-              option SPADES
+              option clubs
+              option diamonds
+              option hearts
+              option spades
           .dealer2
             select.dealer2Value
-              option ACE
+              option ace
               option 2
               option 3
               option 4
@@ -126,18 +126,18 @@ html
               option 8
               option 9
               option 10
-              option JACK
-              option QUEEN
-              option KING
+              option jack
+              option queen
+              option king
             select.dealer2Suit
-              option CLUBS
-              option DIAMONDS
-              option HEARTS
-              option SPADES
+              option clubs
+              option diamonds
+              option hearts
+              option spades
           .player1
             p To Player
             select.player1Value
-              option ACE
+              option ace
               option 2
               option 3
               option 4
@@ -147,17 +147,17 @@ html
               option 8
               option 9
               option 10
-              option JACK
-              option QUEEN
-              option KING
+              option jack
+              option queen
+              option king
             select.player1Suit
-              option CLUBS
-              option DIAMONDS
-              option HEARTS
-              option SPADES
+              option clubs
+              option diamonds
+              option hearts
+              option spades
           .player2
             select.player2Value
-              option ACE
+              option ace
               option 2
               option 3
               option 4
@@ -167,18 +167,21 @@ html
               option 8
               option 9
               option 10
-              option JACK
-              option QUEEN
-              option KING
+              option jack
+              option queen
+              option king
             select.player2Suit
-              option CLUBS
-              option DIAMONDS
-              option HEARTS
-              option SPADES
-          button.testDeal Deal Cards
+              option clubs
+              option diamonds
+              option hearts
+              option spades
+          button.testDeal Deal Hands
+          input.splitTesting(type="checkbox")
+          label Split
           .testCard
+            p Deal single card
             select.giveCardValue
-              option ACE
+              option ace
               option 2
               option 3
               option 4
@@ -188,24 +191,33 @@ html
               option 8
               option 9
               option 10
-              option JACK
-              option QUEEN
-              option KING
+              option jack
+              option queen
+              option king
             select.giveCardSuit
-              option CLUBS
-              option DIAMONDS
-              option HEARTS
-              option SPADES
-          button.giveCard.dealerGiveCard(data-id="dealer") To Dealer
-          button.giveCard.playerGiveCard(data-id="player") To Player
-          input.splitTesting(type="checkbox")
-          label Split Testing
-          //- button.giveCard.split1GiveCard(data-id="split1") To Split1
-          //- button.giveCard.split2GiveCard(data-id="split2") To Split2
-          //- button.giveCard.split1aGiveCard(data-id="split1a") To Split1a
-          //- button.giveCard.split1bGiveCard(data-id="split1b") To Split1b
-          //- button.giveCard.split2aGiveCard(data-id="split2a") To Split2a
-          //- button.giveCard.split2bGiveCard(data-id="split2b") To Split2b
+              option clubs
+              option diamonds
+              option hearts
+              option spades
+            button.giveCardButton Deal Card
+            select.giveCardToHand
+              option dealer
+              option player
+              option split1
+              option split2
+              option split1a
+              option split1b
+              option split2a
+              option split2b
+          //- .giveCards
+          //-   button.giveCard.dealerGiveCard(data-id="dealer") To Dealer
+          //-   button.giveCard.playerGiveCard(data-id="player") To Player
+          //-   button.giveCard.split1GiveCard(data-id="split1") To Split1
+          //-   button.giveCard.split2GiveCard(data-id="split2") To Split2
+          //-   button.giveCard.split1aGiveCard(data-id="split1a") To Split1a
+          //-   button.giveCard.split1bGiveCard(data-id="split1b") To Split1b
+          //-   button.giveCard.split2aGiveCard(data-id="split2a") To Split2a
+          //-   button.giveCard.split2bGiveCard(data-id="split2b") To Split2b
     script(src="lib/build.js")
     script(src="main.js")
 
