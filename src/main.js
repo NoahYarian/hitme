@@ -145,39 +145,55 @@ $stay.click(function () {
 });
 
 $splitButton.click(function () {
-  if ($(".splitTesting").is(":checked")) {
-    split("player", true);
+  if (bank - betAmt >= 0) {
+    if ($(".splitTesting").is(":checked")) {
+      split("player", true);
+    } else {
+      split("player");
+    }
   } else {
-    split("player");
+    console.log("Insufficient funds.");
   }
 });
 
 $split1Button.click(function () {
-  if ($(".splitTesting").is(":checked")) {
-    split("split1", true);
+  if (bank - betAmt >= 0) {
+    if ($(".splitTesting").is(":checked")) {
+      split("split1", true);
+    } else {
+      split("split1");
+    }
   } else {
-    split("split1");
+    console.log("Insufficient funds.");
   }
 });
 
 $split2Button.click(function () {
-  if ($(".splitTesting").is(":checked")) {
-    split("split2", true);
+  if (bank - betAmt >= 0) {
+    if ($(".splitTesting").is(":checked")) {
+      split("split2", true);
+    } else {
+      split("split2");
+    }
   } else {
-    split("split2");
+    console.log("Insufficient funds.");
   }
 });
 
 $double.click(function () {
   var hand = game.currentHand;
-  if (game[hand].isFirstTurn) {
-    $double.attr("disabled", true);
-    $hit.attr("disabled", true);
-    $stay.attr("disabled", true);
-    bet(hand, betAmt);
-    console.log("double down");
-    game[hand].isDoubled = true;
-    hit();
+  if (bank - betAmt >= 0) {
+    if (game[hand].isFirstTurn) {
+      $double.attr("disabled", true);
+      $hit.attr("disabled", true);
+      $stay.attr("disabled", true);
+      bet(hand, betAmt);
+      console.log("double down");
+      game[hand].isDoubled = true;
+      hit();
+    }
+  } else {
+    console.log("Insufficient funds.");
   }
 });
 
@@ -230,6 +246,7 @@ function Hand() {
   this.isFirstTurn = true;
   this.isBusted = false;
   this.winnings = 0;
+  this.charlie = false;
 }
 
 function newGame() {
@@ -331,6 +348,8 @@ function split(hand, test) {
   game[hand2].wager = betAmt;
   game[hand].wager = 0;
   bank -= betAmt;
+  countChips("bank");
+  $bankTotal.text("Bank: " + bank);
   countChips(hand1);
   countChips(hand2);
   $(`.${hand1}Wager`).text(game[hand1].wager);
@@ -427,7 +446,19 @@ function drawCard(options) {
       checkTotal(hand);
       console.log(`${hand} - ${game[hand].cards} **** ${hand} is at ${game.player.total}`);
     }
-    hand !== "dealer" && checkLoss21(hand);
+    // hand !== "dealer" && checkLoss21(hand);
+    // if (hand !== "dealer" && game[hand].cards.length === 5) {
+    //     game[hand].charlie = true;
+    //     handEnd(hand);
+    //   }
+    // }
+    if (hand !== "dealer") {
+      checkLoss21(hand);
+      if (game[hand].cards.length === 5) {
+        game[hand].charlie = true;
+        handEnd(hand);
+      }
+    }
     typeof options.callback === 'function' && options.callback();
   });
   cardsLeft--;
@@ -470,7 +501,7 @@ function dealerTurn() {
         dealerTurn();
       }
     });
-  } else if (game.dealer.total >= 17 || game.unbustedHands === 0 || game.player.has21 === true) {
+  } else if (game.dealer.total >= 17 || game.unbustedHands === 0 || game.player.has21 === true || game.player.charlie === true) {
     console.log(`dealer is finished with ${game.dealer.total}`);
     game.player.cards.length >= 2 && checkVictory("player");
     game.split1.cards.length >= 2 && checkVictory("split1");
@@ -531,7 +562,12 @@ function checkLoss21(hand) {
 }
 
 function checkVictory(hand) {
-    if (game.dealer.total === 21 && game.dealer.cards.length === 2 && game[hand].total === 21 && game[hand].cards.length === 2) {
+    if (game[hand].charlie) {
+      console.log("five card charlie!");
+      game[hand].winner = "player";
+      game[hand].wager *= 1.25;
+      announce(hand, "5 CARD!");
+    } else if (game.dealer.total === 21 && game.dealer.cards.length === 2 && game[hand].total === 21 && game[hand].cards.length === 2) {
       console.log("double blackjack push!");
       game[hand].winner = "push";
       announce(hand, "PUSH");
@@ -770,7 +806,7 @@ function countChips(location, winnings) {
 
 $(".testDeal").click(function () {
   game = new Game();
-  bet(betAmt);
+  bet("player", betAmt);
   game.player.isFirstTurn = true;
   betChangeAllowed = false;
   if (bank >= betAmt) {
