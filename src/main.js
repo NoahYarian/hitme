@@ -141,7 +141,13 @@ $hit.click(hit);
 
 $stay.click(function () {
   console.log("stay");
-  handEnd(game.currentHand);
+  var hand = game.currentHand;
+ // if (game[hand].canSplit) {
+ //   game[hand].canSplit = false;
+    $(`.${hand} > button`).attr("disabled", true);
+    $(`.${hand} > button`).addClass("hidden");
+ // }
+  handEnd(hand);
 });
 
 $splitButton.click(function () {
@@ -446,19 +452,7 @@ function drawCard(options) {
       checkTotal(hand);
       console.log(`${hand} - ${game[hand].cards} **** ${hand} is at ${game.player.total}`);
     }
-    // hand !== "dealer" && checkLoss21(hand);
-    // if (hand !== "dealer" && game[hand].cards.length === 5) {
-    //     game[hand].charlie = true;
-    //     handEnd(hand);
-    //   }
-    // }
-    if (hand !== "dealer") {
-      checkLoss21(hand);
-      if (game[hand].cards.length === 5) {
-        game[hand].charlie = true;
-        handEnd(hand);
-      }
-    }
+    hand !== "dealer" && checkLoss21(hand);
     typeof options.callback === 'function' && options.callback();
   });
   cardsLeft--;
@@ -466,7 +460,6 @@ function drawCard(options) {
 
 function hit() {
   console.log("hit");
-  var $thisSplitButton;
   var hand = game.currentHand;
   drawCard({
     hand: hand,
@@ -476,17 +469,11 @@ function hit() {
       }
     }
   });
-  if (hand === "player") {
-    $thisSplitButton = $splitButton;
-  } else if (hand === "split1") {
-    $thisSplitButton = $split1Button;
-  } else if (hand === "split2") {
-    $thisSplitButton = $split2Button;
-  }
   if (game[hand].isFirstTurn) {
     game[hand].isFirstTurn = false;
     $double.attr("id", "double-disabled");
-    $thisSplitButton && $thisSplitButton.addClass("hidden");
+    $(`.${hand} > button`).attr("disabled", true);
+    $(`.${hand} > button`).addClass("hidden");
   }
 }
 
@@ -558,11 +545,20 @@ function checkLoss21(hand) {
     } else if (game[hand].total === 21) {
       game[hand].has21 = true;
       handEnd(hand);
+    } else if (game[hand].length === 5) {
+      game[hand].charlie = true;
+      handEnd(hand);
     }
 }
 
 function checkVictory(hand) {
-    if (game[hand].charlie) {
+    if (game[hand].charlie && game[hand].total === 21) {
+      console.log("five card 21!");
+      game[hand].winner = "player";
+      game[hand].wager *= 1.25;
+      game[hand].wager *= 1.25;
+      announce(hand, "5 CARD 21!");
+    } else if (game[hand].charlie) {
       console.log("five card charlie!");
       game[hand].winner = "player";
       game[hand].wager *= 1.25;
@@ -627,11 +623,11 @@ function handEnd(hand) {
 
 function handPayout(hand) {
 if (game[hand].winner === "player") {
-    game[hand].winnings = game[hand].wager * 2;
-    console.log(`giving player ${game[hand].wager * 2}. Bank was at ${bank}`);
+    game[hand].winnings = Number((game[hand].wager * 2).toFixed());
+    console.log(`giving player ${game[hand].winnings}. Bank is at ${bank + game[hand].winnings}`);
   } else if (game[hand].winner === "push") {
     game[hand].winnings = game[hand].wager;
-    console.log(`returning ${game[hand].wager} to player. Bank was at ${bank}`);
+    console.log(`returning ${game[hand].wager} to player. Bank is at ${bank + game[hand].wager}`);
   }
   bank += game[hand].winnings;
   countChips(hand, true);

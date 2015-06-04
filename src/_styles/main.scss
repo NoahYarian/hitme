@@ -35,6 +35,7 @@ button:focus {
   width: 960px;
   height: 540px;
   border: 2px solid white;
+  perspective: 1300px;
 }
 
 .total {
@@ -139,6 +140,7 @@ button:focus {
 .highlighted {
   background: rgba(255,255,0, .75);
   border-radius: 6px;
+  transform: rotateX(16deg);
 }
 
 .announcePlayer {
