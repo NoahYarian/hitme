@@ -211,6 +211,11 @@ $(".toggleTestPanel").click(function () {
   $(".testPanel").toggleClass("hidden");
 });
 
+$(".strategyImg").click(function () {
+  $(".strategyImg").toggleClass("strategyBig");
+  //$(".strategyImg").toggleClass("strategySmall");
+});
+
 //chip click listener
 $(".chip").click(function() {
   if (betChangeAllowed) {
