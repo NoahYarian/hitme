@@ -213,7 +213,6 @@ $(".toggleTestPanel").click(function () {
 
 $(".strategyImg").click(function () {
   $(".strategyImg").toggleClass("strategyBig");
-  //$(".strategyImg").toggleClass("strategySmall");
 });
 
 //chip click listener
