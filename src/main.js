@@ -258,6 +258,8 @@ function Hand() {
   this.isBusted = false;
   this.winnings = 0;
   this.charlie = false;
+  this.chipLeft = 0;
+  this.chipTop = 0;
 }
 
 function newGame() {
@@ -643,12 +645,12 @@ if (game[hand].winner === "player") {
 
 function moveChips(hand, condition) {
   var bankTop = $bankChips.children().length * -5;
-  game.chipsWonHeight += $(`.${hand}Chips`).children().length * -5;
   if (condition === "win") {
     $(`.${hand}Chips`).animate({
-      top: `${393 + bankTop + game.chipsWonHeight + 5}px`,
+      top: `${393 + bankTop + game.chipsWonHeight}px`,
       left: "287px"
     });
+    game.chipsWonHeight += $(`.${hand}Chips`).children().length * -5;
   } else if (condition === "bet") {
     $(`.${hand}Chips`).show().animate({top: "387px", left: "458px"});
   } else if (condition === "lose") {
@@ -667,12 +669,14 @@ function moveAllWinnings() {
     if ($(`.${hand}Chips`).children().length > 0) {
       setTimeout(function () {
         moveChips(hand, "win");
+        $(`.${hand}Wager`).empty();
       }, 200 * i);
     }
   });
 }
 
 function gameEnd() {
+ // moveAllWinnings();
   !game.isFlipped && flipCard();
   betChangeAllowed = true;
   $dealerTotal.removeClass("hidden");
@@ -687,6 +691,7 @@ function clearTable() {
   $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup, .playerChips, .playerWager").addClass("hidden");
   $player.removeClass("hidden");
   $(".popup").removeClass("win lose push");
+  //$(`.${hand}Chips`).css({top: game[hand].chipTop, left: game[hand].chipLeft});
   console.log("------------table cleared------------");
 }
 
