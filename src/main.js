@@ -640,7 +640,6 @@ if (game[hand].winner === "player") {
   bank += game[hand].winnings;
   countChips(hand, true);
   game[hand].winnings > 0 ? $(`.${hand}Wager`).text(game[hand].winnings) : $(`.${hand}Wager`).empty();
-  // $bankTotal.text("Bank: " + bank);
 }
 
 function moveChips(hand, condition) {
@@ -663,20 +662,52 @@ function moveChips(hand, condition) {
   }
 }
 
+function setChipLocations() {
+  game.player.chipTop = 386;
+  game.player.chipLeft = 457;
+  game.split1.chipTop = 347;
+  game.split1.chipLeft = 328;
+  game.split2.chipTop = 347;
+  game.split2.chipLeft = 604;
+  game.split1a.chipTop = 347;
+  game.split1a.chipLeft = 119;
+  game.split1b.chipTop = 347;
+  game.split1b.chipLeft = 343;
+  game.split2a.chipTop = 347;
+  game.split2a.chipLeft = 567;
+  game.split2b.chipTop = 347;
+  game.split2b.chipLeft = 792;
+}
+
 function moveAllWinnings() {
   var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
   hands.forEach(function(hand, i) {
+    $(`.${hand}Wager`).empty();
     if ($(`.${hand}Chips`).children().length > 0) {
       setTimeout(function () {
+         $bankTotal.text("Bank: " + bank);
+       }, 200 * i + 600);
+      setTimeout(function () {
         moveChips(hand, "win");
-        $(`.${hand}Wager`).empty();
       }, 200 * i);
     }
   });
 }
 
+// function createNewChips(hand) {
+//   var docFragment = document.createDocumentFragment(); // contains all gathered nodes
+
+//   var chipStack = document.createElement('DIV');
+//   chipStack.setAttribute("class", "handChips");
+//   docFragment.appendChild(chipStack);
+
+//   var chipImage = document.createElement('IMG');
+//   chipImage.setAttribute("src", "chipImage");
+//   chipStack.appendChild(chipImage);
+// }
+
 function gameEnd() {
- // moveAllWinnings();
+  moveAllWinnings();
   !game.isFlipped && flipCard();
   betChangeAllowed = true;
   $dealerTotal.removeClass("hidden");
@@ -691,7 +722,11 @@ function clearTable() {
   $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup, .playerChips, .playerWager").addClass("hidden");
   $player.removeClass("hidden");
   $(".popup").removeClass("win lose push");
-  //$(`.${hand}Chips`).css({top: game[hand].chipTop, left: game[hand].chipLeft});
+  setChipLocations();
+  var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
+  hands.forEach(function (hand) {
+    $(`.${hand}Chips`).css({top: game[hand].chipTop, left: game[hand].chipLeft});
+  });
   console.log("------------table cleared------------");
 }
 
