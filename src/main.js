@@ -642,53 +642,103 @@ if (game[hand].winner === "player") {
   game[hand].winnings > 0 ? $(`.${hand}Wager`).text(game[hand].winnings) : $(`.${hand}Wager`).empty();
 }
 
-function moveChips(hand, condition) {
-  var bankTop = $bankChips.children().length * -5;
-  if (condition === "win") {
-    $(`.${hand}Chips`).animate({
-      top: `${393 + bankTop + game.chipsWonHeight}px`,
-      left: "287px"
-    });
+function moveChips(hand, location) {
+  // setChipLocations();
+  // var bankTop = $bankChips.children().length * -5;
+  // if (condition === "win") {
+  //   $(`.${hand}Chips`).animate({
+  //     top: `${393 + bankTop + game.chipsWonHeight}px`,
+  //     left: "287px"
+  //   });
+  //   game.chipsWonHeight += $(`.${hand}Chips`).children().length * -5;
+  // } else if (condition === "bet") {
+  //   $(`.${hand}Chips`).show().animate({top: game[hand].chipTop, left: game[hand].chipLeft});
+  // } else if (condition === "lose") {
+  //   $(`.${hand}Chips`)
+  //     .animate({
+  //       top: "-24px",
+  //       left: "458px"
+  //     })
+  //     .fadeOut();
+  // }
+  setChipLocations(location);
+  if (location === "bank") {
+    //setChipLocations("bank");
     game.chipsWonHeight += $(`.${hand}Chips`).children().length * -5;
-  } else if (condition === "bet") {
-    $(`.${hand}Chips`).show().animate({top: "387px", left: "458px"});
-  } else if (condition === "lose") {
-    $(`.${hand}Chips`)
-      .animate({
-        top: "-24px",
-        left: "458px"
-      })
-      .fadeOut();
+  } else if (location === "hand") {
+    //setChipLocations("hand");
+  } else if (location === "dealer") {
+    //setChipLocations("dealer");
   }
+  $(`.${hand}Chips`).animate({
+    top: `${game[hand].chipTop}px`,
+    left: `${game[hand].chipLeft}px`
+  });
 }
 
-function setChipLocations() {
-  game.player.chipTop = 386;
-  game.player.chipLeft = 457;
-  game.split1.chipTop = 347;
-  game.split1.chipLeft = 328;
-  game.split2.chipTop = 347;
-  game.split2.chipLeft = 604;
-  game.split1a.chipTop = 347;
-  game.split1a.chipLeft = 119;
-  game.split1b.chipTop = 347;
-  game.split1b.chipLeft = 343;
-  game.split2a.chipTop = 347;
-  game.split2a.chipLeft = 567;
-  game.split2b.chipTop = 347;
-  game.split2b.chipLeft = 792;
+function setChipLocations(location) {
+  var bankTop = 393 + ($bankChips.children().length * -5) + game.chipsWonHeight;
+  var bankLeft = 287;
+  var dealerTop = -24
+  var dealerLeft = 458;
+  if (location === "bank") {
+    game.player.chipTop =
+    game.split1.chipTop =
+    game.split2.chipTop =
+    game.split1a.chipTop =
+    game.split1b.chipTop =
+    game.split2a.chipTop =
+    game.split2b.chipTop = bankTop;
+    game.player.chipLeft =
+    game.split1.chipLeft =
+    game.split2.chipLeft =
+    game.split1a.chipLeft =
+    game.split1b.chipLeft =
+    game.split2a.chipLeft =
+    game.split2b.chipLeft = bankLeft;
+  } else if (location === "hand") {
+    game.player.chipTop = 386;
+    game.player.chipLeft = 457;
+    game.split1.chipTop = 347;
+    game.split1.chipLeft = 328;
+    game.split2.chipTop = 347;
+    game.split2.chipLeft = 604;
+    game.split1a.chipTop = 347;
+    game.split1a.chipLeft = 119;
+    game.split1b.chipTop = 347;
+    game.split1b.chipLeft = 343;
+    game.split2a.chipTop = 347;
+    game.split2a.chipLeft = 567;
+    game.split2b.chipTop = 347;
+    game.split2b.chipLeft = 792;
+  } else if (location === "dealer") {
+    game.player.chipTop =
+    game.split1.chipTop =
+    game.split2.chipTop =
+    game.split1a.chipTop =
+    game.split1b.chipTop =
+    game.split2a.chipTop =
+    game.split2b.chipTop = dealerTop;
+    game.player.chipLeft =
+    game.split1.chipLeft =
+    game.split2.chipLeft =
+    game.split1a.chipLeft =
+    game.split1b.chipLeft =
+    game.split2a.chipLeft =
+    game.split2b.chipLeft = dealerLeft;
+  }
 }
 
 function moveAllWinnings() {
   var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
   hands.forEach(function(hand, i) {
-    $(`.${hand}Wager`).empty();
     if ($(`.${hand}Chips`).children().length > 0) {
       setTimeout(function () {
          $bankTotal.text("Bank: " + bank);
        }, 200 * i + 600);
       setTimeout(function () {
         moveChips(hand, "win");
+        $(`.${hand}Wager`).empty();
       }, 200 * i);
     }
   });
@@ -722,11 +772,11 @@ function clearTable() {
   $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup, .playerChips, .playerWager").addClass("hidden");
   $player.removeClass("hidden");
   $(".popup").removeClass("win lose push");
-  setChipLocations();
-  var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
-  hands.forEach(function (hand) {
-    $(`.${hand}Chips`).css({top: game[hand].chipTop, left: game[hand].chipLeft});
-  });
+  // setChipLocations();
+  // var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
+  // hands.forEach(function (hand) {
+  //   $(`.${hand}Chips`).css({top: game[hand].chipTop, left: game[hand].chipLeft});
+  // });
   console.log("------------table cleared------------");
 }
 
