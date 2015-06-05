@@ -238,6 +238,7 @@ function Game() {
   this.currentHand = "player";
   this.handsToPlay = 1;
   this.unbustedHands = 1;
+  this.chipsWonHeight = 0;
 }
 
 function Hand() {
@@ -353,6 +354,7 @@ function split(hand, test) {
   game[hand2].isDone = false;
   $button.attr("disabled", true);
   $(`.${hand}`).addClass("hidden");
+  $(`.${hand}Chips`).empty();
   $(`.${hand1}, .${hand2}`).removeClass("hidden");
   game[hand1].wager = betAmt;
   game[hand2].wager = betAmt;
@@ -639,6 +641,37 @@ if (game[hand].winner === "player") {
   // $bankTotal.text("Bank: " + bank);
 }
 
+function moveChips(hand, condition) {
+  var bankTop = $bankChips.children().length * -5;
+  game.chipsWonHeight += $(`.${hand}Chips`).children().length * -5;
+  if (condition === "win") {
+    $(`.${hand}Chips`).animate({
+      top: `${393 + bankTop + game.chipsWonHeight + 5}px`,
+      left: "287px"
+    });
+  } else if (condition === "bet") {
+    $(`.${hand}Chips`).show().animate({top: "387px", left: "458px"});
+  } else if (condition === "lose") {
+    $(`.${hand}Chips`)
+      .animate({
+        top: "-24px",
+        left: "458px"
+      })
+      .fadeOut();
+  }
+}
+
+function moveAllWinnings() {
+  var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
+  hands.forEach(function(hand, i) {
+    if ($(`.${hand}Chips`).children().length > 0) {
+      setTimeout(function () {
+        moveChips(hand, "win");
+      }, 200 * i);
+    }
+  });
+}
+
 function gameEnd() {
   !game.isFlipped && flipCard();
   betChangeAllowed = true;
@@ -789,12 +822,12 @@ function countChips(location, winnings) {
   if (location === "bank") {
     $bankChips.html(html);
     $('.bankChips img').each(function(i, c) {
-      $(c).css('top', -5 * i + 7);
+      $(c).css('top', -5 * i);
     });
   } else {
     $(`.${location}Chips`).html(html);
     $(`.${location}Chips img`).each(function(i, c) {
-      $(c).css('top', -5 * i + 7);
+      $(c).css('top', -5 * i);
     });
   }
 }

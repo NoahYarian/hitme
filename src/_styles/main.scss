@@ -112,7 +112,6 @@ button:focus {
   left: 748px;
 }
 
-
 .hand img {
   margin: 3px -95px -1px 4px;
   -webkit-transform: rotateX(16deg);
@@ -309,9 +308,15 @@ button:focus {
   img {
     position: absolute;
     width: 47px;
-    top: 7px;
-    left: 46px;
+    //top: 7px;
+    //left: 46px;
   }
+   z-index: 200;
+}
+
+.table div {
+  -webkit-transition: 0.5s;
+   transition: 0.5s;
 }
 
 .wager {
@@ -329,7 +334,7 @@ button:focus {
 .bankChips {
   width: 47px;
   position: absolute;
-  top: 387px;
+  top: 393px;
   left: 287px;
   img {
     width: 47px;
