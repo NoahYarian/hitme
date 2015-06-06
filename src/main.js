@@ -546,9 +546,9 @@ function checkLoss21(hand) {
       if (game[hand].cards.length === 5) {
         game[hand].charlie = true;
         game.undecidedHands--;
-        console.log("five card charlie!");
+        console.log("five card 21!");
         game[hand].winner = "player";
-        announce(hand, "5 CARD!");
+        announce(hand, "5 CARD 21!");
       }
       handEnd(hand);
     } else if (game[hand].cards.length === 5) {
@@ -565,8 +565,7 @@ function checkVictory(hand) {
     if (game[hand].charlie && game[hand].total === 21) {
       console.log("five card 21!");
       game[hand].winner = "player";
-      game[hand].wager *= 1.25;
-      game[hand].wager *= 1.25;
+      game[hand].wager *= 2.5;
       announce(hand, "5 CARD 21!");
     } else if (game[hand].charlie) {
       console.log("five card charlie!");
@@ -585,7 +584,7 @@ function checkVictory(hand) {
       console.log("player has blackjack");
       game[hand].winner = "player";
       game[hand].wager *= 1.25;
-      announce(hand, "21!");
+      announce(hand, "BLACKJACK!");
     } else if (game.dealer.total === 21 && game[hand].total === 21) {
       console.log("push");
       game[hand].winner = "push";
@@ -657,6 +656,7 @@ function finalChipMovement() {
 var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
   hands.forEach(function(hand, i) {
     var location;
+    var j = 0;
     if ($(`.${hand}Chips`).children().length > 0) {
       if (game[hand].winner === "dealer") {
         location = "dealer";
@@ -664,19 +664,20 @@ var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "pl
         location = "bank";
         setTimeout(function () {
           $bankTotal.text("Bank: " + bank);
-        }, 200 * i + 600);
+        }, 200 * j + 600);
       }
       setTimeout(function () {
         moveChips(hand, location);
         $(`.${hand}Wager`).empty();
-      }, 200 * i);
+      }, 200 * j);
+      j++;
     }
   });
 }
 
 function chipStacksToHands() {
   setChipLocations("hand");
-  var hands = ["player", "split1", "split2", "split1a", "split1b", "split2a", "split2b"];
+  var hands = ["player", "split1", "split1a", "split1b", "split2", "split2a", "split2b"];
   hands.forEach(function(hand, i) {
     moveChips(hand, "hand");
   });
@@ -807,12 +808,13 @@ function announce(hand, text) {
     $(`.announce${_.capitalize(hand)}`).addClass("push");
   }
   if (hand !== "player") {
-    $(`.announce${_.capitalize(hand)}`).css("width", popupWidth);
-    // if (text === "BLACKJACK!") {
-    //   $(`.announce${_.capitalize(hand)}`).css("left", "-38px");
-    //   $(`.announce${_.capitalize(hand)} > p`).css("margin-right", "-85px");
-    //   $(`.announce${_.capitalize(hand)} > p`).css("font-size", "2em");
-    // }
+    if (text === "BLACKJACK!") {
+      $(`.announce${_.capitalize(hand)}`).css("width", "164px");
+      $(`.announce${_.capitalize(hand)}`).css("left", "-10px");
+    } else {
+      $(`.announce${_.capitalize(hand)}`).css("width", popupWidth);
+      //$(`.announce${_.capitalize(hand)}`).css("left", "5px");
+    }
   }
   $(`.announce${_.capitalize(hand)}`).removeClass("hidden");
   $(`.announce${_.capitalize(hand)}`).html(`<p>${text}</p>`);
