@@ -9,7 +9,7 @@ var count = 0;
 var trueCount = count / decksLeft;
 var decksLeft = cardsLeft / 52;
 var cardsLeft = 52 * decks;
-var advantage = -.5;
+var advantage = -0.5;
 var bank = 500;
 var betAmt = 25;
 var betChangeAllowed = true;
@@ -152,11 +152,7 @@ $stay.click(function () {
 
 $splitButton.click(function () {
   if (bank - betAmt >= 0) {
-    if ($(".splitTesting").is(":checked")) {
-      split("player", true);
-    } else {
       split("player");
-    }
   } else {
     console.log("Insufficient funds.");
   }
@@ -164,11 +160,7 @@ $splitButton.click(function () {
 
 $split1Button.click(function () {
   if (bank - betAmt >= 0) {
-    if ($(".splitTesting").is(":checked")) {
-      split("split1", true);
-    } else {
       split("split1");
-    }
   } else {
     console.log("Insufficient funds.");
   }
@@ -176,11 +168,7 @@ $split1Button.click(function () {
 
 $split2Button.click(function () {
   if (bank - betAmt >= 0) {
-    if ($(".splitTesting").is(":checked")) {
-      split("split2", true);
-    } else {
       split("split2");
-    }
   } else {
     console.log("Insufficient funds.");
   }
@@ -237,7 +225,7 @@ function Game() {
   this.isFlipped = false;
   this.currentHand = "player";
   this.handsToPlay = 1;
-  this.unbustedHands = 1;
+  this.undecidedHands = 1;
   this.chipsWonHeight = 0;
 }
 
@@ -284,7 +272,7 @@ function deal() {
       count = 0;
       trueCount = 0;
       cardsLeft = 312;
-      advantage = -.5;
+      advantage = -0.5;
     });
   } else {
     console.log("About to deal from current deck");
@@ -315,7 +303,7 @@ function draw4() {
   });
 }
 
-function checkSplit(hand) {
+function checkSplit(hand, test) {
   var checkSplitArr = game[hand].cards.map(function(card) {
     if (card === "KING" || card === "QUEEN" || card === "JACK") {
       return "10";
@@ -323,14 +311,14 @@ function checkSplit(hand) {
       return card;
     }
   });
-  if (checkSplitArr[0] === checkSplitArr[1] && bank >= betAmt) {
+  if ((checkSplitArr[0] === checkSplitArr[1] && bank >= betAmt) || $(".splitTesting").is(":checked")) {
     game[hand].canSplit = true;
     $(`.${hand} > button`).attr("disabled", false);
     $(`.${hand} > button`).removeClass("hidden");
   }
 }
 
-function split(hand, test) {
+function split(hand) {
   console.log("splitting " + hand);
   var hand1;
   var hand2;
@@ -372,18 +360,18 @@ function split(hand, test) {
   game[hand2].cardImages.push(game[hand].cardImages.shift());
   $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[0]}'>`);
   $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[0]}'>`);
-  if (test) {
-    game[hand1].cards.push(game[hand1].cards[0]);
-    game[hand2].cards.push(game[hand2].cards[0]);
-    game[hand1].cardImages[1] = game[hand1].cardImages[0];
-    game[hand2].cardImages[1] = game[hand2].cardImages[0];
-    $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[1]}'>`);
-    $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[1]}'>`);
-    checkSplit(hand1);
-    checkSplit(hand2);
-    checkTotal(hand1);
-    checkTotal(hand2);
-  } else {
+  // if (test) {
+  //   game[hand1].cards.push(game[hand1].cards[0]);
+  //   game[hand2].cards.push(game[hand2].cards[0]);
+  //   game[hand1].cardImages[1] = game[hand1].cardImages[0];
+  //   game[hand2].cardImages[1] = game[hand2].cardImages[0];
+  //   $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[1]}'>`);
+  //   $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[1]}'>`);
+  //   checkSplit(hand1);
+  //   checkSplit(hand2);
+  //   checkTotal(hand1);
+  //   checkTotal(hand2);
+  // } else {
     drawCard({
       hand: hand1,
       callback: function () {
@@ -396,9 +384,9 @@ function split(hand, test) {
         checkSplit(hand2);
       }
     });
-  }
+  //}
   game.handsToPlay++;
-  game.unbustedHands++;
+  game.undecidedHands++;
   checkFocus();
   highlight(game.currentHand);
 }
@@ -424,7 +412,7 @@ function checkFocus() {
 function highlight(hand) {
   $(".hand").removeClass("highlighted");
   $(`.${hand}Hand`).addClass("highlighted");
-  game[hand].canDouble && $double.attr("disabled", false).attr("id", "");;
+  game[hand].canDouble && $double.attr("disabled", false).attr("id", "");
   $hit.attr("disabled", false);
   $stay.attr("disabled", false);
 }
@@ -487,7 +475,7 @@ function hit() {
 
 function dealerTurn() {
   flipCard();
-  if (game.dealer.total < 17 && game.unbustedHands > 0 && game.player.has21 === false) {
+  if (game.dealer.total < 17 && game.undecidedHands > 0 && game.player.has21 === false) {
     console.log(`dealer hits on ${game.dealer.total}`);
     drawCard({
       hand: "dealer",
@@ -496,7 +484,7 @@ function dealerTurn() {
         dealerTurn();
       }
     });
-  } else if (game.dealer.total >= 17 || game.unbustedHands === 0 || game.player.has21 === true || game.player.charlie === true) {
+  } else if (game.dealer.total >= 17 || game.undecidedHands === 0 || game.player.has21 === true || game.player.charlie === true) {
     console.log(`dealer is finished with ${game.dealer.total}`);
     game.player.cards.length >= 2 && checkVictory("player");
     game.split1.cards.length >= 2 && checkVictory("split1");
@@ -544,17 +532,31 @@ function checkTotal(hand) {
 }
 
 function checkLoss21(hand) {
-    if (game[hand].total > 21) {
+    if (game[hand].total > 21 && game[hand].cards.length < 5) {
       console.log("player busts");
       game[hand].winner = "dealer";
       announce(hand, "BUST");
-      game.unbustedHands--
+      game.undecidedHands--;
       handEnd(hand);
     } else if (game[hand].total === 21) {
       game[hand].has21 = true;
+      if (game[hand].cards.length === 2) {
+        game.undecidedHands--;
+      }
+      if (game[hand].cards.length === 5) {
+        game[hand].charlie = true;
+        game.undecidedHands--;
+        console.log("five card charlie!");
+        game[hand].winner = "player";
+        announce(hand, "5 CARD!");
+      }
       handEnd(hand);
-    } else if (game[hand].length === 5) {
+    } else if (game[hand].cards.length === 5) {
       game[hand].charlie = true;
+      game.undecidedHands--;
+      console.log("five card charlie!");
+      game[hand].winner = "player";
+      announce(hand, "5 CARD!");
       handEnd(hand);
     }
 }
@@ -624,7 +626,7 @@ function checkVictory(hand) {
 
 function handEnd(hand) {
   game[hand].isDone = true;
-  game.handsToPlay--;
+  !game[hand].isSplit && game.handsToPlay--;
   checkFocus();
   game.handsToPlay > 0 && highlight(game.currentHand);
 }
@@ -638,41 +640,45 @@ if (game[hand].winner === "player") {
     console.log(`returning ${game[hand].wager} to player. Bank is at ${bank + game[hand].wager}`);
   }
   bank += game[hand].winnings;
-  countChips(hand, true);
+  game[hand].winner === "player" && countChips(hand, true);
   game[hand].winnings > 0 ? $(`.${hand}Wager`).text(game[hand].winnings) : $(`.${hand}Wager`).empty();
 }
 
 function moveChips(hand, location) {
-  // setChipLocations();
-  // var bankTop = $bankChips.children().length * -5;
-  // if (condition === "win") {
-  //   $(`.${hand}Chips`).animate({
-  //     top: `${393 + bankTop + game.chipsWonHeight}px`,
-  //     left: "287px"
-  //   });
-  //   game.chipsWonHeight += $(`.${hand}Chips`).children().length * -5;
-  // } else if (condition === "bet") {
-  //   $(`.${hand}Chips`).show().animate({top: game[hand].chipTop, left: game[hand].chipLeft});
-  // } else if (condition === "lose") {
-  //   $(`.${hand}Chips`)
-  //     .animate({
-  //       top: "-24px",
-  //       left: "458px"
-  //     })
-  //     .fadeOut();
-  // }
   setChipLocations(location);
-  if (location === "bank") {
-    //setChipLocations("bank");
-    game.chipsWonHeight += $(`.${hand}Chips`).children().length * -5;
-  } else if (location === "hand") {
-    //setChipLocations("hand");
-  } else if (location === "dealer") {
-    //setChipLocations("dealer");
-  }
+  location === "bank" && (game.chipsWonHeight += $(`.${hand}Chips`).children().length * -5);
   $(`.${hand}Chips`).animate({
     top: `${game[hand].chipTop}px`,
     left: `${game[hand].chipLeft}px`
+  });
+}
+
+function finalChipMovement() {
+var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
+  hands.forEach(function(hand, i) {
+    var location;
+    if ($(`.${hand}Chips`).children().length > 0) {
+      if (game[hand].winner === "dealer") {
+        location = "dealer";
+      } else {
+        location = "bank";
+        setTimeout(function () {
+          $bankTotal.text("Bank: " + bank);
+        }, 200 * i + 600);
+      }
+      setTimeout(function () {
+        moveChips(hand, location);
+        $(`.${hand}Wager`).empty();
+      }, 200 * i);
+    }
+  });
+}
+
+function chipStacksToHands() {
+  setChipLocations("hand");
+  var hands = ["player", "split1", "split2", "split1a", "split1b", "split2a", "split2b"];
+  hands.forEach(function(hand, i) {
+    moveChips(hand, "hand");
   });
 }
 
@@ -729,20 +735,20 @@ function setChipLocations(location) {
   }
 }
 
-function moveAllWinnings() {
-  var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
-  hands.forEach(function(hand, i) {
-    if ($(`.${hand}Chips`).children().length > 0) {
-      setTimeout(function () {
-         $bankTotal.text("Bank: " + bank);
-       }, 200 * i + 600);
-      setTimeout(function () {
-        moveChips(hand, "win");
-        $(`.${hand}Wager`).empty();
-      }, 200 * i);
-    }
-  });
-}
+// function moveAllWinnings() {
+//   var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
+//   hands.forEach(function(hand, i) {
+//     if ($(`.${hand}Chips`).children().length > 0) {
+//       setTimeout(function () {
+//          $bankTotal.text("Bank: " + bank);
+//        }, 200 * i + 600);
+//       setTimeout(function () {
+//         moveChips(hand, "bank");
+//         $(`.${hand}Wager`).empty();
+//       }, 200 * i);
+//     }
+//   });
+// }
 
 // function createNewChips(hand) {
 //   var docFragment = document.createDocumentFragment(); // contains all gathered nodes
@@ -757,7 +763,7 @@ function moveAllWinnings() {
 // }
 
 function gameEnd() {
-  moveAllWinnings();
+  finalChipMovement();
   !game.isFlipped && flipCard();
   betChangeAllowed = true;
   $dealerTotal.removeClass("hidden");
@@ -772,7 +778,7 @@ function clearTable() {
   $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup, .playerChips, .playerWager").addClass("hidden");
   $player.removeClass("hidden");
   $(".popup").removeClass("win lose push");
-  // setChipLocations();
+  chipStacksToHands();
   // var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
   // hands.forEach(function (hand) {
   //   $(`.${hand}Chips`).css({top: game[hand].chipTop, left: game[hand].chipLeft});
@@ -851,7 +857,7 @@ function getTrueCount() {
 }
 
 function getAdvantage() {
-  advantage = (trueCount * .5) - .5;
+  advantage = (trueCount * 0.5) - 0.5;
 }
 
 function setNeedle() {
@@ -884,7 +890,7 @@ function countChips(location, winnings) {
   var num10s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25) / 10);
    var num5s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10) / 5);
    var num1s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10 - num5s * 5) / 1);
-  var num05s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10 - num5s * 5 - num1s * 1) / .5);
+  var num05s = Math.floor((amt - num100s * 100 - num50s * 50 - num25s * 25 - num10s * 10 - num5s * 5 - num1s * 1) / 0.5);
 
   var html = "";
   for (var i = 0; i < num100s; i++) {

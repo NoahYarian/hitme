@@ -305,6 +305,8 @@ button:focus {
 
 .chips {
   position: absolute;
+  top: 393px;
+  left: 287px;
   img {
     position: absolute;
     width: 47px;
@@ -314,44 +316,54 @@ button:focus {
    z-index: 200;
 }
 
-.playerChips {
-  top: 386px;
-  left: 457px;
-}
+// .playerChips {
+//   top: 386px;
+//   left: 457px;
+// }
 
-.split1Chips {
-  top: 347px;
-  left: 328px;
-}
+// .split1Chips {
+//   top: 347px;
+//   left: 328px;
+// }
 
-.split2Chips {
-  top: 347px;
-  left: 604px;
-}
+// .split2Chips {
+//   top: 347px;
+//   left: 604px;
+// }
 
-.split1aChips {
-  top: 347px;
-  left: 119px;
-}
+// .split1aChips {
+//   top: 347px;
+//   left: 119px;
+// }
 
-.split1bChips {
-  top: 347px;
-  left: 343px;
-}
+// .split1bChips {
+//   top: 347px;
+//   left: 343px;
+// }
 
-.split2aChips {
-  top: 347px;
-  left: 567px;
-}
+// .split2aChips {
+//   top: 347px;
+//   left: 567px;
+// }
 
-.split2bChips {
-  top: 347px;
-  left: 792px;
-}
+// .split2bChips {
+//   top: 347px;
+//   left: 792px;
+// }
 
-.table div {
+.hand, .chips {
   -webkit-transition: 0.5s;
    transition: 0.5s;
+}
+
+.chipHiding {
+  background: rgb(0, 0, 0);
+  width: 59px;
+  height: 24px;
+  top: -26px;
+  position: absolute;
+  left: 452px;
+  z-index: 300;
 }
 
 .wager {
