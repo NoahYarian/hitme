@@ -11,7 +11,7 @@ var decksLeft = cardsLeft / 52;
 var cardsLeft = 52 * decks;
 var advantage = -0.5;
 var bank = 500;
-var betAmt = 25;
+var betAmt = 10;
 var betChangeAllowed = true;
 // var splitAllowed = false;
 // var isFirstTurn = true;
@@ -225,6 +225,8 @@ function Game() {
   this.isFlipped = false;
   this.currentHand = "player";
   this.handsToPlay = 1;
+  // undecidedHands means the number of hands for which the dealer needs to keep drawing cards against.
+  // Splitting increases the number by 1 while busts, blackjacks, and 5-card charlies decrease it by 1.
   this.undecidedHands = 1;
   this.chipsWonHeight = 0;
 }
@@ -458,12 +460,12 @@ function hit() {
   console.log("hit");
   var hand = game.currentHand;
   drawCard({
-    hand: hand,
-    callback: function () {
-      if (game[hand].isDoubled) {
-        handEnd(hand);
-      }
-    }
+    hand: hand//,
+    //callback: function () {
+    //  if (game[hand].isDoubled) {
+    //    handEnd(hand);
+    //  }
+    //}
   });
   if (game[hand].isFirstTurn) {
     game[hand].isFirstTurn = false;
@@ -474,8 +476,9 @@ function hit() {
 }
 
 function dealerTurn() {
+  console.log("--dealerTurn--");
   flipCard();
-  if (game.dealer.total < 17 && game.undecidedHands > 0 && game.player.has21 === false) {
+  if (game.dealer.total < 17 && game.undecidedHands > 0) {
     console.log(`dealer hits on ${game.dealer.total}`);
     drawCard({
       hand: "dealer",
@@ -557,6 +560,8 @@ function checkLoss21(hand) {
       console.log("five card charlie!");
       game[hand].winner = "player";
       announce(hand, "5 CARD!");
+      handEnd(hand);
+    } else if (game[hand].isDoubled) {
       handEnd(hand);
     }
 }
@@ -821,7 +826,7 @@ function announce(hand, text) {
 }
 
 function flipCard() {
-  console.log('flip');
+  console.log('--flipCard--');
   game.isFlipped = true;
   var $flipped = $(".dealerHand .cardImage").first();
   $flipped.remove();
