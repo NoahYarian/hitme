@@ -256,12 +256,11 @@ function Game() {
   // Splitting increases the number by 1 while busts, blackjacks, and 5-card charlies decrease it by 1.
   this.undecidedHands = 1;
   this.chipsWonHeight = 0;
-  // dealerCouldHaveBlackjack is true when the dealer's upcard is a 10, JACK, QUEEN, KING, or ACE.
+  // dealerCouldHaveBlackjack is true when the dealer's upcard is a 10, jack, queen, king, or ace.
   this.dealerCouldHaveBlackjack = false;
   // insuranceAvailable is true when dealer has two cards, it is the player's first turn,
-  // and game.dealerCouldHaveBlackjack = true.
+  // and the dealer's upcard is an ace.
   this.insuranceAvailable = false;
-  this.insuranceBet = 0;
 }
 
 function Hand() {
@@ -341,15 +340,16 @@ function draw4() {
 
 function couldDealerHaveBlackjack() {
   switch (game.dealer.cards[1]) {
+    case 'ACE':
+      console.log("Insurance is available");
+      game.insuranceAvailable = true;
+      $(".insuranceButton").removeClass("hidden");
     case '10':
     case 'JACK':
     case 'QUEEN':
     case 'KING':
-    case 'ACE':
       console.log('Dealer could have Blackjack');
       game.dealerCouldHaveBlackjack = true;
-      game.insuranceAvailable = true;
-      $(".insuranceButton").removeClass("hidden");
       break;
   }
 }
