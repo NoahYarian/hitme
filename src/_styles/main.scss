@@ -223,6 +223,14 @@ button:focus {
   border-radius: 8px;
 }
 
+.noDealerBlackjack {
+  position: absolute;
+  top: 160px;
+  left: 386px;
+  color: white;
+  text-shadow: 1px 1px 0 black;
+}
+
 .buttons {
   position: absolute;
   display: flex;
@@ -381,6 +389,11 @@ button:focus {
   text-align: center;
   bottom: -49px;
   left: 45px;
+}
+
+.insuranceWager {
+  bottom: 424px;
+  left: 553px;
 }
 
 #selectedBet {

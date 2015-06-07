@@ -144,10 +144,10 @@ $stay.click(function () {
   var hand = game.currentHand;
  // if (game[hand].canSplit) {
  //   game[hand].canSplit = false;
-    $(`.${hand} > button`).attr("disabled", true);
-    $(`.${hand} > button`).addClass("hidden");
+  $(`.${hand} > button`).attr("disabled", true);
+  $(`.${hand} > button`).addClass("hidden");
  // }
- $(".insuranceButton").addClass("hidden");
+  $(".insuranceButton").addClass("hidden");
   handEnd(hand);
 });
 
@@ -193,6 +193,30 @@ $double.click(function () {
   }
 });
 
+$(".insuranceButton").click(function () {
+  if (bank - (betAmt / 2) >= 0) {
+    $(".insuranceButton").addClass("hidden");
+    bank -= (betAmt / 2);
+    game.insurance.wager = betAmt / 2;
+    countChips("insurance");
+    $(".insuranceWager").text(game.insurance.wager);
+    countChips("bank");
+    $bankTotal.text("Bank: " + bank);
+    if (game.dealer.total === 21) {
+      flipCard();
+      game.insurance.winner = "player"
+      handPayout("insurance");
+      checkVictory("player");
+      gameEnd();
+    } else {
+      $(".noDealerBlackjack").removeClass("hidden");
+      game.insurance.winner = "dealer"
+    }
+  } else {
+    console.log("Insufficient funds.");
+  }
+});
+
 $(".toggleCountInfo").click(function () {
   $(".countInfo").toggleClass("hidden");
 });
@@ -217,6 +241,7 @@ $(".chip").click(function() {
 //game object
 function Game() {
   this.dealer = new Hand();
+  this.insurance = new Hand();
   this.player = new Hand();
   this.split1 = new Hand();
   this.split2 = new Hand();
@@ -236,6 +261,7 @@ function Game() {
   // insuranceAvailable is true when dealer has two cards, it is the player's first turn,
   // and game.dealerCouldHaveBlackjack = true.
   this.insuranceAvailable = false;
+  this.insuranceBet = 0;
 }
 
 function Hand() {
@@ -667,7 +693,7 @@ function handEnd(hand) {
 }
 
 function handPayout(hand) {
-if (game[hand].winner === "player") {
+  if (game[hand].winner === "player") {
     game[hand].winnings = Number((game[hand].wager * 2).toFixed());
     console.log(`giving player ${game[hand].winnings}. Bank is at ${bank + game[hand].winnings}`);
   } else if (game[hand].winner === "push") {
@@ -689,7 +715,7 @@ function moveChips(hand, location) {
 }
 
 function finalChipMovement() {
-var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
+var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player", "insurance"];
   hands.forEach(function(hand, i) {
     var location;
     var j = 0;
@@ -713,7 +739,7 @@ var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "pl
 
 function chipStacksToHands() {
   setChipLocations("hand");
-  var hands = ["player", "split1", "split1a", "split1b", "split2", "split2a", "split2b"];
+  var hands = ["insurance", "player", "split1", "split1a", "split1b", "split2", "split2a", "split2b"];
   hands.forEach(function(hand, i) {
     moveChips(hand, "hand");
   });
@@ -725,6 +751,7 @@ function setChipLocations(location) {
   var dealerTop = -24
   var dealerLeft = 458;
   if (location === "bank") {
+    game.insurance.chipTop =
     game.player.chipTop =
     game.split1.chipTop =
     game.split2.chipTop =
@@ -732,6 +759,7 @@ function setChipLocations(location) {
     game.split1b.chipTop =
     game.split2a.chipTop =
     game.split2b.chipTop = bankTop;
+    game.insurance.chipLeft =
     game.player.chipLeft =
     game.split1.chipLeft =
     game.split2.chipLeft =
@@ -740,6 +768,8 @@ function setChipLocations(location) {
     game.split2a.chipLeft =
     game.split2b.chipLeft = bankLeft;
   } else if (location === "hand") {
+    game.insurance.chipTop = 74;
+    game.insurance.chipLeft = 553;
     game.player.chipTop = 386;
     game.player.chipLeft = 457;
     game.split1.chipTop = 347;
@@ -755,6 +785,7 @@ function setChipLocations(location) {
     game.split2b.chipTop = 347;
     game.split2b.chipLeft = 792;
   } else if (location === "dealer") {
+    game.insurance.chipTop =
     game.player.chipTop =
     game.split1.chipTop =
     game.split2.chipTop =
@@ -762,6 +793,7 @@ function setChipLocations(location) {
     game.split1b.chipTop =
     game.split2a.chipTop =
     game.split2b.chipTop = dealerTop;
+    game.insurance.chipLeft =
     game.player.chipLeft =
     game.split1.chipLeft =
     game.split2.chipLeft =
@@ -815,6 +847,8 @@ function clearTable() {
   $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup, .playerChips, .playerWager").addClass("hidden");
   $player.removeClass("hidden");
   $(".popup").removeClass("win lose push");
+  $(".insuranceButton").addClass("hidden");
+  $(".noDealerBlackjack").addClass("hidden");
   chipStacksToHands();
   // var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
   // hands.forEach(function (hand) {

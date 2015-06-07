@@ -11,6 +11,7 @@ html
   body
     .container
       .table
+        .chips.insuranceChips
         .chips.playerChips
         .chips.split1Chips
         .chips.split2Chips
@@ -22,7 +23,11 @@ html
         .dealer
           .hand.dealerHand
           .total.dealerTotal
-        button.btn.insuranceButton.hidden Insurance
+        .insurance
+          .wager.insuranceWager
+          button.btn.insuranceButton.hidden Insurance
+        .noDealerBlackjack.hidden
+          p Dealer does not have blackjack
         .player
           .hand.playerHand
           .total.playerTotal
