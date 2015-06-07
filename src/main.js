@@ -2,6 +2,7 @@ var API = "http://deckofcardsapi.com/api/";
 var newDeckURL = API + "shuffle/?deck_count=";
 var cardBack = "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Card_back_16.svg/209px-Card_back_16.svg.png";
 
+// global variables needed for data that persists beyond each hand
 var game;
 var deckId = "";
 var decks = 6;
@@ -13,15 +14,8 @@ var advantage = -0.5;
 var bank = 500;
 var betAmt = 10;
 var betChangeAllowed = true;
-// var splitAllowed = false;
-// var isFirstTurn = true;
-// var isPlayersTurn = true;
-// var isDoubledDown = false;
-// var isFlipped = false;
-// var isSplit = false;
-// var gameHand = "";
 
-//game buttons
+// game buttons
 var $deal = $(".deal");
 var $hit = $(".hit");
 var $stay = $(".stay");
@@ -29,8 +23,9 @@ var $double = $(".double");
 var $splitButton = $(".splitButton");
 var $split1Button = $(".split1Button");
 var $split2Button = $(".split2Button");
+var $insuranceButton = $(".insuranceButton");
 
-//chips
+// chip buttons for bet selection
 var $chip1 = $(".chip1");
 var $chip5 = $(".chip5");
 var $chip10 = $(".chip10");
@@ -38,12 +33,13 @@ var $chip25 = $(".chip25");
 var $chip50 = $(".chip50");
 var $chip100 = $(".chip100");
 
-//info divs
+// info divs
 var $count = $(".count");
 var $trueCount = $(".trueCount");
 
-// Chip stacks
+// chip stacks
 var $bankChips = $(".bankChips");
+var $insuranceChips = $(".insuranceChips");
 var $playerChips = $(".playerChips");
 var $split1Chips = $(".split1Chips");
 var $split2Chips = $(".split2Chips");
@@ -52,8 +48,9 @@ var $split1bChips = $(".split1bChips");
 var $split2aChips = $(".split2aChips");
 var $split2bChips = $(".split2bChips");
 
-// Chip totals
+// chip totals
 var $bankTotal = $(".bankTotal");
+var $insuranceWager = $(".insuranceWager");
 var $playerWager = $(".playerWager");
 var $split1Wager = $(".split1Wager");
 var $split2Wager = $(".split2Wager");
@@ -62,7 +59,7 @@ var $split1bWager = $(".split1bWager");
 var $split2aWager = $(".split2aWager");
 var $split2bWager = $(".split2bWager");
 
-//card hand divs
+// card hand divs
 var $dealerHand = $(".dealerHand");
 var $playerHand = $(".playerHand");
 var $split1Hand = $(".split1Hand");
@@ -72,7 +69,7 @@ var $split1bHand = $(".split1bHand");
 var $split2aHand = $(".split2aHand");
 var $split2bHand = $(".split2bHand");
 
-//card hand parent divs
+// card hand parent divs
 var $dealer = $(".dealer");
 var $player = $(".player");
 var $split1 = $(".split1");
@@ -82,12 +79,12 @@ var $split1b = $(".split1b");
 var $split2a = $(".split2a");
 var $split2b = $(".split2b");
 
-//card split parent divs
+// card split parent divs
 var $playerSplit = $(".playerSplit");
 var $playerSplit1 = $(".playerSplit1");
 var $playerSplit2 = $(".playerSplit2");
 
-//hand total divs
+// hand total divs
 var $dealerTotal = $(".dealerTotal");
 var $playerTotal = $(".playerTotal");
 var $split1Total = $(".split1Total");
@@ -113,7 +110,7 @@ var $announceText2a = $(".announce2a p");
 var $announce2b = $(".announce2b");
 var $announceText2b = $(".announce2b p");
 
-//create audio elements
+// create audio elements on page load
 var cardPlace = document.createElement('audio');
 cardPlace.setAttribute('src', 'sounds/cardPlace1.wav');
 var cardPackage = document.createElement('audio');
@@ -135,106 +132,34 @@ chipOnChipWav.setAttribute('src', 'sounds/chip-on-chip.wav');
 $bankTotal.text("Bank: " + bank);
 countChips("bank");
 
-//button click listeners
+//////////////////////////
+//button click listeners//
+//////////////////////////
+
+// button click sound for all buttons
 $("button").click(function () {
   buttonClick.load();
   buttonClick.play();
 });
 
+// game buttons
 $deal.click(newGame);
-
 $hit.click(hit);
+$stay.click(stay);
+$double.click(double);
+$insuranceButton.click(insurance);
 
-$stay.click(function () {
-  console.log("stay");
-  var hand = game.currentHand;
-  $(`.${hand} > button`).attr("disabled", true);
-  $(`.${hand} > button`).addClass("hidden");
-  $(".insuranceButton").addClass("hidden");
-  handEnd(hand);
-});
-
-$splitButton.click(function () {
+// split buttons
+$(".hand ~ button").click(function () {
+  var hand = $(this).parent().attr("class");
   if (bank - betAmt >= 0) {
-      split("player");
+      split(hand);
   } else {
     console.log("Insufficient funds.");
   }
 });
 
-$split1Button.click(function () {
-  if (bank - betAmt >= 0) {
-      split("split1");
-  } else {
-    console.log("Insufficient funds.");
-  }
-});
-
-$split2Button.click(function () {
-  if (bank - betAmt >= 0) {
-      split("split2");
-  } else {
-    console.log("Insufficient funds.");
-  }
-});
-
-$double.click(function () {
-  var hand = game.currentHand;
-  if (bank - betAmt >= 0) {
-    if (game[hand].isFirstTurn) {
-      $double.attr("disabled", true);
-      $hit.attr("disabled", true);
-      $stay.attr("disabled", true);
-      $(".insuranceButton").addClass("hidden");
-      game[hand].isDoubled = true;
-      bet(hand, betAmt);
-      chipOnChipWav.play();
-      console.log("double down");
-      hit();
-    }
-  } else {
-    console.log("Insufficient funds.");
-  }
-});
-
-$(".insuranceButton").click(function () {
-  if (bank - (betAmt / 2) >= 0) {
-    $(".insuranceButton").addClass("hidden");
-    bank -= (betAmt / 2);
-    game.insurance.wager = betAmt / 2;
-    countChips("insurance");
-    chipOnFeltWav.play();
-    $(".insuranceWager").text(game.insurance.wager);
-    countChips("bank");
-    $bankTotal.text("Bank: " + bank);
-    if (game.dealer.total === 21) {
-      flipCard();
-      game.insurance.winner = "player"
-      handPayout("insurance");
-      checkVictory("player");
-      gameEnd();
-    } else {
-      $(".noDealerBlackjack").removeClass("hidden");
-      game.insurance.winner = "dealer"
-    }
-  } else {
-    console.log("Insufficient funds.");
-  }
-});
-
-$(".toggleCountInfo").click(function () {
-  $(".countInfo").toggleClass("hidden");
-});
-
-$(".toggleTestPanel").click(function () {
-  $(".testPanel").toggleClass("hidden");
-});
-
-$(".strategyImg").click(function () {
-  $(".strategyImg").toggleClass("strategyBig");
-});
-
-//chip click listener
+// chips for changing bet amount
 $(".chip").click(function() {
   if (betChangeAllowed) {
     $(".chip").attr("id", "");
@@ -243,9 +168,27 @@ $(".chip").click(function() {
   }
 });
 
+// show/hide more count info by clicking the advantage meter
+$(".toggleCountInfo").click(function () {
+  $(".countInfo").toggleClass("hidden");
+});
+
+// show/hide hand testing panel
+$(".toggleTestPanel").click(function () {
+  $(".testPanel").toggleClass("hidden");
+});
+
+// enlarge/shrink strategy chart
+$(".strategyImg").click(function () {
+  $(".strategyImg").toggleClass("strategyBig");
+});
+
+
+
 //game object
 function Game() {
   this.dealer = new Hand();
+  // while not a hand, insurance makes use of winner, wager, winnings, chipLeft, and chipTop for bet counting and chip display.
   this.insurance = new Hand();
   this.player = new Hand();
   this.split1 = new Hand();
@@ -254,18 +197,19 @@ function Game() {
   this.split1b = new Hand();
   this.split2a = new Hand();
   this.split2b = new Hand();
+  // isFlipped tracks the status of the dealer's hole card.
   this.isFlipped = false;
   this.currentHand = "player";
+  // handsToPlay tracks how many hands the player still needs to play. Only used for turning off highlighting.
   this.handsToPlay = 1;
-  // undecidedHands means the number of hands for which the dealer needs to keep drawing cards against.
+  // undecidedHands tracks the number of hands for which the dealer will need to continue drawing cards.
   // Splitting increases the number by 1 while busts, blackjacks, and 5-card charlies decrease it by 1.
   this.undecidedHands = 1;
+  // chipsWonHeight is the negative height of the chips already stacked on top of the bank chips.
   this.chipsWonHeight = 0;
   // dealerCouldHaveBlackjack is true when the dealer's upcard is a 10, jack, queen, king, or ace.
+  // This allows for displaying the Blackjack! announcement on split hands before others are finished.
   this.dealerCouldHaveBlackjack = false;
-  // insuranceAvailable is true when dealer has two cards, it is the player's first turn,
-  // and the dealer's upcard is an ace.
-  this.insuranceAvailable = false;
 }
 
 function Hand() {
@@ -346,8 +290,7 @@ function couldDealerHaveBlackjack() {
   switch (game.dealer.cards[1]) {
     case 'ACE':
       console.log("Insurance is available");
-      game.insuranceAvailable = true;
-      $(".insuranceButton").removeClass("hidden");
+      $insuranceButton.removeClass("hidden");
     case '10':
     case 'JACK':
     case 'QUEEN':
@@ -355,6 +298,34 @@ function couldDealerHaveBlackjack() {
       console.log('Dealer could have Blackjack');
       game.dealerCouldHaveBlackjack = true;
       break;
+  }
+}
+
+function stay() {
+  console.log("stay");
+  var hand = game.currentHand;
+  $(`.${hand} > button`).attr("disabled", true);
+  $(`.${hand} > button`).addClass("hidden");
+  $insuranceButton.addClass("hidden");
+  handEnd(hand);
+}
+
+function double() {
+  var hand = game.currentHand;
+  if (bank - betAmt >= 0) {
+    if (game[hand].isFirstTurn) {
+      $double.attr("disabled", true);
+      $hit.attr("disabled", true);
+      $stay.attr("disabled", true);
+      $insuranceButton.addClass("hidden");
+      game[hand].isDoubled = true;
+      bet(hand, betAmt);
+      chipOnChipWav.play();
+      console.log("double down");
+      hit();
+    }
+  } else {
+    console.log("Insufficient funds.");
   }
 }
 
@@ -393,8 +364,7 @@ function split(hand) {
   game[hand1].cards.push(game[hand].cards.shift());
   game[hand2].cards.push(game[hand].cards.shift());
   game[hand].isSplit = true;
-  game.insuranceAvailable = false;
-  $(".insuranceButton").addClass("hidden");
+  $insuranceButton.addClass("hidden");
   game[hand].isDone = true;
   game[hand1].isDone = false;
   game[hand2].isDone = false;
@@ -417,35 +387,47 @@ function split(hand) {
   game[hand2].cardImages.push(game[hand].cardImages.shift());
   $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[0]}'>`);
   $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[0]}'>`);
-  // if (test) {
-  //   game[hand1].cards.push(game[hand1].cards[0]);
-  //   game[hand2].cards.push(game[hand2].cards[0]);
-  //   game[hand1].cardImages[1] = game[hand1].cardImages[0];
-  //   game[hand2].cardImages[1] = game[hand2].cardImages[0];
-  //   $(`.${hand1}Hand`).append(`<img class='cardImage' src='${game[hand1].cardImages[1]}'>`);
-  //   $(`.${hand2}Hand`).append(`<img class='cardImage' src='${game[hand2].cardImages[1]}'>`);
-  //   checkSplit(hand1);
-  //   checkSplit(hand2);
-  //   checkTotal(hand1);
-  //   checkTotal(hand2);
-  // } else {
-    drawCard({
-      hand: hand1,
-      callback: function () {
-        checkSplit(hand1);
-      }
-    });
-    drawCard({
-      hand: hand2,
-      callback: function () {
-        checkSplit(hand2);
-      }
-    });
-  //}
+  drawCard({
+    hand: hand1,
+    callback: function () {
+      checkSplit(hand1);
+    }
+  });
+  drawCard({
+    hand: hand2,
+    callback: function () {
+      checkSplit(hand2);
+    }
+  });
   game.handsToPlay++;
   game.undecidedHands++;
   checkFocus();
   highlight(game.currentHand);
+}
+
+function insurance() {
+  if (bank - (betAmt / 2) >= 0) {
+    $insuranceButton.addClass("hidden");
+    bank -= (betAmt / 2);
+    game.insurance.wager = betAmt / 2;
+    countChips("insurance");
+    chipOnFeltWav.play();
+    $(".insuranceWager").text(game.insurance.wager);
+    countChips("bank");
+    $bankTotal.text("Bank: " + bank);
+    if (game.dealer.total === 21) {
+      flipCard();
+      game.insurance.winner = "player"
+      handPayout("insurance");
+      checkVictory("player");
+      gameEnd();
+    } else {
+      $(".noDealerBlackjack").removeClass("hidden");
+      game.insurance.winner = "dealer"
+    }
+  } else {
+    console.log("Insufficient funds.");
+  }
 }
 
 function checkFocus() {
@@ -468,10 +450,12 @@ function checkFocus() {
 
 function highlight(hand) {
   $(".hand").removeClass("highlighted");
-  $(`.${hand}Hand`).addClass("highlighted");
-  $double.attr("disabled", false).attr("id", "");
-  $hit.attr("disabled", false);
-  $stay.attr("disabled", false);
+  if (hand !== "none") {
+    $(`.${hand}Hand`).addClass("highlighted");
+    $double.attr("disabled", false).attr("id", "");
+    $hit.attr("disabled", false);
+    $stay.attr("disabled", false);
+  }
 }
 
 function drawCard(options) {
@@ -515,19 +499,14 @@ function hit() {
   console.log("hit");
   var hand = game.currentHand;
   drawCard({
-    hand: hand//,
-    //callback: function () {
-    //  if (game[hand].isDoubled) {
-    //    handEnd(hand);
-    //  }
-    //}
+    hand: hand
   });
   if (game[hand].isFirstTurn) {
     game[hand].isFirstTurn = false;
     $double.attr("id", "double-disabled");
     $(`.${hand} > button`).attr("disabled", true);
     $(`.${hand} > button`).addClass("hidden");
-    $(".insuranceButton").addClass("hidden");
+    $insuranceButton.addClass("hidden");
   }
 }
 
@@ -693,7 +672,7 @@ function handEnd(hand) {
   game[hand].isDone = true;
   !game[hand].isSplit && game.handsToPlay--;
   checkFocus();
-  game.handsToPlay > 0 && highlight(game.currentHand);
+  game.handsToPlay > 0 ? highlight(game.currentHand) : highlight("none");
 }
 
 function handPayout(hand) {
@@ -824,33 +803,6 @@ function setChipLocations(location) {
   }
 }
 
-// function moveAllWinnings() {
-//   var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
-//   hands.forEach(function(hand, i) {
-//     if ($(`.${hand}Chips`).children().length > 0) {
-//       setTimeout(function () {
-//          $bankTotal.text("Bank: " + bank);
-//        }, 200 * i + 600);
-//       setTimeout(function () {
-//         moveChips(hand, "bank");
-//         $(`.${hand}Wager`).empty();
-//       }, 200 * i);
-//     }
-//   });
-// }
-
-// function createNewChips(hand) {
-//   var docFragment = document.createDocumentFragment(); // contains all gathered nodes
-
-//   var chipStack = document.createElement('DIV');
-//   chipStack.setAttribute("class", "handChips");
-//   docFragment.appendChild(chipStack);
-
-//   var chipImage = document.createElement('IMG');
-//   chipImage.setAttribute("src", "chipImage");
-//   chipStack.appendChild(chipImage);
-// }
-
 function gameEnd() {
   finalChipMovement();
   !game.isFlipped && flipCard();
@@ -867,13 +819,9 @@ function clearTable() {
   $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup, .playerChips, .playerWager").addClass("hidden");
   $player.removeClass("hidden");
   $(".popup").removeClass("win lose push");
-  $(".insuranceButton").addClass("hidden");
+  $insuranceButton.addClass("hidden");
   $(".noDealerBlackjack").addClass("hidden");
   chipStacksToHands();
-  // var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "player"];
-  // hands.forEach(function (hand) {
-  //   $(`.${hand}Chips`).css({top: game[hand].chipTop, left: game[hand].chipLeft});
-  // });
   console.log("------------table cleared------------");
 }
 
