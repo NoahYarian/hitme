@@ -214,6 +214,15 @@ button:focus {
   font-family: Tahoma;
 }
 
+.insuranceButton {
+  position: absolute;
+  top: 153px;
+  left: 431px;
+  font-size: 1em;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
 .buttons {
   position: absolute;
   display: flex;
@@ -635,6 +644,7 @@ $needle-origin: 8px 84px;
   left: 309px;
   width: initial;
   border: 3px solid black;
+  z-index: 300;
 }
 
 .hidden {

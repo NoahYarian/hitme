@@ -147,6 +147,7 @@ $stay.click(function () {
     $(`.${hand} > button`).attr("disabled", true);
     $(`.${hand} > button`).addClass("hidden");
  // }
+ $(".insuranceButton").addClass("hidden");
   handEnd(hand);
 });
 
@@ -181,6 +182,7 @@ $double.click(function () {
       $double.attr("disabled", true);
       $hit.attr("disabled", true);
       $stay.attr("disabled", true);
+      $(".insuranceButton").addClass("hidden");
       bet(hand, betAmt);
       console.log("double down");
       game[hand].isDoubled = true;
@@ -229,6 +231,11 @@ function Game() {
   // Splitting increases the number by 1 while busts, blackjacks, and 5-card charlies decrease it by 1.
   this.undecidedHands = 1;
   this.chipsWonHeight = 0;
+  // dealerCouldHaveBlackjack is true when the dealer's upcard is a 10, JACK, QUEEN, KING, or ACE.
+  this.dealerCouldHaveBlackjack = false;
+  // insuranceAvailable is true when dealer has two cards, it is the player's first turn,
+  // and game.dealerCouldHaveBlackjack = true.
+  this.insuranceAvailable = false;
 }
 
 function Hand() {
@@ -295,7 +302,8 @@ function draw4() {
     }
   });
   drawCard({
-    hand: "dealer"
+    hand: "dealer",
+    callback: couldDealerHaveBlackjack
   });
   drawCard({
     hand: "player",
@@ -303,6 +311,21 @@ function draw4() {
       checkSplit("player");
     }
   });
+}
+
+function couldDealerHaveBlackjack() {
+  switch (game.dealer.cards[1]) {
+    case '10':
+    case 'JACK':
+    case 'QUEEN':
+    case 'KING':
+    case 'ACE':
+      console.log('Dealer could have Blackjack');
+      game.dealerCouldHaveBlackjack = true;
+      game.insuranceAvailable = true;
+      $(".insuranceButton").removeClass("hidden");
+      break;
+  }
 }
 
 function checkSplit(hand, test) {
@@ -341,6 +364,8 @@ function split(hand) {
   game[hand1].cards.push(game[hand].cards.shift());
   game[hand2].cards.push(game[hand].cards.shift());
   game[hand].isSplit = true;
+  game.insuranceAvailable = false;
+  $(".insuranceButton").addClass("hidden");
   game[hand].isDone = true;
   game[hand1].isDone = false;
   game[hand2].isDone = false;
@@ -472,6 +497,7 @@ function hit() {
     $double.attr("id", "double-disabled");
     $(`.${hand} > button`).attr("disabled", true);
     $(`.${hand} > button`).addClass("hidden");
+    $(".insuranceButton").addClass("hidden");
   }
 }
 
@@ -545,6 +571,11 @@ function checkLoss21(hand) {
       game[hand].has21 = true;
       if (game[hand].cards.length === 2) {
         game.undecidedHands--;
+        if (!game.dealerCouldHaveBlackjack) {
+          console.log("player has blackjack");
+          game[hand].winner = "player";
+          announce(hand, "BLACKJACK!");
+        }
       }
       if (game[hand].cards.length === 5) {
         game[hand].charlie = true;
