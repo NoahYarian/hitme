@@ -31,46 +31,39 @@ html
         .player
           .hand.playerHand
           .total.playerTotal
-          //- .chips.playerChips
           .wager.playerWager
           button.btn.splitButton(disabled) Split
           .popup.announcePlayer
         .split1
           .hand.split1Hand
           .total.split1Total
-          //- .chips.split1Chips
           .wager.split1Wager
           button.btn.split1Button(disabled) Split
           .popup.announceSplit1
         .split2
           .hand.split2Hand
           .total.split2Total
-          //- .chips.split2Chips
           .wager.split2Wager
           button.btn.split2Button(disabled) Split
           .popup.announceSplit2
         .split1a
           .hand.split1aHand
           .total.split1aTotal
-          //- .chips.split1aChips
           .wager.split1aWager
           .popup.announceSplit1a
         .split1b
           .hand.split1bHand
           .total.split1bTotal
-          //- .chips.split1bChips
           .wager.split1bWager
           .popup.announceSplit1b
         .split2a
           .hand.split2aHand
           .total.split2aTotal
-          //- .chips.split2aChips
           .wager.split2aWager
           .popup.announceSplit2a
         .split2b
           .hand.split2bHand
           .total.split2bTotal
-          //- .chips.split2bChips
           .wager.split2bWager
           .popup.announceSplit2b
         .bankChips
@@ -101,13 +94,13 @@ html
             .pos2 +2%
             .pos4 +4%
         button.toggleCountInfo
-        .countInfo
+        .countInfo.hidden
           .count Count: 0
           .trueCount True Count: 0
           .cardsLeft Cards left: 312
           .decksLeft Decks left: 6 of 6
         button.toggleTestPanel
-        .testPanel
+        .testPanel.hidden
           .dealer1
             p To Dealer
             select.dealer1Value
@@ -224,15 +217,6 @@ html
               option split1b
               option split2a
               option split2b
-          //- .giveCards
-          //-   button.giveCard.dealerGiveCard(data-id="dealer") To Dealer
-          //-   button.giveCard.playerGiveCard(data-id="player") To Player
-          //-   button.giveCard.split1GiveCard(data-id="split1") To Split1
-          //-   button.giveCard.split2GiveCard(data-id="split2") To Split2
-          //-   button.giveCard.split1aGiveCard(data-id="split1a") To Split1a
-          //-   button.giveCard.split1bGiveCard(data-id="split1b") To Split1b
-          //-   button.giveCard.split2aGiveCard(data-id="split2a") To Split2a
-          //-   button.giveCard.split2bGiveCard(data-id="split2b") To Split2b
     script(src="lib/build.js")
     script(src="main.js")
 

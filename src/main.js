@@ -120,10 +120,16 @@ var cardPackage = document.createElement('audio');
 cardPackage.setAttribute('src', 'sounds/cardOpenPackage2.wav');
 var buttonClick = document.createElement('audio');
 buttonClick.setAttribute('src', 'sounds/click1.wav');
-var winWav = document.createElement('audio');
-winWav.setAttribute('src', 'sounds/chipsHandle5.wav');
+var chipsToDealerWav = document.createElement('audio');
+chipsToDealerWav.setAttribute('src', 'sounds/chips-to-dealer.wav');
 var loseWav = document.createElement('audio');
 loseWav.setAttribute('src', 'sounds/cardShove3.wav');
+var chipsToBankWav = document.createElement('audio');
+chipsToBankWav.setAttribute('src', 'sounds/chips-to-bank.wav');
+var chipOnFeltWav = document.createElement('audio');
+chipOnFeltWav.setAttribute('src', 'sounds/chip-on-felt.wav');
+var chipOnChipWav = document.createElement('audio');
+chipOnChipWav.setAttribute('src', 'sounds/chip-on-chip.wav');
 
 //populate bank amount on page load
 $bankTotal.text("Bank: " + bank);
@@ -142,11 +148,8 @@ $hit.click(hit);
 $stay.click(function () {
   console.log("stay");
   var hand = game.currentHand;
- // if (game[hand].canSplit) {
- //   game[hand].canSplit = false;
   $(`.${hand} > button`).attr("disabled", true);
   $(`.${hand} > button`).addClass("hidden");
- // }
   $(".insuranceButton").addClass("hidden");
   handEnd(hand);
 });
@@ -183,9 +186,10 @@ $double.click(function () {
       $hit.attr("disabled", true);
       $stay.attr("disabled", true);
       $(".insuranceButton").addClass("hidden");
-      bet(hand, betAmt);
-      console.log("double down");
       game[hand].isDoubled = true;
+      bet(hand, betAmt);
+      chipOnChipWav.play();
+      console.log("double down");
       hit();
     }
   } else {
@@ -199,6 +203,7 @@ $(".insuranceButton").click(function () {
     bank -= (betAmt / 2);
     game.insurance.wager = betAmt / 2;
     countChips("insurance");
+    chipOnFeltWav.play();
     $(".insuranceWager").text(game.insurance.wager);
     countChips("bank");
     $bankTotal.text("Bank: " + bank);
@@ -269,9 +274,7 @@ function Hand() {
   this.total = 0;
   this.winner = "";
   this.wager = 0;
-  this.canSplit = false;
   this.isSplit = false;
-  this.canDouble = true;
   this.isDoubled = false;
   this.isCurrentTurn = false;
   this.isDone = true;
@@ -324,6 +327,7 @@ function draw4() {
     callback: function () {
       $playerChips.removeClass("hidden");
       $playerWager.removeClass("hidden");
+      chipOnFeltWav.play();
     }
   });
   drawCard({
@@ -363,7 +367,6 @@ function checkSplit(hand, test) {
     }
   });
   if ((checkSplitArr[0] === checkSplitArr[1] && bank >= betAmt) || $(".splitTesting").is(":checked")) {
-    game[hand].canSplit = true;
     $(`.${hand} > button`).attr("disabled", false);
     $(`.${hand} > button`).removeClass("hidden");
   }
@@ -407,6 +410,7 @@ function split(hand) {
   $bankTotal.text("Bank: " + bank);
   countChips(hand1);
   countChips(hand2);
+  chipOnFeltWav.play();
   $(`.${hand1}Wager`).text(game[hand1].wager);
   $(`.${hand2}Wager`).text(game[hand2].wager);
   game[hand1].cardImages.push(game[hand].cardImages.shift());
@@ -465,7 +469,7 @@ function checkFocus() {
 function highlight(hand) {
   $(".hand").removeClass("highlighted");
   $(`.${hand}Hand`).addClass("highlighted");
-  game[hand].canDouble && $double.attr("disabled", false).attr("id", "");
+  $double.attr("disabled", false).attr("id", "");
   $hit.attr("disabled", false);
   $stay.attr("disabled", false);
 }
@@ -702,7 +706,12 @@ function handPayout(hand) {
   }
   bank += game[hand].winnings;
   game[hand].winner === "player" && countChips(hand, true);
-  game[hand].winnings > 0 ? $(`.${hand}Wager`).text(game[hand].winnings) : $(`.${hand}Wager`).empty();
+  if (game[hand].winnings > 0) {
+    $(`.${hand}Wager`).text(game[hand].winnings);
+    chipOnChipWav.play();
+  } else {
+    $(`.${hand}Wager`).empty();
+  }
 }
 
 function moveChips(hand, location) {
@@ -729,9 +738,20 @@ var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "pl
         }, 200 * j + 600);
       }
       setTimeout(function () {
+        if (game[hand].winner === "dealer") {
+          setTimeout(function() {
+            chipsToDealerWav.load();
+            chipsToDealerWav.play();
+          }, 400);
+        } else {
+          setTimeout(function() {
+            chipsToBankWav.load();
+            chipsToBankWav.play();
+          }, 700);
+        }
         moveChips(hand, location);
         $(`.${hand}Wager`).empty();
-      }, 200 * j);
+      }, 200 * (j + 1));
       j++;
     }
   });
@@ -868,12 +888,8 @@ function announce(hand, text) {
   var popupWidth = 113 + (game[hand].cards.length - 1) * 22;
   if (game[hand].winner === "dealer") {
     $(`.announce${_.capitalize(hand)}`).addClass("lose");
-    loseWav.load();
-    loseWav.play();
   } else if (game[hand].winner === "player") {
     $(`.announce${_.capitalize(hand)}`).addClass("win");
-    winWav.load();
-    winWav.play();
   } else if (game[hand].winner === "push") {
     $(`.announce${_.capitalize(hand)}`).addClass("push");
   }
@@ -883,7 +899,6 @@ function announce(hand, text) {
       $(`.announce${_.capitalize(hand)}`).css("left", "-10px");
     } else {
       $(`.announce${_.capitalize(hand)}`).css("width", popupWidth);
-      //$(`.announce${_.capitalize(hand)}`).css("left", "5px");
     }
   }
   $(`.announce${_.capitalize(hand)}`).removeClass("hidden");
@@ -944,6 +959,7 @@ function bet(hand, amt) {
     $bankTotal.text("Bank: " + bank);
     countChips("bank");
     countChips(hand);
+
     $(`.${hand}Wager`).text(game[hand].wager);
     console.log(`betting ${amt} on ${hand}`);
     console.log(`${hand} wager at ${game[hand].wager}`);
