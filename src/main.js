@@ -231,18 +231,24 @@ function Hand() {
   this.isDoubled = false;
   // isDone is set by various functions and is checked by checkFocus() to control the flow of the game.
   this.isDone = true;
-  this.isBusted = false;
-  this.charlie = false;
+  // chipLeft and chipTop are used by setChipLocation() to absolutely position chip stacks on the table.
   this.chipLeft = 0;
   this.chipTop = 0;
 }
 
+// newGame() is invoked by clicking Deal. It creates a new game object, resets the table, and if there's
+// enough in the bank it bets the selected bet amount and calls deal() to deal the cards.
 function newGame() {
   game = new Game();
   clearTable();
   bet("player", betAmt) && deal();
 }
 
+// deal() first disables changing the bet amount, replaces the Deal button with the Double, Hit and Stay buttons,
+// and plays a card shuffling sound. Next it makes a call to the deckofcards API if it hasn't yet or if there is
+// less than 3/4 of a deck left. If it makes the call it stores the deckId for later calls for cards, resets card
+// counting global variables to initial values, and calls draw4() to deal two hands. If it already has a full-enough
+// deck it calls draw4();
 function deal() {
   betChangeAllowed = false;
   game.player.isDone = false;
@@ -251,7 +257,7 @@ function deal() {
   $double.attr("id", "");
   cardPackage.load();
   cardPackage.play();
-  if (deckId === "" || cardsLeft < 33) {
+  if (deckId === "" || cardsLeft < 39) {
     getJSON(newDeckURL + decks, function(data) {
       deckId = data.deck_id;
       console.log("About to deal from new deck");
@@ -267,11 +273,16 @@ function deal() {
   }
 }
 
+/////////////////////////////////
+// draw4() calls drawCard() four times, alternating between the dealer and the player.
 function draw4() {
+  // The first call for the dealer's hole card specifies that its image is to be replaced with the cardBack image.
   drawCard({
     hand: "dealer",
     image: cardBack
   });
+  // The second call for the player's first card specifies that once the card is retrieved the chips and wager amount
+  // are to be shown and a chip placement sound is to be played.
   drawCard({
     hand: "player",
     callback: function () {
@@ -280,16 +291,89 @@ function draw4() {
       chipOnFeltWav.play();
     }
   });
+  // The third call for the dealer's second card specifies that once the card is retrieved it should check to see if
+  // blackjack is possible and if the insurance button should be shown.
   drawCard({
     hand: "dealer",
     callback: couldDealerHaveBlackjack
   });
+  // The fourth call for the player's second card specifies that once the card is retrieved it is to see if the player's
+  // cards have matching values.
   drawCard({
     hand: "player",
     callback: function () {
       checkSplit("player");
     }
   });
+}
+
+// drawCard() takes an object as an argument to allow for optional parameters. These are hand, image, and callback.
+//   hand refers to the string value of the hand to deal a card to, such as "dealer" and "split1a".
+//   image will replace the card's face image with the URL specified.
+//   callback is a function to be run upon completion of the deckofcards API call.
+
+
+function drawCard(options) {
+  // drawCard() first makes a call to the API with an updated URL to draw 1 card from the current deck.
+  var cardURL = `${API}draw/${deckId}/?count=1`;
+  getJSON(cardURL, function(data, cb) {
+    // variable for holding html string created
+    var html;
+    // hand is set to options.hand to allow for the string's use inside brackets below
+    var hand = options.hand;
+    // card image source is changed to local card image URL
+    var cardImageSrc = cardImage(data);
+    // card image is pushed to hand's array
+    game[hand].cardImages.push(cardImageSrc);
+    // cardPlace.wav is loaded and played. This means the sound will cut itself if it is still playing.
+    cardPlace.load();
+    cardPlace.play();
+    // If a card back image has been specified for the dealer's first card...
+    options.image ? (
+      // create an html img element with its source
+      html = `<img class="cardImage" src="${options.image}">`,
+      // and add it to the front of the dealer's hand. This was necessary as responses
+      // from the API don't always come back in the order the requests were sent.
+      $dealerHand.prepend(html)
+    // If this is any other card...
+    ) : (
+      // create an html img element with the card's front as its source
+      html = `<img class="cardImage" src="${cardImageSrc}">`,
+      // and add it to the end of the hand.
+      $(`.${hand}Hand`).append(html)
+    );
+    if (hand === "dealer") {
+      if (options.image) {
+        // If this is the dealer's hole card, put its value at the front of the array.
+        // Necessary for the same reason as above.
+        game.dealer.cards.unshift(data.cards[0].value);
+      } else {
+        // If this is any other dealer card, put its value at the end of the array.
+        game.dealer.cards.push(data.cards[0].value);
+        // Since this is a visible card, send its value off for advantage calculation.
+        updateCount(data.cards[0].value);
+      }
+      // Check what the dealer's cards add up to.
+      checkTotal("dealer");
+      console.log(`dealer - ${game.dealer.cards} **** dealer is at ${game.dealer.total}`);
+    // If this isn't a card for the dealer's hand...
+    } else {
+      //put its value at the end of the array
+      game[hand].cards.push(data.cards[0].value);
+      // Update the count
+      updateCount(data.cards[0].value);
+      // and check the hand's total
+      checkTotal(hand);
+      console.log(`${hand} - ${game[hand].cards} **** ${hand} is at ${game.player.total}`);
+      // Now that the total is checked, check to see if more action is allowed on the hand or not.
+      checkLoss21(hand);
+    }
+    // If a callback has been specified and is a function, run it.
+    // With just "options.callback()" it was not an optional parameter.
+    typeof options.callback === 'function' && options.callback();
+  });
+  // Subtract 1 from the number of cards left in the deck.
+  cardsLeft--;
 }
 
 function couldDealerHaveBlackjack() {
@@ -462,43 +546,6 @@ function highlight(hand) {
   }
 }
 
-function drawCard(options) {
-  var cardURL = `${API}draw/${deckId}/?count=1`;
-  getJSON(cardURL, function(data, cb) {
-    var html;
-    var hand = options.hand;
-    var cardImageSrc = cardImage(data);
-    game[hand].cardImages.push(cardImageSrc);
-    cardPlace.load();
-    cardPlace.play();
-    options.image ? (
-      html = `<img class="cardImage" src="${options.image}">`,
-      $dealerHand.prepend(html)
-    ) : (
-      html = `<img class="cardImage" src="${cardImageSrc}">`,
-      $(`.${hand}Hand`).append(html)
-    );
-    if (hand === "dealer") {
-      if (options.image) {
-        game.dealer.cards.unshift(data.cards[0].value);
-      } else {
-        game.dealer.cards.push(data.cards[0].value);
-        updateCount(data.cards[0].value);
-      }
-      checkTotal("dealer");
-      console.log(`dealer - ${game.dealer.cards} **** dealer is at ${game.dealer.total}`);
-    } else {
-      game[hand].cards.push(data.cards[0].value);
-      updateCount(data.cards[0].value);
-      checkTotal(hand);
-      console.log(`${hand} - ${game[hand].cards} **** ${hand} is at ${game.player.total}`);
-    }
-    hand !== "dealer" && checkLoss21(hand);
-    typeof options.callback === 'function' && options.callback();
-  });
-  cardsLeft--;
-}
-
 function hit() {
   console.log("hit");
   var hand = game.currentHand;
@@ -523,7 +570,7 @@ function dealerTurn() {
         dealerTurn();
       }
     });
-  } else if (game.dealer.total >= 17 || game.undecidedHands === 0 || game.player.total === 21 || game.player.charlie === true) {
+  } else if (game.dealer.total >= 17 || game.undecidedHands === 0 || game.player.total === 21 || game.player.cards.length === 5) {
     console.log(`dealer is finished with ${game.dealer.total}`);
     game.player.cards.length >= 2 && checkVictory("player");
     game.split1.cards.length >= 2 && checkVictory("split1");
@@ -587,7 +634,6 @@ function checkLoss21(hand) {
         }
       }
       if (game[hand].cards.length === 5) {
-        game[hand].charlie = true;
         game.undecidedHands--;
         console.log("five card 21!");
         game[hand].winner = "player";
@@ -595,7 +641,6 @@ function checkLoss21(hand) {
       }
       handEnd(hand);
     } else if (game[hand].cards.length === 5) {
-      game[hand].charlie = true;
       game.undecidedHands--;
       console.log("five card charlie!");
       game[hand].winner = "player";
@@ -607,12 +652,12 @@ function checkLoss21(hand) {
 }
 
 function checkVictory(hand) {
-    if (game[hand].charlie && game[hand].total === 21) {
+    if (game[hand].cards.length === 5 && game[hand].total === 21) {
       console.log("five card 21!");
       game[hand].winner = "player";
       game[hand].wager *= 2.5;
       announce(hand, "5 CARD 21!");
-    } else if (game[hand].charlie) {
+    } else if (game[hand].cards.length === 5) {
       console.log("five card charlie!");
       game[hand].winner = "player";
       game[hand].wager *= 1.25;
