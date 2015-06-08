@@ -43,10 +43,6 @@ var $chip25 = $(".chip25");
 var $chip50 = $(".chip50");
 var $chip100 = $(".chip100");
 
-// info divs
-var $count = $(".count");
-var $trueCount = $(".trueCount");
-
 // chip stacks
 var $bankChips = $(".bankChips");
 var $insuranceChips = $(".insuranceChips");
@@ -119,6 +115,16 @@ var $announce2a = $(".announce2a");
 var $announceText2a = $(".announce2a p");
 var $announce2b = $(".announce2b");
 var $announceText2b = $(".announce2b p");
+
+// info divs
+var $count = $(".count");
+var $trueCount = $(".trueCount");
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// on page load //
+/////////////////
 
 // create audio elements on page load
 var cardPlace = document.createElement('audio');
@@ -301,9 +307,8 @@ function bet(hand, amt) {
 function deal() {
   betChangeAllowed = false;
   game.player.isDone = false;
-  $deal.attr("disabled", true);
-  $(".hit, .stay, .double").attr("disabled", false);
-  $double.attr("id", "");
+  $deal.addClass("hidden");
+  $(".hit, .stay, .double").removeClass("hidden");
   cardPackage.load();
   cardPackage.play();
   if (deckId === "" || cardsLeft < 39) {
@@ -426,6 +431,127 @@ function drawCard(options) {
   cardsLeft--;
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function checkTotal(hand) {
+  var total = 0;
+  var handToCheck = hand === "dealer" ? game.dealer.cards : game[hand].cards;
+  var aces = 0;
+
+  handToCheck.forEach(function(card) {
+    if (card === "KING" || card === "QUEEN" || card === "JACK") {
+      total += 10;
+    } else if (!isNaN(card)) {
+      total += Number(card);
+    } else if (card === "ACE") {
+      aces += 1;
+    }
+  });
+
+  if (aces > 0) {
+    if (total + aces + 10 > 21) {
+      total += aces;
+    } else {
+      total += aces + 10;
+    }
+  }
+
+  var textColor = "white"
+  if (total === 21) {
+    textColor = "lime";
+  } else if (total > 21) {
+    textColor = "red";
+  }
+
+  game[hand].total = total;
+  $(`.${hand}Total`).text(total).css("color", textColor);
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// couldDealerHaveBlackjack() checks to see if the dealer's up card is a 10, jack, queen, king, or ace.
+// If it's an ace it shows the Insurance button.
+// If it's an ace, 10, jack, queen, or king it sets dealerCouldHaveBlackjack to true.
+function couldDealerHaveBlackjack() {
+  switch (game.dealer.cards[1]) {
+    case 'ACE':
+      console.log("Insurance is available");
+      $insuranceButton.removeClass("hidden");
+    case '10':
+    case 'JACK':
+    case 'QUEEN':
+    case 'KING':
+      console.log('Dealer could have Blackjack');
+      game.dealerCouldHaveBlackjack = true;
+      break;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// checkSplit() takes two arguments: hand and test.
+//   hand refers to the string value of the hand to deal a card to, such as "dealer" and "split1a".
+//   test is a boolean value the specifies whether or not to allow splitting regardless of matching card values
+function checkSplit(hand, test) {
+  // A new array is created to hold the two card values
+  // For each card in the hand the numeric value is passed to the new array.
+  var checkSplitArr = game[hand].cards.map(function(card) {
+    if (card === "KING" || card === "QUEEN" || card === "JACK") {
+      return "10";
+    } else {
+      return card;
+    }
+  });
+  // If the two values are equal, and there is enough in the bank to bet on a new hand, or if the Split box is checked...
+  if ((checkSplitArr[0] === checkSplitArr[1] && bank >= betAmt) || $(".splitTesting").is(":checked")) {
+    // Show the Split button for the hand
+    $(`.${hand} > button`).removeClass("hidden");
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function checkLoss21(hand) {
+    if (game[hand].total > 21 && game[hand].cards.length < 5) {
+      console.log("player busts");
+      game[hand].winner = "dealer";
+      announce(hand, "BUST");
+      game.undecidedHands--;
+      handEnd(hand);
+    } else if (game[hand].total === 21) {
+      if (game[hand].cards.length === 2) {
+        game.undecidedHands--;
+        if (!game.dealerCouldHaveBlackjack) {
+          console.log("player has blackjack");
+          game[hand].winner = "player";
+          announce(hand, "BLACKJACK!");
+        }
+      }
+      if (game[hand].cards.length === 5) {
+        game.undecidedHands--;
+        console.log("five card 21!");
+        game[hand].winner = "player";
+        announce(hand, "5 CARD 21!");
+      }
+      handEnd(hand);
+    } else if (game[hand].cards.length === 5) {
+      game.undecidedHands--;
+      console.log("five card charlie!");
+      game[hand].winner = "player";
+      announce(hand, "5 CARD!");
+      handEnd(hand);
+    } else if (game[hand].isDoubled) {
+      handEnd(hand);
+    }
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// player's turn //
+//////////////////
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function hit() {
   console.log("hit");
@@ -433,8 +559,7 @@ function hit() {
   drawCard({
     hand: hand
   });
-  $double.attr("id", "double-disabled");
-  $(`.${hand} > button`).attr("disabled", true);
+  $double.attr("disabled", true);
   $(`.${hand} > button`).addClass("hidden");
   $insuranceButton.addClass("hidden");
 }
@@ -444,25 +569,20 @@ function hit() {
 function stay() {
   console.log("stay");
   var hand = game.currentHand;
-  $(`.${hand} > button`).attr("disabled", true);
   $(`.${hand} > button`).addClass("hidden");
   $insuranceButton.addClass("hidden");
   handEnd(hand);
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////
 // side rules //
 ///////////////
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function double() {
   var hand = game.currentHand;
   if (bank - betAmt >= 0) {
-    $double.attr("disabled", true);
-    $hit.attr("disabled", true);
-    $stay.attr("disabled", true);
+    $(".hit, .stay, .double").addClass("hidden");
     $insuranceButton.addClass("hidden");
     game[hand].isDoubled = true;
     bet(hand, betAmt);
@@ -501,7 +621,7 @@ function split(hand) {
   game[hand].isDone = true;
   game[hand1].isDone = false;
   game[hand2].isDone = false;
-  $button.attr("disabled", true);
+  $button.addClass("hidden");
   $(`.${hand}`).addClass("hidden");
   $(`.${hand}Chips`).empty();
   $(`.${hand1}, .${hand2}`).removeClass("hidden");
@@ -605,11 +725,13 @@ function highlight(hand) {
   $(".hand").removeClass("highlighted");
   if (hand !== "none") {
     $(`.${hand}Hand`).addClass("highlighted");
-    $double.attr("disabled", false).attr("id", "");
-    $hit.attr("disabled", false);
-    $stay.attr("disabled", false);
+    $(".hit, .stay, .double").removeClass("hidden");
+    $double.attr("disabled", false);
   }
 }
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // dealer's turn and endgame //
 //////////////////////////////
@@ -639,161 +761,6 @@ function dealerTurn() {
     game.split2b.cards.length >= 2 && checkVictory("split2b");
     gameEnd();
   }
-}
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// utility functions //
-//////////////////////
-/////////////////////
-
-function clearTable() {
-  $(".hand, .total, .chips, .wager").empty();
-  $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup, .playerChips, .playerWager").addClass("hidden");
-  $player.removeClass("hidden");
-  $(".popup").removeClass("win lose push");
-  $insuranceButton.addClass("hidden");
-  $(".noDealerBlackjack").addClass("hidden");
-  chipStacksToHands();
-  console.log("------------table cleared------------");
-}
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// couldDealerHaveBlackjack() checks to see if the dealer's up card is a 10, jack, queen, king, or ace.
-// If it's an ace it shows the Insurance button.
-// If it's an ace, 10, jack, queen, or king it sets dealerCouldHaveBlackjack to true.
-function couldDealerHaveBlackjack() {
-  switch (game.dealer.cards[1]) {
-    case 'ACE':
-      console.log("Insurance is available");
-      $insuranceButton.removeClass("hidden");
-    case '10':
-    case 'JACK':
-    case 'QUEEN':
-    case 'KING':
-      console.log('Dealer could have Blackjack');
-      game.dealerCouldHaveBlackjack = true;
-      break;
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// checkSplit() takes two arguments: hand and test.
-//   hand refers to the string value of the hand to deal a card to, such as "dealer" and "split1a".
-//   test is a boolean value the specifies whether or not to allow splitting regardless of matching card values
-function checkSplit(hand, test) {
-  // A new array is created to hold the two card values
-  // For each card in the hand the numeric value is passed to the new array.
-  var checkSplitArr = game[hand].cards.map(function(card) {
-    if (card === "KING" || card === "QUEEN" || card === "JACK") {
-      return "10";
-    } else {
-      return card;
-    }
-  });
-  // If the two values are equal, and there is enough in the bank to bet on a new hand, or if the Split box is checked...
-  if ((checkSplitArr[0] === checkSplitArr[1] && bank >= betAmt) || $(".splitTesting").is(":checked")) {
-    // Show the Split button for the hand
-    $(`.${hand} > button`).removeClass("hidden");
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function checkTotal(hand) {
-  var total = 0;
-  var handToCheck = hand === "dealer" ? game.dealer.cards : game[hand].cards;
-  var aces = 0;
-
-  handToCheck.forEach(function(card) {
-    if (card === "KING" || card === "QUEEN" || card === "JACK") {
-      total += 10;
-    } else if (!isNaN(card)) {
-      total += Number(card);
-    } else if (card === "ACE") {
-      aces += 1;
-    }
-  });
-
-  if (aces > 0) {
-    if (total + aces + 10 > 21) {
-      total += aces;
-    } else {
-      total += aces + 10;
-    }
-  }
-
-  var textColor = "white"
-  if (total === 21) {
-    textColor = "lime";
-  } else if (total > 21) {
-    textColor = "red";
-  }
-
-  game[hand].total = total;
-  $(`.${hand}Total`).text(total).css("color", textColor);
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function checkLoss21(hand) {
-    if (game[hand].total > 21 && game[hand].cards.length < 5) {
-      console.log("player busts");
-      game[hand].winner = "dealer";
-      announce(hand, "BUST");
-      game.undecidedHands--;
-      handEnd(hand);
-    } else if (game[hand].total === 21) {
-      if (game[hand].cards.length === 2) {
-        game.undecidedHands--;
-        if (!game.dealerCouldHaveBlackjack) {
-          console.log("player has blackjack");
-          game[hand].winner = "player";
-          announce(hand, "BLACKJACK!");
-        }
-      }
-      if (game[hand].cards.length === 5) {
-        game.undecidedHands--;
-        console.log("five card 21!");
-        game[hand].winner = "player";
-        announce(hand, "5 CARD 21!");
-      }
-      handEnd(hand);
-    } else if (game[hand].cards.length === 5) {
-      game.undecidedHands--;
-      console.log("five card charlie!");
-      game[hand].winner = "player";
-      announce(hand, "5 CARD!");
-      handEnd(hand);
-    } else if (game[hand].isDoubled) {
-      handEnd(hand);
-    }
 }
 
 
@@ -887,19 +854,9 @@ function gameEnd() {
   !game.isFlipped && flipCard();
   betChangeAllowed = true;
   $dealerTotal.removeClass("hidden");
-  $deal.attr("disabled", false);
-  $hit.attr("disabled", true);
-  $stay.attr("disabled", true);
-  $double.attr("disabled", true);
+  $deal.removeClass("hidden");
+  $(".hit, .stay, .double").addClass("hidden");
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -910,12 +867,25 @@ function gameEnd() {
 /////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function clearTable() {
+  $(".hand, .total, .chips, .wager").empty();
+  $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup, .playerChips, .playerWager, .noDealerBlackjack, .insuranceButton").addClass("hidden");
+  $player.removeClass("hidden");
+  $double.attr("disabled", false);
+  $(".popup").removeClass("win lose push");
+  chipStacksToHands();
+  console.log("------------table cleared------------");
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function cardImage(data) {
   var cardValue = data.cards[0].value;
   var cardSuit = data.cards[0].suit;
   var filename = "../images/cards/" + cardValue + "_of_" + cardSuit.toLowerCase() + ".svg";
   return filename;
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function flipCard() {
@@ -927,6 +897,7 @@ function flipCard() {
   $dealerHand.prepend(html);
   updateCount(game.dealer.cards[0]);
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function announce(hand, text) {
@@ -950,10 +921,10 @@ function announce(hand, text) {
   $(`.announce${_.capitalize(hand)}`).html(`<p>${text}</p>`);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////
 // chip movement //
 //////////////////
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function countChips(location, winnings) {
@@ -1001,7 +972,6 @@ function countChips(location, winnings) {
     });
   }
 }
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1124,6 +1094,11 @@ var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "pl
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// card counting and strategy //
+///////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateCount(card) {
   if (isNaN(Number(card)) || card === "10") {
     count -= 1;
@@ -1151,26 +1126,21 @@ function updateCount(card) {
 
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// testing //
+////////////
 
 
-
-/////////////
-// TESTING //
-/////////////
-
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function testDeal() {
   game = new Game();
   bet("player", betAmt);
   betChangeAllowed = false;
   if (bank >= betAmt) {
     clearTable();
-    $deal.attr("disabled", true);
-    $hit.attr("disabled", false);
-    $stay.attr("disabled", false);
-    $double.attr("disabled", false);
-    $double.attr("id", "");
+
+    $(".hit, .stay, .double").removeClass("hidden");
+    $deal.addClass("hidden");
     cardPackage.load();
     cardPackage.play();
     getJSON(newDeckURL + decks, function(data) {
@@ -1205,9 +1175,6 @@ function testDeal() {
 };
 
 
-
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function giveCard() {
   var cardValue = $('.giveCardValue').val();
@@ -1223,7 +1190,9 @@ function giveCard() {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// JSON request function with JSONP proxy
+// JSON request function with JSONP proxy //
+///////////////////////////////////////////
+
 function getJSON(url, cb) {
   var JSONP_PROXY = 'https://jsonp.afeld.me/?url=';
   // THIS WILL ADD THE CROSS ORIGIN HEADERS

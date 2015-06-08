@@ -11,9 +11,9 @@ body {
   background: black;
 }
 
-button:disabled {
-  display: none;
-}
+// button:disabled {
+//   display: none;
+// }
 
 button:focus {
   outline: none;
@@ -240,7 +240,7 @@ button:focus {
   width: 361px;
 }
 
-#double-disabled {
+button:disabled {
   background: rgba(154, 154, 154, 0.63);
   border: 4px groove rgba(154, 154, 154, 0.63);
   color: rgba(59, 59, 59, .63);
