@@ -85,11 +85,6 @@ var $split1b = $(".split1b");
 var $split2a = $(".split2a");
 var $split2b = $(".split2b");
 
-// card split parent divs
-var $playerSplit = $(".playerSplit");
-var $playerSplit1 = $(".playerSplit1");
-var $playerSplit2 = $(".playerSplit2");
-
 // hand total divs
 var $dealerTotal = $(".dealerTotal");
 var $playerTotal = $(".playerTotal");

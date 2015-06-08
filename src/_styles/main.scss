@@ -11,19 +11,6 @@ body {
   background: black;
 }
 
-// button:disabled {
-//   display: none;
-// }
-
-button:focus {
-  outline: none;
-}
-
-.btn:active, .testHand button:active {
-  color: white;
-  transform: translate(2px, 2px);
-}
-
 .table {
   background-image: url("../images/table-graphic.jpg");
   background-size: contain;
@@ -38,28 +25,11 @@ button:focus {
   perspective: 1300px;
 }
 
-.total {
-  position: absolute;
-  color: white;
-  font-size: 1.5em;
-  text-shadow: 1px 1px 0 black;
-  &.dealerTotal {
-    top: 68px;
-    left: -32px;
-  }
-  &.playerTotal {
-    top: 68px;
-    left: -32px;
-  }
-  &.hand1Total {
-    top: 66px;
-    left: 0px;
-  }
-  &.hand2Total {
-    top: 66px;
-    left: 250px;
-  }
-}
+
+////////////////
+// hand divs //
+//////////////
+
 .dealer {
   position: absolute;
   top: 0px;
@@ -112,6 +82,15 @@ button:focus {
   left: 748px;
 }
 
+/////////////////
+// cards      //
+///////////////
+
+.cardImage {
+  width: 113px;
+  height: 157px;
+}
+
 .hand img {
   margin: 3px -95px -1px 4px;
   -webkit-transform: rotateX(16deg);
@@ -126,20 +105,223 @@ button:focus {
   transform: scale(.85) rotateX(16deg);
 }
 
-.playerSplit {
+
+
+//////////////////
+// hand totals //
+////////////////
+
+.total {
   position: absolute;
-  width: 500px;
-  top: 204px;
-  left: 275px;
-  display: flex;
-  justify-content: space-around;
+  color: white;
+  font-size: 1.5em;
+  text-shadow: 1px 1px 0 black;
+  &.dealerTotal {
+    top: 68px;
+    left: -32px;
+  }
+  &.playerTotal {
+    top: 68px;
+    left: -32px;
+  }
 }
 
-.highlighted {
-  background: rgba(255,255,0, .75);
-  border-radius: 6px;
-  transform: rotateX(16deg);
+.split1Total, .split2Total, .split1aTotal, .split1bTotal, .split2aTotal, .split2bTotal {
+  position: absolute;
+  top: -28px;
+  left: 58px;
 }
+
+//////////////////
+// chip totals //
+////////////////
+
+.bankTotal {
+  position: absolute;
+  top: 418px;
+  left: 277px;
+}
+
+.wager {
+  position: absolute;
+  width: 47px;
+  text-align: center;
+  bottom: -49px;
+  left: 45px;
+}
+
+.insuranceWager {
+  bottom: 424px;
+  left: 553px;
+}
+
+///////////////////
+// chips        //
+/////////////////
+
+.chip {
+  position: absolute;
+}
+
+.chip:hover {
+  cursor: pointer;
+  -webkit-filter: drop-shadow(1px 1px 5px white);
+}
+
+.chip1 {
+  left: 6px;
+  top: 366px;
+  width: 47px;
+  height: 21px;
+}
+
+.chip5 {
+  left: 48px;
+  top: 380px;
+  width: 45px;
+  height: 22px;
+}
+
+.chip10 {
+  left: 88px;
+  top: 394px;
+  width: 47px;
+  height: 22px;
+}
+
+.chip25 {
+  left: 130px;
+  top: 408px;
+  width: 46px;
+  height: 21px;
+}
+
+.chip50 {
+  left: 171px;
+  top: 422px;
+  width: 47px;
+  height: 22px;
+}
+
+.chip100 {
+  left: 213px;
+  top: 435px;
+  width: 47px;
+  height: 22px;
+}
+
+#selectedBet {
+  -webkit-filter: drop-shadow(1px 1px 5px white);
+}
+
+.chips {
+  position: absolute;
+  top: 393px;
+  left: 287px;
+  img {
+    position: absolute;
+    width: 47px;
+  }
+   z-index: 200;
+}
+
+.hand, .chips {
+  transition: 0.5s;
+}
+
+.bankChips {
+  width: 47px;
+  position: absolute;
+  top: 393px;
+  left: 287px;
+  img {
+    width: 47px;
+    position: absolute;
+  }
+}
+
+.chipHiding {
+  background: rgb(0, 0, 0);
+  width: 59px;
+  height: 27px;
+  top: -29px;
+  position: absolute;
+  left: 452px;
+  z-index: 300;
+}
+
+
+///////////////////
+// buttons      //
+/////////////////
+
+button:focus {
+  outline: none;
+}
+
+button:disabled {
+  background: rgba(154, 154, 154, 0.63);
+  border: 4px groove rgba(154, 154, 154, 0.63);
+  color: rgba(59, 59, 59, .63);
+}
+
+.btn:active, .testHand button:active {
+  color: white;
+  transform: translate(2px, 2px);
+}
+
+.btn {
+  background: rgba(154, 185, 133, 0.63);
+  font-size: 2em;
+  padding: 8px 24px;
+  border: 4px groove rgba(154, 185, 133, 0.63);
+  border-radius: 16px 16px;
+  color: rgb(59, 6, 0);
+  font-family: Tahoma;
+}
+
+.insuranceButton {
+  position: absolute;
+  top: 153px;
+  left: 431px;
+  font-size: 1em;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
+.noDealerBlackjack {
+  position: absolute;
+  top: 160px;
+  left: 386px;
+  color: white;
+  text-shadow: 1px 1px 0 black;
+}
+
+.buttons {
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  top: 448px;
+  left: 308px;
+  width: 361px;
+}
+
+.stay {
+  padding: 8px 16px;
+}
+
+.splitButton, .split1Button, .split2Button {
+  position: absolute;
+  top: 88px;
+  left: 12px;
+  background: rgba(154, 185, 133, .9);
+  border: 4px groove rgba(154, 185, 133, .9);
+}
+
+
+/////////////////////
+// announce popup //
+///////////////////
 
 .announcePlayer {
   position: absolute;
@@ -204,294 +386,11 @@ button:focus {
   }
 }
 
-.btn {
-  background: rgba(154, 185, 133, 0.63);
-  font-size: 2em;
-  padding: 8px 24px;
-  border: 4px groove rgba(154, 185, 133, 0.63);
-  border-radius: 16px 16px;
-  color: rgb(59, 6, 0);
-  font-family: Tahoma;
-}
-
-.insuranceButton {
-  position: absolute;
-  top: 153px;
-  left: 431px;
-  font-size: 1em;
-  padding: 4px 12px;
-  border-radius: 8px;
-}
-
-.noDealerBlackjack {
-  position: absolute;
-  top: 160px;
-  left: 386px;
-  color: white;
-  text-shadow: 1px 1px 0 black;
-}
-
-.buttons {
-  position: absolute;
-  display: flex;
-  justify-content: space-around;
-  top: 448px;
-  left: 308px;
-  width: 361px;
-}
-
-button:disabled {
-  background: rgba(154, 154, 154, 0.63);
-  border: 4px groove rgba(154, 154, 154, 0.63);
-  color: rgba(59, 59, 59, .63);
-}
-
-.stay {
-  padding: 8px 16px;
-}
-
-.splitButton, .split1Button, .split2Button {
-  position: absolute;
-  top: 88px;
-  left: 12px;
-  background: rgba(154, 185, 133, .9);
-  border: 4px groove rgba(154, 185, 133, .9);
-}
-
-.split1Total, .split2Total, .split1aTotal, .split1bTotal, .split2aTotal, .split2bTotal {
-  position: absolute;
-  top: -28px;
-  left: 58px;
-}
-
-.cardImage {
-  width: 113px;
-  height: 157px;
-}
-
-.chip {
-  position: absolute;
-}
-
-.chip:hover {
-  cursor: pointer;
-  -webkit-filter: drop-shadow(1px 1px 5px white);
-}
-
-.chip1 {
-  left: 6px;
-  top: 366px;
-  width: 47px;
-  height: 21px;
-}
-
-.chip5 {
-  left: 48px;
-  top: 380px;
-  width: 45px;
-  height: 22px;
-}
-
-.chip10 {
-  left: 88px;
-  top: 394px;
-  width: 47px;
-  height: 22px;
-}
-
-.chip25 {
-  left: 130px;
-  top: 408px;
-  width: 46px;
-  height: 21px;
-}
-
-.chip50 {
-  left: 171px;
-  top: 422px;
-  width: 47px;
-  height: 22px;
-}
-
-.chip100 {
-  left: 213px;
-  top: 435px;
-  width: 47px;
-  height: 22px;
-}
-
-.chips {
-  position: absolute;
-  top: 393px;
-  left: 287px;
-  img {
-    position: absolute;
-    width: 47px;
-    //top: 7px;
-    //left: 46px;
-  }
-   z-index: 200;
-}
-
-// .playerChips {
-//   top: 386px;
-//   left: 457px;
-// }
-
-// .split1Chips {
-//   top: 347px;
-//   left: 328px;
-// }
-
-// .split2Chips {
-//   top: 347px;
-//   left: 604px;
-// }
-
-// .split1aChips {
-//   top: 347px;
-//   left: 119px;
-// }
-
-// .split1bChips {
-//   top: 347px;
-//   left: 343px;
-// }
-
-// .split2aChips {
-//   top: 347px;
-//   left: 567px;
-// }
-
-// .split2bChips {
-//   top: 347px;
-//   left: 792px;
-// }
-
-.hand, .chips {
-  transition: 0.5s;
-}
-
-.chipHiding {
-  background: rgb(0, 0, 0);
-  width: 59px;
-  height: 27px;
-  top: -29px;
-  position: absolute;
-  left: 452px;
-  z-index: 300;
-}
-
-.wager {
-  position: absolute;
-  width: 47px;
-  text-align: center;
-  bottom: -49px;
-  left: 45px;
-}
-
-.insuranceWager {
-  bottom: 424px;
-  left: 553px;
-}
-
-#selectedBet {
-  -webkit-filter: drop-shadow(1px 1px 5px white);
-}
-
-.bankChips {
-  width: 47px;
-  position: absolute;
-  top: 393px;
-  left: 287px;
-  img {
-    width: 47px;
-    position: absolute;
-  }
-}
-
-.bankTotal {
-  position: absolute;
-  top: 418px;
-  left: 277px;
-}
 
 
-//////////////////
-// Hand Testing //
-//////////////////
-
-.toggleTestPanel {
-  position: absolute;
-  top: 26px;
-  right: 8px;
-  width: 98px;
-  height: 72px;
-  transform: rotate(18deg);
-  background: transparent;
-  border: none;
-}
-
-.testPanel {
-  position: absolute;
-  top: 99px;
-  right: 0px;
-  width: 160px;
-  p {
-    color: white;
-    margin-top: 10px;
-  }
-}
-
-.testPanel label {
-  left: 120px;
-  position: absolute;
-  color: white;
-  top: 144px;
-}
-
-.testPanel > button {
-  margin: 8px 0 0;
-}
-
-.testPanel button {
-  background-image: -webkit-linear-gradient(top, rgba(255,234,0,1) 0%,rgba(255,140,0,1) 100%);
-  background-image:    -moz-linear-gradient(top, rgba(255,234,0,1) 0%,rgba(255,140,0,1) 100%);
-  background-image:     -ms-linear-gradient(top, rgba(255,234,0,1) 0%,rgba(255,140,0,1) 100%);
-  background-image:      -o-linear-gradient(top, rgba(255,234,0,1) 0%,rgba(255,140,0,1) 100%);
-  background-image:         linear-gradient(top, rgba(255,234,0,1) 0%,rgba(255,140,0,1) 100%);
-  border: solid 1px rgba(255,191,0,1);
-  -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-         border-radius: 4px;
-  padding: 2px 13px;
-  display: inline-block;
-  line-height: 20px;
-  color: rgba(0,0,0,1);
-  margin: 8px 0 6px;
-  &:hover {
-   background-image: -webkit-linear-gradient(top, rgba(255,234,0,1) 100%,rgba(255,140,0,1) 0%);
-   background-image:    -moz-linear-gradient(top, rgba(255,234,0,1) 100%,rgba(255,140,0,1) 0%);
-   background-image:     -ms-linear-gradient(top, rgba(255,234,0,1) 100%,rgba(255,140,0,1) 0%);
-   background-image:      -o-linear-gradient(top, rgba(255,234,0,1) 100%,rgba(255,140,0,1) 0%);
-   background-image:         linear-gradient(top, rgba(255,234,0,1) 100%,rgba(255,140,0,1) 0%);
-  }
-  &:active {
-  -webkit-transform: translate(2px 2px);
-     -moz-transform: translate(2px 2px);
-          transform: translate(2px 2px);
-  }
-}
-
-.splitTesting {
-  position: absolute;
-  top: 144px;
-  left: 99px;
-}
-
-////////////
-// Needle //
-////////////
+////////////////////////////////////////
+// advantage gauge and card counting //
+//////////////////////////////////////
 
 $red:     #e93e3c;
 $green:   #9ead3a;
@@ -550,7 +449,7 @@ $needle-origin: 8px 84px;
       -ms-transition: all 1s ease-in-out;
           transition: all 1s ease-in-out;
 
-} // .gauge-needle
+}
 
 .toggleCountInfo {
   width: 209px;
@@ -657,6 +556,97 @@ $needle-origin: 8px 84px;
   width: initial;
   border: 3px solid black;
   z-index: 300;
+}
+
+
+
+///////////////////////////
+// testing              //
+/////////////////////////
+
+
+.toggleTestPanel {
+  position: absolute;
+  top: 26px;
+  right: 8px;
+  width: 98px;
+  height: 72px;
+  transform: rotate(18deg);
+  background: transparent;
+  border: none;
+}
+
+.testPanel {
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid black;
+  position: absolute;
+  top: 93px;
+  right: 6px;
+  width: 152px;
+  z-index: 350;
+  p {
+    color: rgb(255, 255, 255);
+    margin-top: 10px;
+    text-shadow: 1px 1px 0 black;
+  }
+}
+
+.testPanel label {
+  left: 120px;
+  position: absolute;
+  color: white;
+  top: 148px;
+}
+
+.testPanel > button {
+  margin: 8px 0 0;
+}
+
+.testPanel button {
+  background-image: -webkit-linear-gradient(top, rgba(255,234,0,1) 0%,rgba(255,140,0,1) 100%);
+  background-image:    -moz-linear-gradient(top, rgba(255,234,0,1) 0%,rgba(255,140,0,1) 100%);
+  background-image:     -ms-linear-gradient(top, rgba(255,234,0,1) 0%,rgba(255,140,0,1) 100%);
+  background-image:      -o-linear-gradient(top, rgba(255,234,0,1) 0%,rgba(255,140,0,1) 100%);
+  background-image:         linear-gradient(top, rgba(255,234,0,1) 0%,rgba(255,140,0,1) 100%);
+  border: solid 1px rgba(255,191,0,1);
+  -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+         border-radius: 4px;
+  padding: 2px 13px;
+  display: inline-block;
+  line-height: 20px;
+  color: rgba(0,0,0,1);
+  margin: 8px 0 6px;
+  &:hover {
+   background-image: -webkit-linear-gradient(top, rgba(255,234,0,1) 100%,rgba(255,140,0,1) 0%);
+   background-image:    -moz-linear-gradient(top, rgba(255,234,0,1) 100%,rgba(255,140,0,1) 0%);
+   background-image:     -ms-linear-gradient(top, rgba(255,234,0,1) 100%,rgba(255,140,0,1) 0%);
+   background-image:      -o-linear-gradient(top, rgba(255,234,0,1) 100%,rgba(255,140,0,1) 0%);
+   background-image:         linear-gradient(top, rgba(255,234,0,1) 100%,rgba(255,140,0,1) 0%);
+  }
+  &:active {
+  -webkit-transform: translate(2px 2px);
+     -moz-transform: translate(2px 2px);
+          transform: translate(2px 2px);
+  }
+}
+
+.splitTesting {
+  position: absolute;
+  top: 148px;
+  left: 99px;
+}
+
+
+///////////////
+// utility  //
+/////////////
+
+.highlighted {
+  background: rgba(255,255,0, .75);
+  border-radius: 6px;
+  transform: rotateX(16deg);
 }
 
 .hidden {
