@@ -2,7 +2,7 @@ var API = "http://deckofcardsapi.com/api/";
 var newDeckURL = API + "shuffle/?deck_count=";
 var cardBack = "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Card_back_16.svg/209px-Card_back_16.svg.png";
 
-// global variables needed for data that persists beyond each hand
+// global variables needed for data that persists beyond each round
 var game;
 var deckId = "";
 var decks = 6;
@@ -213,19 +213,25 @@ function Game() {
 }
 
 function Hand() {
+  // cards holds the card values for each hand, e.g. "ACE", "9", "10", etc.
   this.cards = [];
+  // cardImages holds the URLs pointing to cards in the hand.
   this.cardImages = [];
+  // total is the hand's card total as determined by checkTotal().
   this.total = 0;
+  // winner is set to "dealer", "player", or "push" by insurance(), checkLoss21(), and checkVictory().
   this.winner = "";
+  // wager is the amount that has been bet on the hand.
   this.wager = 0;
-  this.isSplit = false;
-  this.isDoubled = false;
-  this.isCurrentTurn = false;
-  this.isDone = true;
-  this.has21 = false;
-  this.isFirstTurn = true;
-  this.isBusted = false;
+  // winnings is determined by handPayout() and is used by countChips() to change to showing chips won.
   this.winnings = 0;
+  // isSplit is set to true by split() and checked by handEnd() to correctly calculate game.handsToPlay.
+  this.isSplit = false;
+  // isDoubled is set to true by double() and is checked by checkLoss21() to end the hand after hitting.
+  this.isDoubled = false;
+  // isDone is set by various functions and is checked by checkFocus() to control the flow of the game.
+  this.isDone = true;
+  this.isBusted = false;
   this.charlie = false;
   this.chipLeft = 0;
   this.chipTop = 0;
@@ -313,17 +319,15 @@ function stay() {
 function double() {
   var hand = game.currentHand;
   if (bank - betAmt >= 0) {
-    if (game[hand].isFirstTurn) {
-      $double.attr("disabled", true);
-      $hit.attr("disabled", true);
-      $stay.attr("disabled", true);
-      $insuranceButton.addClass("hidden");
-      game[hand].isDoubled = true;
-      bet(hand, betAmt);
-      chipOnChipWav.play();
-      console.log("double down");
-      hit();
-    }
+    $double.attr("disabled", true);
+    $hit.attr("disabled", true);
+    $stay.attr("disabled", true);
+    $insuranceButton.addClass("hidden");
+    game[hand].isDoubled = true;
+    bet(hand, betAmt);
+    chipOnChipWav.play();
+    console.log("double down");
+    hit();
   } else {
     console.log("Insufficient funds.");
   }
@@ -501,13 +505,10 @@ function hit() {
   drawCard({
     hand: hand
   });
-  if (game[hand].isFirstTurn) {
-    game[hand].isFirstTurn = false;
-    $double.attr("id", "double-disabled");
-    $(`.${hand} > button`).attr("disabled", true);
-    $(`.${hand} > button`).addClass("hidden");
-    $insuranceButton.addClass("hidden");
-  }
+  $double.attr("id", "double-disabled");
+  $(`.${hand} > button`).attr("disabled", true);
+  $(`.${hand} > button`).addClass("hidden");
+  $insuranceButton.addClass("hidden");
 }
 
 function dealerTurn() {
@@ -522,7 +523,7 @@ function dealerTurn() {
         dealerTurn();
       }
     });
-  } else if (game.dealer.total >= 17 || game.undecidedHands === 0 || game.player.has21 === true || game.player.charlie === true) {
+  } else if (game.dealer.total >= 17 || game.undecidedHands === 0 || game.player.total === 21 || game.player.charlie === true) {
     console.log(`dealer is finished with ${game.dealer.total}`);
     game.player.cards.length >= 2 && checkVictory("player");
     game.split1.cards.length >= 2 && checkVictory("split1");
@@ -577,7 +578,6 @@ function checkLoss21(hand) {
       game.undecidedHands--;
       handEnd(hand);
     } else if (game[hand].total === 21) {
-      game[hand].has21 = true;
       if (game[hand].cards.length === 2) {
         game.undecidedHands--;
         if (!game.dealerCouldHaveBlackjack) {
@@ -972,7 +972,6 @@ function countChips(location, winnings) {
 $(".testDeal").click(function () {
   game = new Game();
   bet("player", betAmt);
-  game.player.isFirstTurn = true;
   betChangeAllowed = false;
   if (bank >= betAmt) {
     clearTable();
