@@ -95,10 +95,9 @@ body {
   margin: 3px -95px -1px 4px;
   -webkit-transform: rotateX(16deg);
   transform: rotateX(16deg);
-}
-
-.hand img:last-child {
-  margin-right: 5px;
+  &:last-child {
+    margin-right: 5px;
+  }
 }
 
 .dealer img {

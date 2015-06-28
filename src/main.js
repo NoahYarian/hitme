@@ -3,7 +3,8 @@
 /////////////////////
 
 // URLs
-var API = "http://deckofcardsapi.com/api/";
+//var API = "http://deckofcardsapi.com/api/";
+var API =  "http://localhost:8000/api/";
 var newDeckURL = API + "shuffle/?deck_count=";
 var cardBack = "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Card_back_16.svg/209px-Card_back_16.svg.png";
 
@@ -1189,10 +1190,10 @@ function giveCard() {
 ///////////////////////////////////////////
 
 function getJSON(url, cb) {
-  var JSONP_PROXY = 'https://jsonp.afeld.me/?url=';
+  //var JSONP_PROXY = 'https://jsonp.afeld.me/?url=';
   // THIS WILL ADD THE CROSS ORIGIN HEADERS
   var request = new XMLHttpRequest();
-  request.open('GET', JSONP_PROXY + url);
+  request.open('GET', /*JSONP_PROXY + */url);
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
       cb(JSON.parse(request.responseText));
