@@ -631,12 +631,23 @@ $needle-origin: 8px 84px;
   }
 }
 
-.splitTesting {
-  position: absolute;
-  top: 148px;
-  left: 99px;
-}
+// .splitTesting {
+//   position: absolute;
+//   top: 148px;
+//   left: 99px;
+// }
 
+.splitCity {
+  position: absolute;
+  background: #4F7158;
+  width: 93px;
+  height: 22px;
+  top: 15px;
+  left: 733px;
+  border: 2px solid gold;
+  color: white;
+  padding-top: 2px;
+}
 
 ///////////////
 // utility  //
