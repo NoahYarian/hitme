@@ -94,7 +94,7 @@ gulp.task('copy', function () {
 });
 
 gulp.task('open', function () {
-  $.open('http://godo.tehcode.com');
+  $.open('http://hitme.tehcode.com');
 });
 
 //gulp.task('build:prod', ['jade:prod', 'sass:prod', 'js:prod', 'bower', 'copy']);

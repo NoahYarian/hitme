@@ -5,11 +5,9 @@
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "./node_modules/.bin/hs -a localhost -p $((RANDOM + 10000)) -o",
-    "build": "./build.sh",
-    "start": "npm run build; npm run server",
-    "deploy": "npm run build; ./deploy.sh",
-    "watch": "./watch.sh; npm run server"
+    "start": "python ../deckofcards/manage.py runserver 0.0.0.0:8000 & gulp",
+    "deploy": "gulp clean && gulp build:dev && ./deploy.sh && gulp open"
+
   },
   "repository": {
     "type": "git",

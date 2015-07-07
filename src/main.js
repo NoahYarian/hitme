@@ -864,6 +864,7 @@ function gameEnd() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function clearTable() {
+  chipStacksToBankNow();
   $(".hand, .total, .chips, .wager").empty();
   $(".dealerTotal, .playerSplit, .playerSplit1, .playerSplit2, .popup, .playerChips, .playerWager, .noDealerBlackjack, .insuranceButton").addClass("hidden");
   $player.removeClass("hidden");
@@ -1038,19 +1039,38 @@ function moveChips(hand, location) {
   $(`.${hand}Chips`).animate({
     top: `${game[hand].chipTop}px`,
     left: `${game[hand].chipLeft}px`
+  }, {
+    duration: 400
   });
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function moveChipsNow(hand, location) {
+  setChipLocations(location);
+  location === "bank" && (game.chipsWonHeight = 0);
+  $(`.${hand}Chips`).css({
+    top: `${game[hand].chipTop}px`,
+    left: `${game[hand].chipLeft}px`
+  });
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function chipStacksToHands() {
-  setChipLocations("hand");
+  // setChipLocations("hand");
   var hands = ["insurance", "player", "split1", "split1a", "split1b", "split2", "split2a", "split2b"];
   hands.forEach(function(hand, i) {
     moveChips(hand, "hand");
   });
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function chipStacksToBankNow() {
+  // setChipLocations("hand");
+  var hands = ["insurance", "player", "split1", "split1a", "split1b", "split2", "split2a", "split2b"];
+  hands.forEach(function(hand, i) {
+    moveChipsNow(hand, "bank");
+  });
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function finalChipMovement() {
@@ -1077,7 +1097,7 @@ var hands = ["split1a", "split1b", "split1", "split2a", "split2b", "split2", "pl
           setTimeout(function() {
             chipsToBankWav.load();
             chipsToBankWav.play();
-          }, 700);
+          }, 500);
         }
         moveChips(hand, location);
         $(`.${hand}Wager`).empty();
