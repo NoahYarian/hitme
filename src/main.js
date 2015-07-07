@@ -3,8 +3,8 @@
 /////////////////////
 
 // URLs
-//var API = "http://deckofcardsapi.com/api/";
-var API =  "http://localhost:8000/api/";
+var API = "http://deckofcardsapi.com/api/";
+// var API =  "http://localhost:8000/api/";
 var newDeckURL = API + "shuffle/?deck_count=";
 var cardBack = "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Card_back_16.svg/209px-Card_back_16.svg.png";
 
